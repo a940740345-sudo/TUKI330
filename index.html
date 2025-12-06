@@ -569,7 +569,109 @@
       /* 右侧感应条 */
       .edge-sensor.right { top: 30px; bottom: 30px; right: 0; width: 15px; }
       /* ★★★★★ 这里是你要复制进去的代码 结束 ★★★★★ */
+/* ===========================
+         AI终端 5.0 终极版样式
+         =========================== */
+      
+      /* 1. 修复刘海屏 & 容器优化 */
+      .schedule-container { padding: 60px 20px 120px 20px; height: 100%; overflow-y: auto; box-sizing: border-box; }
+      .schedule-header { font-size: 20px; color: #5d4037; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px dashed #e6ceac; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
 
+      /* 2. 统一桌面图标大小 */
+      .icon-bg-desktop svg { width: 50%; height: 50%; fill: #eceff1; }
+      .icon-bg-desktop span { font-size: 28px; }
+
+      /* 3. 智能悬浮窗 (Flow Window) */
+      #flow-widget {
+        position: fixed; top: 120px; right: 20px; z-index: 9999;
+        display: none; /* 由开关控制 */
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+      /* 文字卡片模式 */
+      .flow-card {
+        background: rgba(255, 253, 240, 0.90);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 32px rgba(93, 64, 55, 0.15);
+        border-radius: 16px; padding: 12px 16px;
+        max-width: 200px; cursor: pointer;
+        animation: float-y 4s ease-in-out infinite;
+      }
+      .flow-card:active { transform: scale(0.95); background: #fff; }
+      .flow-content { font-size: 13px; color: #5d4037; line-height: 1.4; font-weight: bold; }
+      .flow-sub { font-size: 10px; color: #8d6e63; margin-top: 4px; opacity: 0.8; border-top: 1px dashed #d7ccc8; padding-top: 4px; }
+      /* 图标模式 */
+      .flow-icon-img {
+        border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        cursor: pointer; transition: transform 0.2s; object-fit: cover;
+        border: 2px solid #fff; animation: float-y 4s ease-in-out infinite;
+      }
+      .flow-icon-img:active { transform: scale(0.9); }
+      @keyframes float-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+      /* 4. 设置面板组件 */
+      .settings-group { margin-bottom: 20px; background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 12px; border: 1px solid #efe6d5; }
+      .settings-title { font-size: 14px; color: #8d6e63; margin-bottom: 10px; font-weight: bold; border-left: 3px solid #e6ceac; padding-left: 8px; display: flex; justify-content: space-between; align-items: center;}
+      .input-row { margin-bottom: 10px; }
+      .input-label { font-size: 12px; color: #5d4037; margin-bottom: 4px; display: block; }
+      .custom-input, .custom-textarea { width: 100%; padding: 8px; border: 1px solid #e0d0b8; border-radius: 6px; background: #fffdf5; font-size: 13px; color: #3e2723; box-sizing: border-box; outline: none; transition: 0.3s;}
+      .custom-input:focus, .custom-textarea:focus { background: #fff; border-color: #8d6e63; }
+      .custom-textarea { resize: vertical; min-height: 60px; font-family: monospace; }
+      
+      .btn-row { display: flex; gap: 10px; margin-top: 10px; }
+      .btn-primary { flex: 1; background: #eecfa1; color: #5d4037; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+      .btn-secondary { flex: 1; background: #fff; border: 1px solid #d7ccc8; color: #8d6e63; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+      .icon-btn { width: 30px; height: 30px; border: 1px solid #d7ccc8; background: #fff; border-radius: 4px; cursor: pointer; display: flex; justify-content: center; align-items: center; color: #8d6e63; font-size: 14px; padding:0; }
+      
+      .preset-bar { display: flex; gap: 8px; margin-bottom: 10px; background: #fffdf5; padding: 8px; border-radius: 8px; border: 1px dashed #d7ccc8; align-items: center; }
+      .preset-select { flex: 1; padding: 6px; border: 1px solid #e0d0b8; border-radius: 4px; background: #fff; font-size: 12px; color: #5d4037; }
+      
+      /* 角色与页签栏 */
+      .role-bar { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; background: #efe6d5; padding: 8px; border-radius: 8px; }
+      .mini-btn { width: 24px; height: 24px; border: 1px solid #d7ccc8; background: #fff; border-radius: 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #8d6e63; font-size: 12px; }
+      .tabs-header { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 10px; border-bottom: 1px solid #efe6d5; }
+      .tab-item { padding: 6px 12px; background: #fff; border: 1px solid #e0d0b8; border-radius: 6px 6px 0 0; font-size: 12px; color: #8d6e63; cursor: pointer; white-space: nowrap; }
+      .tab-item.active { background: #eecfa1; color: #5d4037; font-weight: bold; border-bottom: 1px solid #eecfa1; }
+      .tab-add-btn { padding: 6px 10px; background: #efe6d5; border: 1px dashed #bbb; border-radius: 6px; cursor: pointer; color: #5d4037; }
+
+      /* 导出与开关 */
+      .export-control-panel { background: #fff3e0; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffcc80; }
+      .export-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; font-size: 12px; color: #e65100; }
+      .toggle-switch { position: relative; display: inline-block; width: 34px; height: 20px; }
+      .toggle-switch input { opacity: 0; width: 0; height: 0; }
+      .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+      .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+      input:checked + .slider { background-color: #ff9800; }
+      input:checked + .slider:before { transform: translateX(14px); }
+
+      /* 提示词工坊 */
+      .prompt-toolbar { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; padding: 5px; background: #efe6d5; border-radius: 6px; }
+      .var-btn { background: #fff; border: 1px solid #d7ccc8; border-radius: 4px; padding: 2px 6px; font-size: 10px; color: #5d4037; cursor: pointer; font-family: monospace; }
+
+      /* 实时面板 & 卡片 */
+      #realtime-status-panel { background: #3e2723; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(62,39,35,0.4); border: 1px solid #5d4037; display: none; }
+      .rt-content { font-size: 15px; font-weight: bold; color: #fff8e1; margin: 5px 0; line-height: 1.4; }
+      .rt-divider { border: 0; border-top: 1px dashed #8d6e63; margin: 10px 0; }
+      .timeline-card { background: #fff; border: 1px solid #efe6d5; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.03); transition: 0.3s; }
+      .timeline-card.active-now { border: 2px solid #ffb74d; background: #fff3e0; transform: scale(1.02); z-index: 2; box-shadow: 0 8px 20px rgba(255, 183, 77, 0.3); }
+      .t-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+      .t-time { font-family: monospace; font-weight: 900; font-size: 16px; color: #5d4037; background: #eecfa1; padding: 2px 8px; border-radius: 4px; }
+      .t-desc { font-size: 14px; color: #4e342e; line-height: 1.5; white-space: pre-wrap; }
+      .card-actions { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #eee; display: flex; justify-content: flex-end; gap: 10px; }
+      .card-btn { font-size: 11px; padding: 4px 8px; border-radius: 4px; cursor: pointer; border: 1px solid transparent; background: transparent; }
+      .card-btn.edit { color: #8d6e63; border-color: #d7ccc8; }
+      .card-btn.del { color: #e57373; border-color: #ffcdd2; }
+
+      /* 小剧场 (电影票/小票) */
+      .movie-ticket { margin-top: 10px; background: #37474f; color: #eceff1; border-radius: 8px; overflow: hidden; }
+      .ticket-header { background: #263238; padding: 8px; font-size: 12px; text-align: center; border-bottom: 1px dashed #546e7a; }
+      .ticket-body { padding: 15px; text-align: center; }
+      .receipt { margin-top: 10px; background: #fff; padding: 15px; border: 1px solid #eee; font-family: monospace; font-size: 12px; color: #333; position: relative; border-bottom: 2px dashed #ccc; }
+      .receipt-header { text-align: center; font-weight: bold; margin-bottom: 10px; border-bottom: 1px dashed #ccc; }
+      .receipt ul { list-style: none; padding: 0; }
+      .receipt li { display: flex; justify-content: space-between; margin-bottom: 4px; }
+      .receipt-total { border-top: 1px dashed #ccc; margin-top: 8px; padding-top: 8px; display: flex; justify-content: space-between; font-weight: bold;}
+      
 
     </style>
   </head>
@@ -636,7 +738,7 @@
         <iframe data-src="https://kittykitty0v0.github.io/-k-/" src="" class="app-iframe"></iframe>
       </div>
 
-      <div id="flow-widget" onmousedown="dragStart(event)" ontouchstart="dragStart(event)">
+      <div id="flow-widget" onclick="copyFromFlowWindow()">
         </div>
 
       <div id="app-settings" class="app-window app-frame">
@@ -644,8 +746,8 @@
           <div class="schedule-header">
             <span>⚙️ 终端配置</span>
             <div>
-              <button class="icon-btn" onclick="exportData()" title="导出全备份">📤</button>
-              <button class="icon-btn" onclick="document.getElementById('import-file').click()" title="导入备份" style="margin-left:5px;">📥</button>
+              <button class="icon-btn" onclick="exportData()" title="导出">📤</button>
+              <button class="icon-btn" onclick="document.getElementById('import-file').click()" title="导入" style="margin-left:5px;">📥</button>
               <input type="file" id="import-file" style="display:none" onchange="importData(this)">
             </div>
           </div>
@@ -654,30 +756,15 @@
             <div class="settings-title" style="color:#d84315;">🎈 智能悬浮窗</div>
             <div class="input-row"><label class="input-label">模式</label>
               <select id="flow-mode" class="custom-input" onchange="saveGlobalSettings()">
-                <option value="detail">详细 (滚动文字)</option>
-                <option value="simple">不剧透 (呼吸闪烁)</option>
-                <option value="icon">仅图标 (无边框)</option>
+                <option value="detail">详细展示 (用文案模板)</option>
+                <option value="simple">不剧透 (仅显示名字+倒计时)</option>
+                <option value="icon">仅图标 (有事件时变色)</option>
               </select>
             </div>
-            <div class="input-row"><label class="input-label">时间范围 (分钟 ±)</label><input type="number" id="flow-range" class="custom-input" value="15" onchange="saveGlobalSettings()"></div>
-            <div class="input-row"><label class="input-label">图标尺寸 (px)</label><input type="number" id="flow-icon-size" class="custom-input" value="50" onchange="saveGlobalSettings()"></div>
-            <div class="input-row"><label class="input-label">默认图标URL</label><input type="text" id="flow-icon-normal" class="custom-input" onchange="saveGlobalSettings()"></div>
-            <div class="input-row"><label class="input-label">活跃图标URL</label><input type="text" id="flow-icon-active" class="custom-input" onchange="saveGlobalSettings()"></div>
-          </div>
-
-          <div class="settings-group">
-            <div class="settings-title" style="color:#d84315;">📋 文案与复制预设</div>
-            
-            <div class="preset-bar">
-              <select id="tpl-preset-select" class="preset-select" onchange="loadPreset('tpl', this.value)"><option value="">-- 新建/选择文案预设 --</option></select>
-              <button class="icon-btn" onclick="savePreset('tpl')">💾</button> <button class="icon-btn delete" onclick="deletePreset('tpl')">🗑️</button>
-            </div>
-            <div class="input-row"><label class="input-label">文案预设名称</label><input type="text" id="tpl-preset-name" class="custom-input"></div>
-
-            <div class="input-row"><label class="input-label">全局复制模板 (含 \${timercontent})</label><textarea id="global-copy-template" class="custom-textarea" style="height:80px;"></textarea></div>
-            <div class="input-row"><label class="input-label">过去事件文案</label><input type="text" id="status-tpl-past" class="custom-input"></div>
-            <div class="input-row"><label class="input-label">未来事件文案</label><input type="text" id="status-tpl-future" class="custom-input"></div>
-            <div style="text-align:right;"><button class="icon-btn" onclick="saveGlobalSettings()" style="width:auto; padding:0 10px;">💾 应用并保存</button></div>
+            <div class="input-row"><label class="input-label">生效时间范围 (前后X分钟)</label><input type="number" id="flow-range" class="custom-input" value="15" onchange="saveGlobalSettings()"></div>
+            <div class="input-row"><label class="input-label">常规图标URL</label><input type="text" id="flow-icon-normal" class="custom-input" value="https://i.postimg.cc/B6FkXGCL/15.png" onchange="saveGlobalSettings()"></div>
+            <div class="input-row"><label class="input-label">活跃图标URL</label><input type="text" id="flow-icon-active" class="custom-input" value="https://i.postimg.cc/1tF2fZKF/16.png" onchange="saveGlobalSettings()"></div>
+            <div class="input-row"><label class="input-label">图标尺寸(px)</label><input type="number" id="flow-icon-size" class="custom-input" value="50" onchange="saveGlobalSettings()"></div>
           </div>
 
           <div class="settings-group">
@@ -694,6 +781,14 @@
               <select id="model-list-dropdown" class="custom-input" style="display:none; margin-top:5px;" onchange="document.getElementById('model-name').value=this.value"></select>
             </div>
             <div class="input-row"><label class="input-label">配置名称(保存用)</label><input type="text" id="api-preset-name" class="custom-input"></div>
+          </div>
+
+          <div class="settings-group">
+            <div class="settings-title" style="color:#d84315;">📋 复制与文案设置</div>
+            <div class="input-row"><label class="input-label">全局复制模板 (含 \${timercontent})</label><textarea id="global-copy-template" class="custom-textarea" style="height:80px;"></textarea></div>
+            <div class="input-row"><label class="input-label">过去事件文案</label><input type="text" id="status-tpl-past" class="custom-input"></div>
+            <div class="input-row"><label class="input-label">未来事件文案</label><input type="text" id="status-tpl-future" class="custom-input"></div>
+            <div style="text-align:right;"><button class="icon-btn" onclick="saveGlobalSettings()" style="width:auto; padding:0 10px;">💾 保存文案</button></div>
           </div>
 
           <div class="settings-group">
@@ -791,6 +886,7 @@
           <div style="height:100px;"></div>
         </div>
       </div>
+      
       <!-- 悬浮按钮 -->
       <div id="fab-container">
         <div class="fab-actions">
@@ -832,6 +928,11 @@
             <span class="fab-label">悬浮窗开关</span>
             <div class="fab-mini-btn" style="background:#b3e5fc;"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg></div>
           </div>
+          <div class="fab-action-btn" onclick="copyGlobalContext()">
+            <span class="fab-label">复制AI上下文</span>
+            <div class="fab-mini-btn" style="background:#ffcc80;"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></div>
+          </div>
+          
           <div class="fab-action-btn" onclick="hideFab()">
             <span class="fab-label">隐藏</span>
             <div class="fab-mini-btn">
@@ -863,126 +964,6 @@
     <div class="edge-sensor right"></div>
     <!-- ★★★★★ 这里是你要复制进去的代码 结束 ★★★★★ -->
 
-      /* ===========================
-         AI终端 6.0 终极版样式
-         =========================== */
-      
-      /* 1. 修复刘海屏 & 容器优化 */
-      .schedule-container { padding: 60px 20px 120px 20px; height: 100%; overflow-y: auto; box-sizing: border-box; }
-      .schedule-header { font-size: 20px; color: #5d4037; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px dashed #e6ceac; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-
-      /* 2. 统一桌面图标大小 */
-      .icon-bg-desktop svg { width: 50%; height: 50%; fill: #eceff1; }
-      .icon-bg-desktop span { font-size: 28px; }
-
-      /* 3. 高级悬浮窗 (可拖动) */
-      #flow-widget {
-        position: fixed; top: 120px; right: 20px; z-index: 9999;
-        display: none; /* 由开关控制 */
-        transition: opacity 0.3s; /* 移除 transform transition 以免干扰拖拽 */
-        touch-action: none; /* 允许触摸拖拽 */
-      }
-      
-      /* 模式A: 详细展示 (高级灰磨砂) */
-      .flow-card-detail {
-        background: rgba(60, 60, 60, 0.75); /* 深灰半透明 */
-        backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        border-radius: 12px; padding: 10px 14px;
-        max-width: 180px; cursor: move; /* 提示可拖拽 */
-        color: #fff; font-size: 12px;
-        overflow: hidden; white-space: nowrap;
-      }
-      .flow-card-detail:active { background: rgba(60, 60, 60, 0.9); }
-      .scroll-text { display: inline-block; padding-left: 100%; animation: scroll-left 10s linear infinite; }
-      @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-
-      /* 模式B: 不剧透 (呼吸闪烁) */
-      .flow-card-simple {
-        background: rgba(60, 60, 60, 0.75);
-        backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px; padding: 8px 16px;
-        color: #fff; font-size: 12px; font-weight: bold;
-        cursor: move; text-align: center;
-        animation: breathe 3s ease-in-out infinite;
-      }
-      @keyframes breathe { 0%, 100% { opacity: 0.8; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } }
-
-      /* 模式C: 纯图标 (无边框) */
-      .flow-icon-img {
-        width: 50px; height: 50px; /* 默认大小 */
-        cursor: move; object-fit: contain;
-        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-        transition: transform 0.2s;
-      }
-      .flow-icon-img:active { transform: scale(0.9); }
-
-      /* 4. 设置面板组件 */
-      .settings-group { margin-bottom: 20px; background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 12px; border: 1px solid #efe6d5; }
-      .settings-title { font-size: 14px; color: #8d6e63; margin-bottom: 10px; font-weight: bold; border-left: 3px solid #e6ceac; padding-left: 8px; display: flex; justify-content: space-between; align-items: center;}
-      .input-row { margin-bottom: 10px; }
-      .input-label { font-size: 12px; color: #5d4037; margin-bottom: 4px; display: block; }
-      .custom-input, .custom-textarea { width: 100%; padding: 8px; border: 1px solid #e0d0b8; border-radius: 6px; background: #fffdf5; font-size: 13px; color: #3e2723; box-sizing: border-box; outline: none; transition: 0.3s;}
-      .custom-input:focus, .custom-textarea:focus { background: #fff; border-color: #8d6e63; }
-      .custom-textarea { resize: vertical; min-height: 60px; font-family: monospace; }
-      
-      .btn-row { display: flex; gap: 10px; margin-top: 10px; }
-      .btn-primary { flex: 1; background: #eecfa1; color: #5d4037; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-      .btn-secondary { flex: 1; background: #fff; border: 1px solid #d7ccc8; color: #8d6e63; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-      .icon-btn { width: 30px; height: 30px; border: 1px solid #d7ccc8; background: #fff; border-radius: 4px; cursor: pointer; display: flex; justify-content: center; align-items: center; color: #8d6e63; font-size: 14px; padding:0; }
-      
-      .preset-bar { display: flex; gap: 8px; margin-bottom: 10px; background: #fffdf5; padding: 8px; border-radius: 8px; border: 1px dashed #d7ccc8; align-items: center; }
-      .preset-select { flex: 1; padding: 6px; border: 1px solid #e0d0b8; border-radius: 4px; background: #fff; font-size: 12px; color: #5d4037; }
-      
-      /* 角色与页签栏 */
-      .role-bar { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; background: #efe6d5; padding: 8px; border-radius: 8px; }
-      .mini-btn { width: 24px; height: 24px; border: 1px solid #d7ccc8; background: #fff; border-radius: 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #8d6e63; font-size: 12px; }
-      .tabs-header { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 10px; border-bottom: 1px solid #efe6d5; }
-      .tab-item { padding: 6px 12px; background: #fff; border: 1px solid #e0d0b8; border-radius: 6px 6px 0 0; font-size: 12px; color: #8d6e63; cursor: pointer; white-space: nowrap; }
-      .tab-item.active { background: #eecfa1; color: #5d4037; font-weight: bold; border-bottom: 1px solid #eecfa1; }
-      .tab-add-btn { padding: 6px 10px; background: #efe6d5; border: 1px dashed #bbb; border-radius: 6px; cursor: pointer; color: #5d4037; }
-
-      /* 导出与开关 */
-      .export-control-panel { background: #fff3e0; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffcc80; }
-      .export-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; font-size: 12px; color: #e65100; }
-      .toggle-switch { position: relative; display: inline-block; width: 34px; height: 20px; }
-      .toggle-switch input { opacity: 0; width: 0; height: 0; }
-      .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
-      .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-      input:checked + .slider { background-color: #ff9800; }
-      input:checked + .slider:before { transform: translateX(14px); }
-
-      /* 提示词工坊 */
-      .prompt-toolbar { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; padding: 5px; background: #efe6d5; border-radius: 6px; }
-      .var-btn { background: #fff; border: 1px solid #d7ccc8; border-radius: 4px; padding: 2px 6px; font-size: 10px; color: #5d4037; cursor: pointer; font-family: monospace; }
-
-      /* 实时面板 & 卡片 */
-      #realtime-status-panel { background: #3e2723; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(62,39,35,0.4); border: 1px solid #5d4037; display: none; }
-      .rt-content { font-size: 15px; font-weight: bold; color: #fff8e1; margin: 5px 0; line-height: 1.4; }
-      .rt-divider { border: 0; border-top: 1px dashed #8d6e63; margin: 10px 0; }
-      .timeline-card { background: #fff; border: 1px solid #efe6d5; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.03); transition: 0.3s; }
-      .timeline-card.active-now { border: 2px solid #ffb74d; background: #fff3e0; transform: scale(1.02); z-index: 2; box-shadow: 0 8px 20px rgba(255, 183, 77, 0.3); }
-      .t-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
-      .t-time { font-family: monospace; font-weight: 900; font-size: 16px; color: #5d4037; background: #eecfa1; padding: 2px 8px; border-radius: 4px; }
-      .t-desc { font-size: 14px; color: #4e342e; line-height: 1.5; white-space: pre-wrap; cursor: pointer; }
-      .t-desc:active { background: #fff8e1; } /* 点击反馈 */
-      .card-actions { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #eee; display: flex; justify-content: flex-end; gap: 10px; }
-      .card-btn { font-size: 11px; padding: 4px 8px; border-radius: 4px; cursor: pointer; border: 1px solid transparent; background: transparent; }
-      .card-btn.edit { color: #8d6e63; border-color: #d7ccc8; }
-      .card-btn.del { color: #e57373; border-color: #ffcdd2; }
-
-      /* 小剧场 (电影票/小票) */
-      .movie-ticket { margin-top: 10px; background: #37474f; color: #eceff1; border-radius: 8px; overflow: hidden; }
-      .ticket-header { background: #263238; padding: 8px; font-size: 12px; text-align: center; border-bottom: 1px dashed #546e7a; }
-      .ticket-body { padding: 15px; text-align: center; }
-      .receipt { margin-top: 10px; background: #fff; padding: 15px; border: 1px solid #eee; font-family: monospace; font-size: 12px; color: #333; position: relative; border-bottom: 2px dashed #ccc; }
-      .receipt-header { text-align: center; font-weight: bold; margin-bottom: 10px; border-bottom: 1px dashed #ccc; }
-      .receipt ul { list-style: none; padding: 0; }
-      .receipt li { display: flex; justify-content: space-between; margin-bottom: 4px; }
-      .receipt-total { border-top: 1px dashed #ccc; margin-top: 8px; padding-top: 8px; display: flex; justify-content: space-between; font-weight: bold;}
-      
       <div id="toast-msg"></div>
     </div>
 
@@ -1247,19 +1228,17 @@
         });
       }
       /* ===========================
-         第5步：逻辑核心 V6.0 (终极版)
+         第5步：逻辑核心 V5.0 (含悬浮窗/数据导出/多角色)
          =========================== */
       let timerPages = [];
       let activeRoleId = 0; 
       let activePageIndex = 0;
       let roles = [];
-      
-      // 默认设置 (含文案预设)
       let globalSettings = {
         copyTemplate: "此条内容是ai写作指导，角色不可见。以下是角色原本的日程计划，注意角色可能之前之后都不按照原计划进行，请你根据上下文语境进行判断剧情发展：\n当前的世界是${currTime}，${timercontent}\n必须根据上下文判断角色是否之前或之后进行原计划，以及根据当前对话场景角色是否会提及此事，角色也可能已经忘记此事或直接根本不提。你作为ai必须自行判断做出有活人感的反应与结果。",
         tplPast: "${min}分钟前，${char}原计划是在${time}${act}",
         tplFuture: "${min}分钟后，${char}原计划是在${time}${act}",
-        flowMode: 'simple', 
+        flowMode: 'simple', // detail, simple, icon
         flowRange: 15,
         flowVisible: false,
         iconNormal: "https://i.postimg.cc/B6FkXGCL/15.png",
@@ -1267,53 +1246,14 @@
         iconSize: 50
       };
 
-      const STORAGE_KEYS = { api:'tuki_presets_api', char:'tuki_presets_char', user:'tuki_presets_user', prompt:'tuki_presets_prompt', tpl:'tuki_presets_tpl', roles:'tuki_roles_v1', global:'tuki_global_settings' };
-      const FIELD_MAP = { 
-        api:['api-preset-name','api-host','api-key','model-name'], 
-        char:['char-preset-name','char-name','char-persona','world-info','chat-history'], 
-        user:['user-preset-name','user-name','user-persona'], 
-        prompt:['prompt-preset-name','prompt-content'],
-        tpl:['tpl-preset-name','global-copy-template','status-tpl-past','status-tpl-future'] 
-      };
-      
+      const STORAGE_KEYS = { api:'tuki_presets_api', char:'tuki_presets_char', user:'tuki_presets_user', prompt:'tuki_presets_prompt', roles:'tuki_roles_v1', global:'tuki_global_settings' };
+      const FIELD_MAP = { api:['api-preset-name','api-host','api-key','model-name'], char:['char-preset-name','char-name','char-persona','world-info','chat-history'], user:['user-preset-name','user-name','user-persona'], prompt:['prompt-preset-name','prompt-content'] };
       const DEFAULT_PROMPT = `# 角色扮演任务\n请根据"\${chat.name}"的人设，推演接下来24小时的行为轨迹。\n# 参数\n角色：\${chat.name}\n人设：\${chat.settings.aiPersona}\n# 输出规则\n1. 返回JSON数组。2. 时间格式 "HH:mm"。3. 包含 'html_snippet' (可选)。\n[{"time":"08:00","description":"...","icon":"⏰"}]`;
 
       window.addEventListener('load', () => {
-        ['api','char','user','prompt','tpl'].forEach(refreshDropdown);
-        
-        // 载入全局设置
+        ['api','char','user','prompt'].forEach(refreshDropdown);
         const savedGlobal = localStorage.getItem(STORAGE_KEYS.global);
         if(savedGlobal) globalSettings = {...globalSettings, ...JSON.parse(savedGlobal)};
-        loadGlobalSettingsToUI();
-
-        // 载入角色数据
-        const savedRoles = localStorage.getItem(STORAGE_KEYS.roles);
-        if(savedRoles) roles = JSON.parse(savedRoles);
-        else roles = [{ id: Date.now(), name: "默认角色", pages: [{ id: Date.now(), name: "主日程", promptPreset: "", data: [], exportEnabled: true, exportMode: 'both' }] }];
-        activeRoleId = roles[0].id;
-
-        // 初始化默认Prompt
-        const prompts = getPresets('prompt');
-        if(Object.keys(prompts).length===0) {
-          prompts["默认日程"] = { "prompt-preset-name": "默认日程", "prompt-content": DEFAULT_PROMPT };
-          localStorage.setItem(STORAGE_KEYS.prompt, JSON.stringify(prompts));
-          refreshDropdown('prompt');
-        }
-        
-        // 初始化默认文案
-        const tpls = getPresets('tpl');
-        if(Object.keys(tpls).length===0) {
-           tpls["默认文案"] = { "tpl-preset-name":"默认文案", "global-copy-template":globalSettings.copyTemplate, "status-tpl-past":globalSettings.tplPast, "status-tpl-future":globalSettings.tplFuture };
-           localStorage.setItem(STORAGE_KEYS.tpl, JSON.stringify(tpls));
-           refreshDropdown('tpl');
-        }
-
-        renderRoleUI();
-        updateFlowWindowVisibility();
-        setInterval(() => { updateRealTimeStatus(); renderFlowWindow(); }, 1000);
-      });
-
-      function loadGlobalSettingsToUI() {
         document.getElementById('global-copy-template').value = globalSettings.copyTemplate;
         document.getElementById('status-tpl-past').value = globalSettings.tplPast;
         document.getElementById('status-tpl-future').value = globalSettings.tplFuture;
@@ -1322,32 +1262,22 @@
         document.getElementById('flow-icon-normal').value = globalSettings.iconNormal;
         document.getElementById('flow-icon-active').value = globalSettings.iconActive;
         document.getElementById('flow-icon-size').value = globalSettings.iconSize;
-      }
 
-      /* --- 拖拽逻辑 --- */
-      let isDragging = false, dragStartX, dragStartY, initialLeft, initialTop;
-      function dragStart(e) {
-        if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT') return;
-        isDragging = true;
-        const touch = e.touches ? e.touches[0] : e;
-        dragStartX = touch.clientX; dragStartY = touch.clientY;
-        const rect = document.getElementById('flow-widget').getBoundingClientRect();
-        initialLeft = rect.left; initialTop = rect.top;
-        document.addEventListener('mousemove', onDrag); document.addEventListener('touchmove', onDrag, {passive:false});
-        document.addEventListener('mouseup', dragEnd); document.addEventListener('touchend', dragEnd);
-      }
-      function onDrag(e) {
-        if(!isDragging) return; e.preventDefault();
-        const touch = e.touches ? e.touches[0] : e;
-        const dx = touch.clientX - dragStartX; const dy = touch.clientY - dragStartY;
-        const w = document.getElementById('flow-widget');
-        w.style.left = (initialLeft + dx) + 'px'; w.style.top = (initialTop + dy) + 'px'; w.style.right = 'auto';
-      }
-      function dragEnd() { 
-        isDragging = false; 
-        document.removeEventListener('mousemove', onDrag); document.removeEventListener('touchmove', onDrag);
-        document.removeEventListener('mouseup', dragEnd); document.removeEventListener('touchend', dragEnd);
-      }
+        const savedRoles = localStorage.getItem(STORAGE_KEYS.roles);
+        if(savedRoles) roles = JSON.parse(savedRoles);
+        else roles = [{ id: Date.now(), name: "默认角色", pages: [{ id: Date.now(), name: "主日程", promptPreset: "", data: [], exportEnabled: true, exportMode: 'both' }] }];
+        activeRoleId = roles[0].id;
+
+        const prompts = getPresets('prompt');
+        if(Object.keys(prompts).length===0) {
+          prompts["默认日程"] = { "prompt-preset-name": "默认日程", "prompt-content": DEFAULT_PROMPT };
+          localStorage.setItem(STORAGE_KEYS.prompt, JSON.stringify(prompts));
+          refreshDropdown('prompt');
+        }
+        renderRoleUI();
+        updateFlowWindowVisibility();
+        setInterval(() => { updateRealTimeStatus(); renderFlowWindow(); }, 1000);
+      });
 
       /* --- 悬浮窗逻辑 --- */
       function toggleFlowWindow() {
@@ -1396,41 +1326,30 @@
           const size = globalSettings.iconSize;
           widget.innerHTML = `<img src="${url}" class="flow-icon-img" style="width:${size}px;height:${size}px;">`;
         } else {
-          let html = "";
-          if(globalSettings.flowMode === 'detail') {
-             html += `<div class="flow-card-detail"><span class="scroll-text">`;
-             if(hasActive) {
-                const item = active[0];
-                const [h,m] = item.time.split(':').map(Number);
-                const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
-                const diff = Math.abs(curM - (h*60+m));
-                const tpl = (curM > h*60+m) ? globalSettings.tplPast : globalSettings.tplFuture;
-                html += tpl.replace(/\${min}/g, diff).replace(/\${char}/g, charName).replace(/\${act}/g, item.description).replace(/\${time}/g, item.time);
-             } else if(next) {
-                const [h,m] = next.time.split(':').map(Number);
-                const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
-                html += `[${diff}min后] ${next.description}`;
-             } else { html += "💤 休息中"; }
-             html += `</span></div>`;
+          let html = `<div class="flow-card">`;
+          if (hasActive) {
+            const item = active[0]; 
+            const [h,m] = item.time.split(':').map(Number);
+            const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
+            const diff = Math.abs(curM - (h*60+m));
+            if(globalSettings.flowMode === 'detail') {
+               const tpl = (curM > h*60+m) ? globalSettings.tplPast : globalSettings.tplFuture;
+               const txt = tpl.replace(/\${min}/g, diff).replace(/\${char}/g, charName).replace(/\${act}/g, item.description).replace(/\${time}/g, item.time);
+               html += `<div class="flow-content">${txt}</div>`;
+            } else {
+               html += `<div class="flow-content">${charName} ${diff}min</div><div class="flow-sub">${item.time}</div>`;
+            }
           } else {
-             // 简单模式
-             html += `<div class="flow-card-simple">`;
-             if(hasActive) {
-                // 循环显示
-                const idx = Math.floor(Date.now() / 3000) % active.length;
-                const item = active[idx];
-                const [h,m] = item.time.split(':').map(Number);
-                const curM = new Date().getHours()*60 + new Date().getMinutes();
-                const diff = Math.abs(curM - (h*60+m));
-                html += `${charName} ${diff}min`;
-             } else if(next) {
-                const [h,m] = next.time.split(':').map(Number);
-                const curM = new Date().getHours()*60 + new Date().getMinutes();
-                const diff = (h*60+m) - curM;
-                html += `Next ${diff}min`;
-             } else { html += "💤"; }
-             html += `</div>`;
+            if(next) {
+               const [h,m] = next.time.split(':').map(Number);
+               const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
+               const diff = (h*60+m) - curM;
+               html += `<div class="flow-content">Next: ${diff}min</div><div class="flow-sub">${next.time} ${next.description.substring(0,8)}...</div>`;
+            } else {
+               html += `<div class="flow-content">💤 休息中</div>`;
+            }
           }
+          html += `</div>`;
           widget.innerHTML = html;
         }
       }
@@ -1457,12 +1376,6 @@
               navigator.clipboard.writeText(txt).then(()=>showToast("已复制预告")).catch(()=>showToast("复制失败"));
            }
         }
-      }
-
-      /* --- 单条复制 --- */
-      function copySingleItem(item) {
-         const txt = `${item.time} ${item.description}`;
-         navigator.clipboard.writeText(txt).then(()=>showToast("已复制: "+txt));
       }
 
       /* --- 基础管理 --- */
@@ -1550,8 +1463,7 @@
         b.innerHTML = d.length ? '' : '<div style="text-align:center;color:#aaa;padding:20px">暂无数据</div>';
         d.forEach((item,i)=>{
           const c=document.createElement('div'); c.className='timeline-card'; c.id=`card-${i}`;
-          // 绑定点击复制整个对象
-          c.innerHTML=`<div class="t-header"><div class="t-time">${item.time}</div><div style="font-size:20px">${item.icon||'📱'}</div></div><div class="t-desc" onclick="copySingleItem(getActivePage().data[${i}])">${item.description}</div>${item.html_snippet||''}<div class="card-actions"><button class="card-btn edit" onclick="editItem(${i})">✏️</button><button class="card-btn del" onclick="delItem(${i})">🗑️</button></div>`;
+          c.innerHTML=`<div class="t-header"><div class="t-time">${item.time}</div><div style="font-size:20px">${item.icon||'📱'}</div></div><div class="t-desc">${item.description}</div>${item.html_snippet||''}<div class="card-actions"><button class="card-btn edit" onclick="editItem(${i})">✏️</button><button class="card-btn del" onclick="delItem(${i})">🗑️</button></div>`;
           b.appendChild(c);
         });
         updateRealTimeStatus();
@@ -1610,14 +1522,8 @@
         navigator.clipboard.writeText(txt).then(()=>showToast("已复制上下文")).catch(()=>showToast("失败"));
       }
 
-      function copySingleItem(item) {
-         const txt = `${item.time} ${item.description}`;
-         navigator.clipboard.writeText(txt).then(()=>showToast("已复制: "+txt));
-      }
-
       function exportData() { const d={}; Object.keys(STORAGE_KEYS).forEach(k=>d[k]=localStorage.getItem(STORAGE_KEYS[k])); const b=new Blob([JSON.stringify(d)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); }
       function importData(i) { const f=i.files[0]; if(!f)return; const r=new FileReader(); r.onload=e=>{try{const d=JSON.parse(e.target.result);Object.keys(d).forEach(k=>localStorage.setItem(k,d[k]));alert("导入成功");location.reload();}catch(x){alert("错误")}}; r.readAsText(f); }
-      
     </script>
   </body>
 </html>
