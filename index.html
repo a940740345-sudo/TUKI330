@@ -570,7 +570,157 @@
       .edge-sensor.right { top: 30px; bottom: 30px; right: 0; width: 15px; }
       /* ★★★★★ 这里是你要复制进去的代码 结束 ★★★★★ */
 
+/* ===========================
+         新增功能样式：AI驾驶舱与小剧场
+         =========================== */
+      
+      /* 1. 预设管理栏样式 */
+      .preset-bar {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 15px;
+        background: #fffdf5;
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px dashed #d7ccc8;
+        align-items: center;
+      }
+      .preset-select {
+        flex: 1;
+        padding: 6px;
+        border: 1px solid #e0d0b8;
+        border-radius: 4px;
+        background: #fff;
+        font-family: inherit;
+        font-size: 12px;
+        color: #5d4037;
+      }
+      .icon-btn {
+        width: 28px;
+        height: 28px;
+        border: 1px solid #d7ccc8;
+        background: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #8d6e63;
+        font-size: 14px;
+        transition: 0.2s;
+      }
+      .icon-btn:hover { background: #efe6d5; }
+      .icon-btn.delete:hover { background: #ffebee; border-color: #ffcdd2; color: #e57373; }
 
+      /* 2. 设置面板通用样式 */
+      .settings-group {
+        margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.5);
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid #efe6d5;
+      }
+      .settings-title {
+        font-size: 14px;
+        color: #8d6e63;
+        margin-bottom: 10px;
+        font-weight: bold;
+        border-left: 3px solid #e6ceac;
+        padding-left: 8px;
+      }
+      .input-row { margin-bottom: 10px; }
+      .input-label {
+        font-size: 12px;
+        color: #5d4037;
+        margin-bottom: 4px;
+        display: block;
+      }
+      .custom-input, .custom-textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #e0d0b8;
+        border-radius: 6px;
+        background: #fffdf5;
+        font-family: inherit;
+        font-size: 13px;
+        color: #3e2723;
+        box-sizing: border-box;
+        outline: none;
+      }
+      .custom-textarea { resize: vertical; min-height: 60px; }
+      .btn-primary {
+        width: 100%;
+        background: #eecfa1;
+        color: #5d4037;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        font-family: inherit;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+      .btn-primary:active { transform: scale(0.98); background: #e0b878; }
+
+      /* 3. 日程生成器与时间轴 */
+      .schedule-container {
+        padding: 20px;
+        height: 100%;
+        overflow-y: auto;
+        box-sizing: border-box;
+      }
+      .schedule-header {
+        font-size: 20px;
+        color: var(--text-deep);
+        margin-bottom: 20px;
+        border-bottom: 2px dashed #e6ceac;
+        padding-bottom: 10px;
+        font-weight: bold;
+      }
+      #ai-timeline-container {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px dashed #e6ceac;
+      }
+      .timeline-card {
+        background: #fff;
+        border: 1px solid #efe6d5;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      }
+      .t-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+      .t-time {
+        font-family: monospace; font-weight: 900; font-size: 16px;
+        color: #5d4037; background: #eecfa1; padding: 2px 8px; border-radius: 4px;
+      }
+      .t-desc { font-size: 14px; color: #4e342e; line-height: 1.5; }
+
+      /* 4. HTML小剧场特效 */
+      /* 电影票 */
+      .movie-ticket {
+        margin-top: 10px; background: #37474f; color: #eceff1;
+        border-radius: 8px; overflow: hidden; font-family: sans-serif;
+      }
+      .ticket-header {
+        background: #263238; padding: 8px; font-size: 12px;
+        text-align: center; color: #b0bec5; border-bottom: 1px dashed #546e7a;
+      }
+      .ticket-body { padding: 15px; text-align: center; }
+      .ticket-body h3 { margin: 0 0 5px 0; color: #fff; font-size: 16px; }
+      .ticket-body p { margin: 0; color: #cfd8dc; font-size: 12px; }
+      /* 购物小票 */
+      .receipt {
+        margin-top: 10px; background: #fff; padding: 15px;
+        border: 1px solid #eee; font-family: monospace; font-size: 12px; color: #333;
+        position: relative; border-bottom: 2px dashed #ccc;
+      }
+      .receipt-header { text-align: center; font-weight: bold; margin-bottom: 10px; border-bottom: 1px dashed #ccc; }
+      .receipt ul { list-style: none; padding: 0; }
+      .receipt li { display: flex; justify-content: space-between; margin-bottom: 4px; }
+      .receipt-total { border-top: 1px dashed #ccc; margin-top: 8px; padding-top: 8px; display: flex; justify-content: space-between; font-weight: bold;}
     </style>
   </head>
   <body>
@@ -600,7 +750,7 @@
                     <div class="tape-window-bg"></div>
 
                     <!-- 左卷轴：330 -->
-                    <div class="desktop-app-icon" onclick="openApp('app-a')">
+<div class="desktop-app-icon" onclick="openApp('app-a')">
                       <div class="icon-bg-desktop">
                         <img
                           src="https://s3plus.meituan.net/opapisdk/op_ticket_885190757_1756312261242_qdqqd_g0eriz.jpeg"
@@ -610,7 +760,6 @@
                       <span class="label">330</span>
                     </div>
 
-                    <!-- 右卷轴：兔K -->
                     <div class="desktop-app-icon" onclick="openApp('app-b')">
                       <div class="icon-bg-desktop">
                         <img
@@ -620,6 +769,16 @@
                       </div>
                       <span class="label">兔K</span>
                     </div>
+
+                    <div class="desktop-app-icon" onclick="openApp('app-settings')">
+                      <div class="icon-bg-desktop" style="background: #455a64;">
+                        <svg viewBox="0 0 24 24" style="width:60%; height:60%; fill:#eceff1;">
+                          <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                        </svg>
+                      </div>
+                      <span class="label">设置</span>
+                    </div>
+
                   </div>
                 </div>
               </div>
@@ -635,7 +794,113 @@
       <div id="app-b" class="app-window app-frame">
         <iframe data-src="https://kittykitty0v0.github.io/-k-/" src="" class="app-iframe"></iframe>
       </div>
+<div id="app-settings" class="app-window app-frame">
+        <div class="schedule-container">
+          <div class="schedule-header">
+            <span>AI 驾驶舱 Pro</span>
+          </div>
 
+          <div class="settings-group">
+            <div class="settings-title">📡 API 连接 (预设管理)</div>
+            <div class="preset-bar">
+              <select id="api-preset-select" class="preset-select" onchange="loadPreset('api', this.value)">
+                <option value="">-- 新建/选择配置 --</option>
+              </select>
+              <button class="icon-btn" onclick="savePreset('api')" title="保存">💾</button>
+              <button class="icon-btn delete" onclick="deletePreset('api')" title="删除">🗑️</button>
+            </div>
+            
+            <div class="input-row">
+              <label class="input-label">配置名称 (保存时必填)</label>
+              <input type="text" id="api-preset-name" class="custom-input" placeholder="例如：Deepseek-V3">
+            </div>
+            <div class="input-row">
+              <label class="input-label">反代地址 (API Host)</label>
+              <input type="text" id="api-host" class="custom-input" placeholder="https://api.openai.com">
+            </div>
+            <div class="input-row">
+              <label class="input-label">API Key</label>
+              <input type="password" id="api-key" class="custom-input" placeholder="sk-...">
+            </div>
+            <div class="input-row">
+              <label class="input-label">模型名称 (Model Name)</label>
+              <input type="text" id="model-name" class="custom-input" placeholder="gpt-3.5-turbo">
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <div class="settings-title">🎭 角色设定 (包含历史)</div>
+            <div class="preset-bar">
+              <select id="char-preset-select" class="preset-select" onchange="loadPreset('char', this.value)">
+                <option value="">-- 新建/选择角色 --</option>
+              </select>
+              <button class="icon-btn" onclick="savePreset('char')" title="保存">💾</button>
+              <button class="icon-btn delete" onclick="deletePreset('char')" title="删除">🗑️</button>
+            </div>
+
+            <div class="input-row">
+              <label class="input-label">角色预设名称</label>
+              <input type="text" id="char-preset-name" class="custom-input" placeholder="例如：我的330">
+            </div>
+            <div class="input-row">
+              <label class="input-label">角色名字 (${chat.name})</label>
+              <input type="text" id="char-name" class="custom-input">
+            </div>
+            <div class="input-row">
+              <label class="input-label">角色人设 (${chat.settings.aiPersona})</label>
+              <textarea id="char-persona" class="custom-textarea"></textarea>
+            </div>
+            <div class="input-row">
+              <label class="input-label">世界观 (${chat.settings.worldinfo})</label>
+              <textarea id="world-info" class="custom-textarea"></textarea>
+            </div>
+            <div class="input-row">
+              <label class="input-label">聊天历史 (${chat.settings.history})</label>
+              <textarea id="chat-history" class="custom-textarea" placeholder="手动填入历史背景..."></textarea>
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <div class="settings-title">👤 用户设定</div>
+            <div class="preset-bar">
+              <select id="user-preset-select" class="preset-select" onchange="loadPreset('user', this.value)">
+                <option value="">-- 新建/选择用户 --</option>
+              </select>
+              <button class="icon-btn" onclick="savePreset('user')" title="保存">💾</button>
+              <button class="icon-btn delete" onclick="deletePreset('user')" title="删除">🗑️</button>
+            </div>
+
+            <div class="input-row">
+              <label class="input-label">用户预设名称</label>
+              <input type="text" id="user-preset-name" class="custom-input" placeholder="例如：主用户">
+            </div>
+            <div class="input-row">
+              <label class="input-label">你的名字 (${user.name})</label>
+              <input type="text" id="user-name" class="custom-input">
+            </div>
+            <div class="input-row">
+              <label class="input-label">你的人设 (${user.settings.aiPersona})</label>
+              <textarea id="user-persona" class="custom-textarea"></textarea>
+            </div>
+          </div>
+
+          <div id="ai-timeline-container">
+            <div class="settings-title" style="color:#d84315;">📅 AI 生活生成器</div>
+            <p style="font-size:12px; color:#666; margin-bottom:10px;">
+              点击按钮，AI将根据预设生成今日日程表。
+            </p>
+            <button class="btn-primary" id="btn-gen-schedule" onclick="generateSchedule()">✨ 生成今日日程 (JSON)</button>
+            
+            <div id="schedule-loading" style="display:none; text-align:center; padding:20px; font-size:12px; color:#8d6e63;">
+               ⏳ 正在连接大脑生成中...
+            </div>
+
+            <div id="schedule-result-area" style="margin-top:15px;"></div>
+          </div>
+          
+          <div style="height:80px;"></div>
+        </div>
+      </div>
       <!-- 悬浮按钮 -->
       <div id="fab-container">
         <div class="fab-actions">
@@ -951,6 +1216,210 @@
             lastTapTime = currentTime;
           });
           navigator.serviceWorker.register('sw.js');
+        });
+      }
+      /* ===========================
+         功能脚本：预设管理 + AI生成
+         =========================== */
+
+      // --- Part 1: 预设管理系统 ---
+      const STORAGE_KEYS = {
+        api: 'tuki_presets_api',
+        char: 'tuki_presets_char',
+        user: 'tuki_presets_user'
+      };
+
+      const FIELD_MAP = {
+        api: ['api-preset-name', 'api-host', 'api-key', 'model-name'],
+        char: ['char-preset-name', 'char-name', 'char-persona', 'world-info', 'chat-history'],
+        user: ['user-preset-name', 'user-name', 'user-persona']
+      };
+
+      window.addEventListener('load', () => {
+        refreshDropdown('api');
+        refreshDropdown('char');
+        refreshDropdown('user');
+      });
+
+      function getPresets(type) {
+        const data = localStorage.getItem(STORAGE_KEYS[type]);
+        return data ? JSON.parse(data) : {};
+      }
+
+      function refreshDropdown(type) {
+        const presets = getPresets(type);
+        const select = document.getElementById(`${type}-preset-select`);
+        const currentVal = select.value;
+        
+        select.innerHTML = '<option value="">-- 新建/选择 --</option>';
+        
+        Object.keys(presets).forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.innerText = name;
+          select.appendChild(opt);
+        });
+        
+        if (presets[currentVal]) select.value = currentVal;
+      }
+
+      function loadPreset(type, presetName) {
+        const fields = FIELD_MAP[type];
+        if (!presetName) {
+          fields.forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+          return;
+        }
+        const presets = getPresets(type);
+        const data = presets[presetName];
+        if (data) {
+          fields.forEach(id => {
+            const el = document.getElementById(id);
+            if(id === `${type}-preset-name`) el.value = presetName;
+            else if(el && data[id]) el.value = data[id];
+          });
+        }
+      }
+
+      function savePreset(type) {
+        const nameInputId = `${type}-preset-name`;
+        const name = document.getElementById(nameInputId).value.trim();
+        if (!name) { showToast('❌ 请输入配置名称'); return; }
+
+        const presets = getPresets(type);
+        const newData = {};
+        FIELD_MAP[type].forEach(id => {
+          const el = document.getElementById(id);
+          if(el) newData[id] = el.value;
+        });
+
+        presets[name] = newData;
+        localStorage.setItem(STORAGE_KEYS[type], JSON.stringify(presets));
+        refreshDropdown(type);
+        document.getElementById(`${type}-preset-select`).value = name;
+        showToast(`✅ 已保存预设：${name}`);
+      }
+
+      function deletePreset(type) {
+        const select = document.getElementById(`${type}-preset-select`);
+        const name = select.value;
+        if (!name) return;
+        if (confirm(`确定删除 "${name}" 吗？`)) {
+          const presets = getPresets(type);
+          delete presets[name];
+          localStorage.setItem(STORAGE_KEYS[type], JSON.stringify(presets));
+          loadPreset(type, '');
+          refreshDropdown(type);
+          showToast('🗑️ 预设已删除');
+        }
+      }
+
+      // --- Part 2: AI 日程生成器 ---
+      async function generateSchedule() {
+        const host = document.getElementById('api-host').value.replace(/\/$/, '');
+        const key = document.getElementById('api-key').value;
+        const model = document.getElementById('model-name').value;
+        
+        // 获取所有变量
+        const charName = document.getElementById('char-name').value || "未知角色";
+        const charPersona = document.getElementById('char-persona').value || "";
+        const worldInfo = document.getElementById('world-info').value || "";
+        const chatHistory = document.getElementById('chat-history').value || "";
+        const userName = document.getElementById('user-name').value || "用户";
+        const userPersona = document.getElementById('user-persona').value || "";
+
+        if (!host || !key) { showToast('❌ 请先配置API'); return; }
+
+        const promptTemplate = `
+# 角色扮演任务
+你是一个手机活动模拟器。你的任务是根据角色“\${chat.name}”的人设，为Ta生成一整天（从午夜0点到晚上23点）的、详细且真实的手机使用记录。
+
+# 角色人设
+\${chat.settings.aiPersona}
+
+# 世界观与背景
+\${chat.settings.worldinfo} \${user.name}\${user.settings.aiPersona}\${chat.settings.history}
+
+# 规则
+1. 时间连贯，覆盖全天。
+2. 活动多样（应用、设置闹钟、聊天等）。
+3. **关键：HTML小剧场**：对于看电影、吃饭、购物等活动，随机生成一个 \`html_snippet\` 字段，内容是一段HTML代码（如电影票、收据），增加视觉趣味。
+4. **格式**：严格返回JSON数组。
+
+# JSON结构
+[
+  {
+  "time": "HH:mm",
+  "description": "...",
+  "icon": "emoji",
+  "html_snippet": "(可选HTML代码)"
+  }
+]
+`;
+        let finalPrompt = promptTemplate
+          .replace(/\${chat.name}/g, charName)
+          .replace(/\${chat.settings.aiPersona}/g, charPersona)
+          .replace(/\${chat.settings.worldinfo}/g, worldInfo)
+          .replace(/\${chat.settings.history}/g, chatHistory)
+          .replace(/\${user.name}/g, userName)
+          .replace(/\${user.settings.aiPersona}/g, userPersona);
+
+        const loading = document.getElementById('schedule-loading');
+        const resultArea = document.getElementById('schedule-result-area');
+        const btn = document.getElementById('btn-gen-schedule');
+        
+        loading.style.display = 'block';
+        resultArea.innerHTML = '';
+        btn.disabled = true;
+
+        try {
+          const response = await fetch(`${host}/v1/chat/completions`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              model: model,
+              messages: [
+                { role: "system", content: "你是一个只输出JSON的后端程序。" },
+                { role: "user", content: finalPrompt }
+              ],
+              temperature: 0.7
+            })
+          });
+
+          if (!response.ok) throw new Error(`API Error: ${response.status}`);
+          const data = await response.json();
+          let content = data.choices[0].message.content;
+          content = content.replace(/```json/g, '').replace(/```/g, '').trim();
+          
+          let scheduleData = JSON.parse(content);
+          renderTimeline(scheduleData);
+          showToast('✨ 日程已生成！');
+
+        } catch (error) {
+          resultArea.innerHTML = `<div style="color:red; padding:10px;">失败: ${error.message}</div>`;
+        } finally {
+          loading.style.display = 'none';
+          btn.disabled = false;
+        }
+      }
+
+      function renderTimeline(data) {
+        const container = document.getElementById('schedule-result-area');
+        if (!Array.isArray(data)) { container.innerHTML = "格式错误"; return; }
+        
+        data.forEach(item => {
+          const card = document.createElement('div');
+          card.className = `timeline-card`;
+          const htmlSnippet = item.html_snippet || '';
+          
+          card.innerHTML = `
+            <div class="t-header">
+              <div class="t-time">${item.time}</div>
+              <div style="font-size:20px;">${item.icon || '📱'}</div>
+            </div>
+            <div class="t-desc">${item.description}</div>
+            ${htmlSnippet}
+          `;
+          container.appendChild(card);
         });
       }
     </script>
