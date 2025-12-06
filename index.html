@@ -569,56 +569,56 @@
       /* 右侧感应条 */
       .edge-sensor.right { top: 30px; bottom: 30px; right: 0; width: 15px; }
       /* ★★★★★ 这里是你要复制进去的代码 结束 ★★★★★ */
-/* ===========================
-         第1步：AI驾驶舱与日程样式
-         =========================== */
-      /* 通用设置 */
-      .preset-bar { display: flex; gap: 8px; margin-bottom: 15px; background: #fffdf5; padding: 8px; border-radius: 8px; border: 1px dashed #d7ccc8; align-items: center; }
-      .preset-select { flex: 1; padding: 6px; border: 1px solid #e0d0b8; border-radius: 4px; background: #fff; font-size: 12px; color: #5d4037; }
-      .icon-btn { width: 28px; height: 28px; border: 1px solid #d7ccc8; background: #fff; border-radius: 4px; cursor: pointer; display: flex; justify-content: center; align-items: center; color: #8d6e63; }
-      .settings-group { margin-bottom: 20px; background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 12px; border: 1px solid #efe6d5; }
-      .settings-title { font-size: 14px; color: #8d6e63; margin-bottom: 10px; font-weight: bold; border-left: 3px solid #e6ceac; padding-left: 8px; }
-      .input-row { margin-bottom: 10px; }
-      .input-label { font-size: 12px; color: #5d4037; margin-bottom: 4px; display: block; }
-      .custom-input, .custom-textarea { width: 100%; padding: 8px; border: 1px solid #e0d0b8; border-radius: 6px; background: #fffdf5; font-size: 13px; color: #3e2723; box-sizing: border-box; outline: none; }
-      .custom-textarea { resize: vertical; min-height: 60px; }
-      .btn-primary { width: 100%; background: #eecfa1; color: #5d4037; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-      .btn-primary:active { transform: scale(0.98); background: #e0b878; }
-      
-      /* 日程表与倒计时 */
-      .schedule-container { padding: 20px; height: 100%; overflow-y: auto; box-sizing: border-box; padding-bottom: 80px; }
-      .schedule-header { font-size: 20px; color: #5d4037; margin-bottom: 10px; border-bottom: 2px dashed #e6ceac; padding-bottom: 10px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-      
-      /* 实时面板 */
-      #realtime-status-panel { background: #5d4037; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(93,64,55,0.3); display: none; }
-      .rt-label { font-size: 10px; opacity: 0.8; letter-spacing: 1px; }
-      .rt-content { font-size: 16px; font-weight: bold; margin: 5px 0; }
-      .rt-timer { font-size: 12px; color: #ffe0b2; }
-
-      /* 时间轴卡片 */
-      .timeline-card { background: #fff; border: 1px solid #efe6d5; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-      .timeline-card.active-now { border: 2px solid #eecfa1; background: #fff8e1; transform: scale(1.02); z-index: 2; box-shadow: 0 5px 15px rgba(238,207,161,0.4); }
-      .timeline-card.active-now::after { content: "进行中..."; position: absolute; top: -10px; right: 10px; background: #eecfa1; color: #5d4037; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
-      
-      .t-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
-      .t-time { font-family: monospace; font-weight: 900; font-size: 16px; color: #5d4037; background: #eecfa1; padding: 2px 8px; border-radius: 4px; }
-      .t-desc { font-size: 14px; color: #4e342e; line-height: 1.5; white-space: pre-wrap; }
-      
-      /* 编辑按钮 */
-      .card-actions { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #eee; display: flex; justify-content: flex-end; gap: 10px; }
-      .card-btn { font-size: 11px; padding: 4px 8px; border-radius: 4px; cursor: pointer; border: 1px solid transparent; background: transparent; }
-      .card-btn.edit { color: #8d6e63; border-color: #d7ccc8; }
-      .card-btn.del { color: #e57373; border-color: #ffcdd2; }
-
-      /* HTML小剧场 */
-      .movie-ticket { margin-top: 10px; background: #37474f; color: #eceff1; border-radius: 8px; overflow: hidden; }
-      .ticket-header { background: #263238; padding: 8px; font-size: 12px; text-align: center; border-bottom: 1px dashed #546e7a; }
-      .ticket-body { padding: 15px; text-align: center; }
-      .receipt { margin-top: 10px; background: #fff; padding: 15px; border: 1px solid #eee; font-family: monospace; font-size: 12px; color: #333; position: relative; border-bottom: 2px dashed #ccc; }
-      .receipt-header { text-align: center; font-weight: bold; margin-bottom: 10px; border-bottom: 1px dashed #ccc; }
-      .receipt ul { list-style: none; padding: 0; }
-      .receipt li { display: flex; justify-content: space-between; margin-bottom: 4px; }
-      .receipt-total { border-top: 1px dashed #ccc; margin-top: 8px; padding-top: 8px; display: flex; justify-content: space-between; font-weight: bold;}
+/* --- AI终端 3.0 旗舰版样式 --- */
+.preset-bar { display: flex; gap: 8px; margin-bottom: 10px; background: #fffdf5; padding: 8px; border-radius: 8px; border: 1px dashed #d7ccc8; align-items: center; }
+.preset-select { flex: 1; padding: 6px; border: 1px solid #e0d0b8; border-radius: 4px; background: #fff; font-size: 12px; color: #5d4037; }
+.icon-btn { min-width: 28px; height: 28px; border: 1px solid #d7ccc8; background: #fff; border-radius: 4px; cursor: pointer; display: flex; justify-content: center; align-items: center; color: #8d6e63; font-size: 14px; padding: 0 5px;}
+.settings-group { margin-bottom: 20px; background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 12px; border: 1px solid #efe6d5; position: relative; }
+.settings-title { font-size: 14px; color: #8d6e63; margin-bottom: 10px; font-weight: bold; border-left: 3px solid #e6ceac; padding-left: 8px; display: flex; justify-content: space-between; align-items: center;}
+.input-row { margin-bottom: 10px; }
+.input-label { font-size: 12px; color: #5d4037; margin-bottom: 4px; display: block; }
+.custom-input, .custom-textarea { width: 100%; padding: 8px; border: 1px solid #e0d0b8; border-radius: 6px; background: #fffdf5; font-size: 13px; color: #3e2723; box-sizing: border-box; outline: none; transition: 0.3s;}
+.custom-input:focus, .custom-textarea:focus { background: #fff; border-color: #8d6e63; }
+.custom-textarea { resize: vertical; min-height: 60px; font-family: monospace; }
+.btn-row { display: flex; gap: 10px; margin-top: 10px; }
+.btn-primary { flex: 1; background: #eecfa1; color: #5d4037; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.btn-secondary { flex: 1; background: #fff; border: 1px solid #d7ccc8; color: #8d6e63; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.prompt-toolbar { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; padding: 5px; background: #efe6d5; border-radius: 6px; }
+.var-btn { background: #fff; border: 1px solid #d7ccc8; border-radius: 4px; padding: 2px 6px; font-size: 10px; color: #5d4037; cursor: pointer; font-family: monospace; }
+.tabs-header { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 10px; border-bottom: 1px solid #efe6d5; }
+.tab-item { padding: 6px 12px; background: #fff; border: 1px solid #e0d0b8; border-radius: 6px 6px 0 0; font-size: 12px; color: #8d6e63; cursor: pointer; white-space: nowrap; }
+.tab-item.active { background: #eecfa1; color: #5d4037; font-weight: bold; border-bottom-color: #eecfa1; }
+.tab-add-btn { padding: 6px 10px; background: #efe6d5; border: 1px dashed #bbb; border-radius: 6px; cursor: pointer; color: #5d4037; }
+.schedule-container { padding: 20px; height: 100%; overflow-y: auto; box-sizing: border-box; padding-bottom: 100px; }
+.schedule-header { font-size: 20px; color: #5d4037; margin-bottom: 10px; padding-bottom: 10px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+.export-control-panel { background: #fff3e0; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffcc80; }
+.export-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; font-size: 12px; color: #e65100; }
+.toggle-switch { position: relative; display: inline-block; width: 34px; height: 20px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+.slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: #ff9800; }
+input:checked + .slider:before { transform: translateX(14px); }
+#realtime-status-panel { background: #3e2723; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(62,39,35,0.4); border: 1px solid #5d4037; display: none; }
+.rt-content { font-size: 15px; font-weight: bold; color: #fff8e1; margin: 5px 0; line-height: 1.4; }
+.rt-divider { border: 0; border-top: 1px dashed #8d6e63; margin: 10px 0; }
+.timeline-card { background: #fff; border: 1px solid #efe6d5; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.03); transition: 0.3s; }
+.timeline-card.active-now { border: 2px solid #ffb74d; background: #fff3e0; transform: scale(1.02); z-index: 2; box-shadow: 0 8px 20px rgba(255, 183, 77, 0.3); }
+.t-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.t-time { font-family: monospace; font-weight: 900; font-size: 16px; color: #5d4037; background: #eecfa1; padding: 2px 8px; border-radius: 4px; }
+.t-desc { font-size: 14px; color: #4e342e; line-height: 1.5; white-space: pre-wrap; }
+.card-actions { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #eee; display: flex; justify-content: flex-end; gap: 10px; }
+.card-btn { font-size: 11px; padding: 4px 8px; border-radius: 4px; cursor: pointer; border: 1px solid transparent; background: transparent; }
+.card-btn.edit { color: #8d6e63; border-color: #d7ccc8; }
+.card-btn.del { color: #e57373; border-color: #ffcdd2; }
+.movie-ticket { margin-top: 10px; background: #37474f; color: #eceff1; border-radius: 8px; overflow: hidden; }
+.ticket-header { background: #263238; padding: 8px; font-size: 12px; text-align: center; border-bottom: 1px dashed #546e7a; }
+.ticket-body { padding: 15px; text-align: center; }
+.receipt { margin-top: 10px; background: #fff; padding: 15px; border: 1px solid #eee; font-family: monospace; font-size: 12px; color: #333; position: relative; border-bottom: 2px dashed #ccc; }
+.receipt-header { text-align: center; font-weight: bold; margin-bottom: 10px; border-bottom: 1px dashed #ccc; }
+.receipt ul { list-style: none; padding: 0; }
+.receipt li { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.receipt-total { border-top: 1px dashed #ccc; margin-top: 8px; padding-top: 8px; display: flex; justify-content: space-between; font-weight: bold;}
 
     </style>
   </head>
@@ -686,17 +686,70 @@
       </div>
 <div id="app-settings" class="app-window app-frame">
         <div class="schedule-container">
-          <div class="schedule-header"><span>⚙️ 预设配置中心</span></div>
+          <div class="schedule-header">
+            <span>⚙️ 终端配置</span>
+            <div>
+              <button class="icon-btn" onclick="exportData()" title="导出备份">📤</button>
+              <button class="icon-btn" onclick="document.getElementById('import-file').click()" title="导入备份" style="margin-left:5px;">📥</button>
+              <input type="file" id="import-file" style="display:none" onchange="importData(this)">
+            </div>
+          </div>
           <div class="settings-group">
             <div class="settings-title">📡 API 连接</div>
             <div class="preset-bar">
               <select id="api-preset-select" class="preset-select" onchange="loadPreset('api', this.value)"><option value="">-- 新建/选择 --</option></select>
               <button class="icon-btn" onclick="savePreset('api')">💾</button> <button class="icon-btn delete" onclick="deletePreset('api')">🗑️</button>
             </div>
-            <div class="input-row"><label class="input-label">配置名称(新建必填)</label><input type="text" id="api-preset-name" class="custom-input" placeholder="例如: Deepseek"></div>
+            <div class="input-row"><label class="input-label">配置名称</label><input type="text" id="api-preset-name" class="custom-input" placeholder="例如: Deepseek"></div>
             <div class="input-row"><label class="input-label">API Host</label><input type="text" id="api-host" class="custom-input" placeholder="https://api.openai.com"></div>
             <div class="input-row"><label class="input-label">API Key</label><input type="password" id="api-key" class="custom-input" placeholder="sk-..."></div>
-            <div class="input-row"><label class="input-label">Model Name</label><input type="text" id="model-name" class="custom-input" placeholder="gpt-3.5-turbo"></div>
+            <div class="input-row">
+              <label class="input-label">Model Name</label>
+              <div style="display:flex; gap:5px;">
+                <input type="text" id="model-name" class="custom-input" placeholder="gpt-3.5-turbo">
+                <button class="icon-btn" onclick="fetchModels()" title="拉取模型列表">🔍</button>
+              </div>
+              <select id="model-list-dropdown" class="custom-input" style="display:none; margin-top:5px;" onchange="document.getElementById('model-name').value=this.value"></select>
+            </div>
+          </div>
+          <div class="settings-group">
+            <div class="settings-title" style="color:#d84315;">📋 复制与状态文案</div>
+            <div class="input-row">
+              <label class="input-label">复制给AI的提示词 (必须包含 \${timercontent})</label>
+              <textarea id="global-copy-template" class="custom-textarea" style="height:80px;">（系统后台数据）当前角色状态：
+${timercontent}
+请根据以上状态调整你的回复。</textarea>
+            </div>
+            <div class="input-row">
+              <label class="input-label">状态文案模板 (过去)</label>
+              <input type="text" id="status-tpl-past" class="custom-input" value="${min}分钟前，${char}原计划是${act}">
+            </div>
+            <div class="input-row">
+              <label class="input-label">状态文案模板 (未来)</label>
+              <input type="text" id="status-tpl-future" class="custom-input" value="${min}分钟后，${char}原计划是${act}">
+            </div>
+            <div style="text-align:right;">
+               <button class="icon-btn" onclick="saveGlobalSettings()">💾 保存文案设置</button>
+            </div>
+          </div>
+          <div class="settings-group">
+            <div class="settings-title">📝 提示词工坊</div>
+            <div class="preset-bar">
+              <select id="prompt-preset-select" class="preset-select" onchange="loadPreset('prompt', this.value)"><option value="">-- 新建/选择提示词 --</option></select>
+              <button class="icon-btn" onclick="savePreset('prompt')">💾</button> <button class="icon-btn delete" onclick="deletePreset('prompt')">🗑️</button>
+            </div>
+            <div class="input-row"><label class="input-label">预设名称</label><input type="text" id="prompt-preset-name" class="custom-input"></div>
+            <div class="input-row">
+              <label class="input-label">Prompt 内容</label>
+              <div class="prompt-toolbar">
+                <button class="var-btn" onclick="insertVar('${chat.name}')">角色名</button>
+                <button class="var-btn" onclick="insertVar('${user.name}')">用户名</button>
+                <button class="var-btn" onclick="insertVar('${chat.settings.aiPersona}')">角色人设</button>
+                <button class="var-btn" onclick="insertVar('${chat.settings.worldinfo}')">世界观</button>
+                <button class="var-btn" onclick="insertVar('${chat.settings.history}')">历史</button>
+              </div>
+              <textarea id="prompt-content" class="custom-textarea" style="height:150px;"></textarea>
+            </div>
           </div>
           <div class="settings-group">
             <div class="settings-title">🎭 角色设定</div>
@@ -723,26 +776,51 @@
           <div style="height:100px;"></div>
         </div>
       </div>
+
       <div id="app-schedule" class="app-window app-frame">
         <div class="schedule-container">
           <div class="schedule-header">
-            <span>📅 角色日程</span>
-            <button class="card-btn del" onclick="clearSchedule()">清空</button>
+            <span>⏱️ 多重计时器</span>
+            <button class="card-btn del" onclick="clearCurrentPage()">清空本页</button>
+          </div>
+          <div class="tabs-header" id="timer-tabs"></div>
+          <div class="export-control-panel">
+            <div class="export-row">
+              <span style="font-weight:bold; color:#bf360c;">复制开关 (是否加入全局复制)</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="page-export-toggle" onchange="updatePageExportSettings()">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="export-row">
+              <span>复制范围</span>
+              <select id="page-export-mode" class="custom-input" style="width:100px; padding:2px;" onchange="updatePageExportSettings()">
+                <option value="both">全部 (过去+未来)</option>
+                <option value="past">只发过去</option>
+                <option value="future">只发未来</option>
+              </select>
+            </div>
           </div>
           <div id="realtime-status-panel">
-            <div class="rt-label">CURRENT STATUS</div>
-            <div class="rt-content" id="rt-activity">暂无活动</div>
-            <div class="rt-timer"><span>⏳</span> <span id="rt-countdown">--</span></div>
+            <div class="rt-content" id="rt-past">--</div>
+            <div class="rt-divider"></div>
+            <div class="rt-content" id="rt-future">--</div>
           </div>
-          <div style="text-align:center; margin-bottom:20px;">
-             <button class="btn-primary" id="btn-gen-schedule" onclick="generateSchedule()">✨ 重新生成今日日程</button>
-             <div id="schedule-loading" style="display:none; padding:10px; font-size:12px; color:#8d6e63;">🧠 正在构思中...</div>
+          <div style="background:#fff3e0; padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px; display:flex; align-items:center; gap:5px;">
+            <span>📚 使用规则：</span>
+            <select id="page-prompt-select" class="custom-input" style="padding:4px;" onchange="bindPromptToPage(this.value)"></select>
+          </div>
+          <div style="margin-bottom:20px;">
+             <div class="btn-row">
+               <button class="btn-primary" id="btn-gen-schedule" onclick="generateSchedule(false)">🔄 重新生成 (覆盖)</button>
+               <button class="btn-secondary" id="btn-append-schedule" onclick="generateSchedule(true)">➕ 再次生成 (追加)</button>
+             </div>
+             <div id="schedule-loading" style="display:none; padding:10px; text-align:center; font-size:12px; color:#8d6e63;">🧠 正在构思中...</div>
           </div>
           <div id="schedule-result-area"></div>
           <div style="height:100px;"></div>
         </div>
       </div>
-      
       <!-- 悬浮按钮 -->
       <div id="fab-container">
         <div class="fab-actions">
@@ -764,8 +842,7 @@
               <img src="https://i.postimg.cc/Kj8JnRcp/267611-CC01-F8-A3-B4910-A2-C2-FFDE479-DC.jpg" alt="兔K" />
             </div>
           </div>
-
-          <div class="desktop-app-icon" onclick="openApp('app-settings')">
+<div class="desktop-app-icon" onclick="openApp('app-settings')">
                       <div class="icon-bg-desktop" style="background: #455a64;">
                         <svg viewBox="0 0 24 24" style="width:60%; height:60%; fill:#eceff1;"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
                       </div>
@@ -777,8 +854,13 @@
                       </div>
                       <span class="label">日程</span>
                     </div>
-          
           <!-- 隐藏按钮：换成 SVG (眼睛关闭图标) -->
+          <div class="fab-action-btn" onclick="copyGlobalContext()">
+            <span class="fab-label">复制AI上下文</span>
+            <div class="fab-mini-btn" style="background:#ffcc80;">
+              <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            </div>
+          </div>
           <div class="fab-action-btn" onclick="hideFab()">
             <span class="fab-label">隐藏</span>
             <div class="fab-mini-btn">
@@ -1073,32 +1155,73 @@
           navigator.serviceWorker.register('sw.js');
         });
       }
-      /* ===========================
-         第4步：全部功能逻辑 (配置/日程/倒计时)
-         =========================== */
-      let currentScheduleData = [];
-      const STORAGE_KEYS = { api: 'tuki_presets_api', char: 'tuki_presets_char', user: 'tuki_presets_user', schedule: 'tuki_current_schedule' };
+      /* --- 第4步：全能逻辑核心 V3.0 --- */
+      let timerPages = [];
+      let activePageIndex = 0;
+      let globalSettings = {
+        copyTemplate: "（系统后台数据）当前角色状态：\n${timercontent}\n请根据以上状态调整你的回复。",
+        tplPast: "${min}分钟前，${char}原计划是${act}",
+        tplFuture: "${min}分钟后，${char}原计划是${act}"
+      };
+
+      const STORAGE_KEYS = { api: 'tuki_presets_api', char: 'tuki_presets_char', user: 'tuki_presets_user', prompt: 'tuki_presets_prompt', pages: 'tuki_timer_pages_v3', global: 'tuki_global_settings' };
       const FIELD_MAP = {
         api: ['api-preset-name', 'api-host', 'api-key', 'model-name'],
         char: ['char-preset-name', 'char-name', 'char-persona', 'world-info', 'chat-history'],
-        user: ['user-preset-name', 'user-name', 'user-persona']
+        user: ['user-preset-name', 'user-name', 'user-persona'],
+        prompt: ['prompt-preset-name', 'prompt-content']
       };
 
-      // 初始化
+      const DEFAULT_PROMPT = `
+# 角色扮演任务
+你是一个时间线计算器。请根据"\${chat.name}"的人设，推演接下来24小时的行为轨迹。
+# 核心参数
+角色：\${chat.name} (\${chat.settings.aiPersona})
+世界观：\${chat.settings.worldinfo}
+用户：\${user.name} (\${user.settings.aiPersona})
+历史：\${chat.settings.history}
+# 输出规则
+1. 返回严格的JSON数组。2. 时间格式 "HH:mm"。3. 包含 'html_snippet' (可选)。
+# JSON示例
+[{"time":"08:00","description":"活动内容","icon":"⏰"}]
+`;
+
       window.addEventListener('load', () => {
-        refreshDropdown('api'); refreshDropdown('char'); refreshDropdown('user');
-        const saved = localStorage.getItem(STORAGE_KEYS.schedule);
-        if (saved) { try { currentScheduleData = JSON.parse(saved); renderTimeline(); } catch(e){} }
-        setInterval(updateRealTimeStatus, 1000); // 启动每秒倒计时
+        ['api', 'char', 'user', 'prompt'].forEach(refreshDropdown);
+        const savedGlobal = localStorage.getItem(STORAGE_KEYS.global);
+        if(savedGlobal) globalSettings = JSON.parse(savedGlobal);
+        document.getElementById('global-copy-template').value = globalSettings.copyTemplate;
+        document.getElementById('status-tpl-past').value = globalSettings.tplPast;
+        document.getElementById('status-tpl-future').value = globalSettings.tplFuture;
+
+        const savedPages = localStorage.getItem(STORAGE_KEYS.pages);
+        if (savedPages) timerPages = JSON.parse(savedPages);
+        else timerPages = [{ id: Date.now(), name: "主计时器", promptPreset: "", data: [], exportEnabled: true, exportMode: 'both' }];
+        
+        const prompts = getPresets('prompt');
+        if (Object.keys(prompts).length === 0) {
+          prompts["默认日程"] = { "prompt-preset-name": "默认日程", "prompt-content": DEFAULT_PROMPT };
+          localStorage.setItem(STORAGE_KEYS.prompt, JSON.stringify(prompts));
+          refreshDropdown('prompt');
+        }
+        renderTabs();
+        setInterval(updateRealTimeStatus, 1000); 
       });
 
-      // --- 预设管理 ---
       function getPresets(type) { return JSON.parse(localStorage.getItem(STORAGE_KEYS[type])) || {}; }
       function refreshDropdown(type) {
         const presets = getPresets(type); const select = document.getElementById(`${type}-preset-select`);
         const cur = select.value; select.innerHTML = '<option value="">-- 新建/选择 --</option>';
         Object.keys(presets).forEach(n => { const opt = document.createElement('option'); opt.value=n; opt.innerText=n; select.appendChild(opt); });
         if(presets[cur]) select.value = cur;
+        if(type === 'prompt') {
+           const pageSelect = document.getElementById('page-prompt-select');
+           if(pageSelect && timerPages[activePageIndex]) {
+             pageSelect.innerHTML = '<option value="">-- 选择此页规则 --</option>';
+             Object.keys(presets).forEach(n => { const opt = document.createElement('option'); opt.value=n; opt.innerText=n; pageSelect.appendChild(opt); });
+             pageSelect.value = timerPages[activePageIndex].promptPreset || "";
+           }
+        }
       }
       function loadPreset(type, name) {
         const fields = FIELD_MAP[type];
@@ -1108,126 +1231,236 @@
       }
       function savePreset(type) {
         const name = document.getElementById(`${type}-preset-name`).value.trim();
-        if(!name) { showToast('请输入配置名称'); return; }
+        if(!name) { showToast('请输入名称'); return; }
         const presets = getPresets(type); const data = {};
         FIELD_MAP[type].forEach(id => data[id] = document.getElementById(id).value);
         presets[name] = data; localStorage.setItem(STORAGE_KEYS[type], JSON.stringify(presets));
-        refreshDropdown(type); document.getElementById(`${type}-preset-select`).value = name; showToast('已保存配置');
+        refreshDropdown(type); document.getElementById(`${type}-preset-select`).value = name; showToast(`已保存: ${name}`);
       }
       function deletePreset(type) {
         const name = document.getElementById(`${type}-preset-select`).value;
-        if(name && confirm('删除此预设？')) {
+        if(name && confirm(`删除 "${name}"？`)) {
           const presets = getPresets(type); delete presets[name];
           localStorage.setItem(STORAGE_KEYS[type], JSON.stringify(presets));
           loadPreset(type, ''); refreshDropdown(type); showToast('已删除');
         }
       }
+      function saveGlobalSettings() {
+        globalSettings.copyTemplate = document.getElementById('global-copy-template').value;
+        globalSettings.tplPast = document.getElementById('status-tpl-past').value;
+        globalSettings.tplFuture = document.getElementById('status-tpl-future').value;
+        localStorage.setItem(STORAGE_KEYS.global, JSON.stringify(globalSettings));
+        showToast("文案设置已保存");
+        updateRealTimeStatus(); 
+      }
 
-      // --- 生成日程 ---
-      async function generateSchedule() {
+      async function fetchModels() {
+        const host = document.getElementById('api-host').value.replace(/\/$/, '');
+        const key = document.getElementById('api-key').value;
+        if(!host || !key) { showToast('请填写Host和Key'); return; }
+        try {
+          const res = await fetch(`${host}/v1/models`, { headers: { 'Authorization': `Bearer ${key}` } });
+          const data = await res.json();
+          const list = document.getElementById('model-list-dropdown');
+          list.innerHTML = '<option value="">-- 选择模型 --</option>';
+          data.data.forEach(m => { const opt = document.createElement('option'); opt.value = m.id; opt.innerText = m.id; list.appendChild(opt); });
+          list.style.display = 'block'; showToast(`获取到 ${data.data.length} 个模型`);
+        } catch(e) { alert('失败: '+e.message); }
+      }
+      function insertVar(text) {
+        const el = document.getElementById('prompt-content');
+        const start = el.selectionStart; const end = el.selectionEnd;
+        el.value = el.value.substring(0, start) + text + el.value.substring(end);
+        el.focus();
+      }
+      function exportData() {
+        const data = {};
+        Object.keys(STORAGE_KEYS).forEach(k => data[k] = localStorage.getItem(STORAGE_KEYS[k]));
+        const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `backup.json`; a.click();
+      }
+      function importData(input) {
+        const file = input.files[0]; if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const data = JSON.parse(e.target.result);
+            Object.keys(data).forEach(k => localStorage.setItem(k, data[k]));
+            alert("导入成功，页面将刷新"); location.reload();
+          } catch(err) { alert("文件错误"); }
+        };
+        reader.readAsText(file);
+      }
+
+      function renderTabs() {
+        const container = document.getElementById('timer-tabs'); container.innerHTML = '';
+        timerPages.forEach((page, index) => {
+          const tab = document.createElement('div'); tab.className = `tab-item ${index === activePageIndex ? 'active' : ''}`;
+          tab.innerText = page.name; tab.onclick = () => switchTab(index);
+          container.appendChild(tab);
+        });
+        const addBtn = document.createElement('div'); addBtn.className = 'tab-add-btn'; addBtn.innerText = '+'; addBtn.onclick = addNewPage; container.appendChild(addBtn);
+        
+        const curPage = timerPages[activePageIndex];
+        if(curPage) {
+           refreshDropdown('prompt');
+           document.getElementById('page-export-toggle').checked = curPage.exportEnabled !== false;
+           document.getElementById('page-export-mode').value = curPage.exportMode || 'both';
+           renderTimeline();
+        }
+      }
+      function addNewPage() {
+        const name = prompt("新页签名称:", "新计时");
+        if(name) { timerPages.push({ id: Date.now(), name: name, promptPreset: "", data: [], exportEnabled: true, exportMode: 'both' }); activePageIndex = timerPages.length - 1; savePages(); renderTabs(); }
+      }
+      function switchTab(i) { activePageIndex = i; renderTabs(); }
+      function bindPromptToPage(val) { if(timerPages[activePageIndex]) { timerPages[activePageIndex].promptPreset = val; savePages(); } }
+      function savePages() { localStorage.setItem(STORAGE_KEYS.pages, JSON.stringify(timerPages)); }
+      function clearCurrentPage() { if(confirm("清空本页?")) { timerPages[activePageIndex].data = []; savePages(); renderTimeline(); } }
+      function updatePageExportSettings() {
+        if(timerPages[activePageIndex]) {
+          timerPages[activePageIndex].exportEnabled = document.getElementById('page-export-toggle').checked;
+          timerPages[activePageIndex].exportMode = document.getElementById('page-export-mode').value;
+          savePages();
+        }
+      }
+
+      async function generateSchedule(isAppend) {
         const host = document.getElementById('api-host').value.replace(/\/$/, '');
         const key = document.getElementById('api-key').value;
         const model = document.getElementById('model-name').value;
-        if(!host || !key) { showToast('请先去【配置】填写API'); return; }
+        if(!host || !key) { showToast('请配置API'); return; }
 
-        // 获取变量
+        const currentPage = timerPages[activePageIndex];
+        if(!currentPage.promptPreset) { showToast('请先选择提示词预设'); return; }
+        const rawPrompt = getPresets('prompt')[currentPage.promptPreset]?.['prompt-content'];
+        if(!rawPrompt) { showToast('提示词内容为空'); return; }
+
         const v = (id) => document.getElementById(id).value || '';
-        const prompt = `
-# 角色扮演任务
-你是一个手机活动模拟器。任务是根据角色“${v('char-name')}”的人设，生成一整天(00:00-23:00)的真实手机/生活记录。
-# 人设
-${v('char-persona')}
-# 背景
-${v('world-info')} ${v('user-name')}${v('user-persona')}${v('chat-history')}
-# 规则
-1. 时间格式必须为 "HH:mm" (如 09:30)。
-2. 内容丰富：包含应用使用、生活琐事、心理活动。
-3. **HTML小剧场**：随机为吃饭、购物、电影等生成 \`html_snippet\` 代码(票根/小票)。
-4. 必须严格返回JSON数组。
-# JSON示例
-[{"time":"08:00","description":"...","icon":"☀️","html_snippet":"..."}]
-`;
-        const loading = document.getElementById('schedule-loading'); const btn = document.getElementById('btn-gen-schedule');
-        loading.style.display = 'block'; btn.disabled = true;
+        let finalPrompt = rawPrompt
+          .replace(/\${chat.name}/g, v('char-name'))
+          .replace(/\${chat.settings.aiPersona}/g, v('char-persona'))
+          .replace(/\${chat.settings.worldinfo}/g, v('world-info'))
+          .replace(/\${chat.settings.history}/g, v('chat-history'))
+          .replace(/\${user.name}/g, v('user-name'))
+          .replace(/\${user.settings.aiPersona}/g, v('user-persona'));
+
+        const loading = document.getElementById('schedule-loading'); 
+        const btn1 = document.getElementById('btn-gen-schedule');
+        const btn2 = document.getElementById('btn-append-schedule');
+        loading.style.display = 'block'; btn1.disabled = true; btn2.disabled = true;
 
         try {
           const res = await fetch(`${host}/v1/chat/completions`, {
             method: 'POST', headers: {'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json'},
-            body: JSON.stringify({ model: model, messages: [{role:"system",content:"Output JSON only."}, {role:"user",content:prompt}], temperature: 0.7 })
+            body: JSON.stringify({ model: model, messages: [{role:"system",content:"Output JSON Array only."}, {role:"user",content:finalPrompt}], temperature: 0.7 })
           });
           const data = await res.json();
           let txt = data.choices[0].message.content.replace(/```json|```/g, '').trim();
-          currentScheduleData = JSON.parse(txt);
-          localStorage.setItem(STORAGE_KEYS.schedule, JSON.stringify(currentScheduleData));
-          renderTimeline(); showToast('生成成功！');
-        } catch(e) { alert('生成失败:' + e.message); }
-        finally { loading.style.display = 'none'; btn.disabled = false; }
+          const newData = JSON.parse(txt);
+          
+          if (isAppend) {
+             currentPage.data = [...currentPage.data, ...newData];
+             currentPage.data.sort((a,b)=>a.time.localeCompare(b.time));
+          } else {
+             currentPage.data = newData;
+          }
+          savePages(); renderTimeline(); showToast('生成完毕');
+        } catch(e) { alert('错误:'+e.message); }
+        finally { loading.style.display = 'none'; btn1.disabled = false; btn2.disabled = false; }
       }
 
-      // --- 渲染与编辑 ---
       function renderTimeline() {
-        const box = document.getElementById('schedule-result-area'); const panel = document.getElementById('realtime-status-panel');
-        if(!currentScheduleData.length) { box.innerHTML='<div style="text-align:center;color:#aaa">暂无数据</div>'; panel.style.display='none'; return; }
+        const box = document.getElementById('schedule-result-area'); 
+        const panel = document.getElementById('realtime-status-panel');
+        const data = timerPages[activePageIndex]?.data || [];
+        if(!data.length) { box.innerHTML='<div style="text-align:center;color:#aaa;padding:20px;">暂无数据</div>'; panel.style.display='none'; return; }
         panel.style.display = 'block'; box.innerHTML = '';
         
-        currentScheduleData.sort((a,b)=>a.time.localeCompare(b.time));
-        currentScheduleData.forEach((item, i) => {
+        data.forEach((item, i) => {
           const card = document.createElement('div'); card.className = 'timeline-card'; card.id = `card-${i}`;
           card.innerHTML = `
             <div class="t-header"><div class="t-time">${item.time}</div><div style="font-size:20px">${item.icon||'📱'}</div></div>
             <div class="t-desc">${item.description}</div>${item.html_snippet||''}
-            <div class="card-actions">
-              <button class="card-btn edit" onclick="editItem(${i})">✏️</button><button class="card-btn del" onclick="delItem(${i})">🗑️</button>
-            </div>`;
+            <div class="card-actions"><button class="card-btn edit" onclick="editItem(${i})">✏️</button><button class="card-btn del" onclick="delItem(${i})">🗑️</button></div>`;
           box.appendChild(card);
         });
         updateRealTimeStatus();
       }
-
       function editItem(i) {
-        const val = prompt("修改内容:", currentScheduleData[i].description);
-        if(val) { currentScheduleData[i].description = val; localStorage.setItem(STORAGE_KEYS.schedule, JSON.stringify(currentScheduleData)); renderTimeline(); }
+        const data = timerPages[activePageIndex].data;
+        const val = prompt("修改:", data[i].description);
+        if(val) { data[i].description = val; savePages(); renderTimeline(); }
       }
       function delItem(i) {
-        if(confirm("删除这条?")) { currentScheduleData.splice(i,1); localStorage.setItem(STORAGE_KEYS.schedule, JSON.stringify(currentScheduleData)); renderTimeline(); }
-      }
-      function clearSchedule() {
-        if(confirm("清空全部?")) { currentScheduleData=[]; localStorage.setItem(STORAGE_KEYS.schedule, ""); renderTimeline(); }
+        if(confirm("删除此条?")) { timerPages[activePageIndex].data.splice(i,1); savePages(); renderTimeline(); }
       }
 
-      // --- 实时倒计时 ---
-      function updateRealTimeStatus() {
-        if(!currentScheduleData.length) return;
-        const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
+      function getStatusStringForPage(page, curM, isExport) {
+        if(!page.data || page.data.length === 0) return "";
         let activeIdx = -1;
-        
-        document.querySelectorAll('.timeline-card').forEach(c => c.classList.remove('active-now'));
-        
-        for(let i=0; i<currentScheduleData.length; i++) {
-          const [h,m] = currentScheduleData[i].time.split(':').map(Number);
+        for(let i=0; i<page.data.length; i++) {
+          const [h,m] = page.data[i].time.split(':').map(Number);
           if(curM >= h*60+m) activeIdx = i; else break;
         }
-
-        const actEl = document.getElementById('rt-activity'); const timerEl = document.getElementById('rt-countdown');
-        
-        if(activeIdx !== -1) {
-          const item = currentScheduleData[activeIdx];
-          document.getElementById(`card-${activeIdx}`)?.classList.add('active-now');
-          actEl.innerText = `${item.icon||''} ${item.description}`;
-          
-          if(activeIdx < currentScheduleData.length - 1) {
-            const next = currentScheduleData[activeIdx+1];
-            const [nh, nm] = next.time.split(':').map(Number);
-            const diff = (nh*60+nm) - curM;
-            timerEl.innerText = `距离下个活动还剩 ${Math.floor(diff/60)}小时 ${diff%60}分`;
-          } else { timerEl.innerText = "今日日程已结束"; }
-        } else {
-          const first = currentScheduleData[0];
-          const [fh, fm] = first.time.split(':').map(Number);
-          const diff = (fh*60+fm) - curM;
-          actEl.innerText = "💤 休息中 / 未开始";
-          timerEl.innerText = `距离开始(${first.time})还剩 ${Math.floor(diff/60)}小时 ${diff%60}分`;
+        const charName = document.getElementById('char-name').value || "TA";
+        let result = [];
+        if (activeIdx !== -1 && (!isExport || page.exportMode !== 'future')) {
+           const item = page.data[activeIdx];
+           const [h,m] = item.time.split(':').map(Number);
+           const diff = curM - (h*60+m);
+           let txt = globalSettings.tplPast.replace(/\${min}/g, diff).replace(/\${char}/g, charName).replace(/\${act}/g, item.description);
+           result.push(txt);
         }
+        if ((!isExport || page.exportMode !== 'past')) {
+           let nextIdx = activeIdx + 1;
+           if (activeIdx === -1) nextIdx = 0; 
+           if (nextIdx < page.data.length) {
+             const next = page.data[nextIdx];
+             const [h,m] = next.time.split(':').map(Number);
+             const diff = (h*60+m) - curM;
+             let txt = globalSettings.tplFuture.replace(/\${min}/g, diff).replace(/\${char}/g, charName).replace(/\${act}/g, next.description);
+             result.push(txt);
+           }
+        }
+        return result;
+      }
+
+      function updateRealTimeStatus() {
+        const data = timerPages[activePageIndex]?.data || [];
+        if(!data.length) return;
+        const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
+        document.querySelectorAll('.timeline-card').forEach(c => c.classList.remove('active-now'));
+        let activeIdx = -1;
+        for(let i=0; i<data.length; i++) {
+          const [h,m] = data[i].time.split(':').map(Number);
+          if(curM >= h*60+m) activeIdx = i; else break;
+        }
+        if(activeIdx !== -1) document.getElementById(`card-${activeIdx}`)?.classList.add('active-now');
+
+        const curPage = timerPages[activePageIndex];
+        const dummyPagePast = { ...curPage, exportMode: 'past' };
+        const dummyPageFuture = { ...curPage, exportMode: 'future' };
+        const txtPast = getStatusStringForPage(dummyPagePast, curM, true).join("");
+        const txtFuture = getStatusStringForPage(dummyPageFuture, curM, true).join("");
+
+        document.getElementById('rt-past').innerText = txtPast || "（当前无进行中活动）";
+        document.getElementById('rt-future').innerText = txtFuture || "（今日计划结束）";
+      }
+
+      function copyGlobalContext() {
+        const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
+        let allStatus = [];
+        timerPages.forEach(page => {
+          if (page.exportEnabled !== false) {
+             const lines = getStatusStringForPage(page, curM, true);
+             if (lines.length > 0) allStatus.push(lines.join("，"));
+          }
+        });
+        const finalContent = allStatus.join("\n"); 
+        const template = globalSettings.copyTemplate;
+        const result = template.replace("${timercontent}", finalContent);
+        navigator.clipboard.writeText(result).then(() => { showToast('✅ 上下文已复制！'); }).catch(() => showToast('复制失败'));
       }
     </script>
   </body>
