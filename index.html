@@ -977,51 +977,36 @@
     </div>
 
     <script>
+     /* ===========================
+         EPhone 核心逻辑 (修复版)
+         =========================== */
+      
+      // 1. 基础 UI 交互 (兔K/330/隐藏/菜单)
       const fabContainer = document.getElementById('fab-container');
       const fabMain = document.getElementById('fab-main');
-
-      // 这里把原来的 id="home-screen" 对应给 launcherScreen
       const launcherScreen = document.getElementById('home-screen');
-
-      // 获取所有的 App 窗口
       const frames = document.querySelectorAll('.app-frame');
       const toastMsg = document.getElementById('toast-msg');
+      const menuIconSvg = '<svg viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zM3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1z"/></svg>';
+      const closeIconSvg = '<svg viewBox="0 0 24 24"><path d="M18.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7a.996.996 0 1 0-1.41 1.41L10.59 12 5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>';
 
-      // 图标定义
-      const menuIconSvg =
-        '<svg viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zM3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1z"/></svg>';
-      const closeIconSvg =
-        '<svg viewBox="0 0 24 24"><path d="M18.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7a.996.996 0 1 0-1.41 1.41L10.59 12 5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>';
-
-      // 初始化图标
       fabMain.innerHTML = menuIconSvg;
-
-      // --- 2. 核心功能逻辑 ---
 
       function openApp(frameId) {
         document.body.classList.add('app-open');
-
-        // 隐藏主屏幕 (模拟)
         launcherScreen.style.opacity = '0';
         launcherScreen.style.transform = 'scale(0.95)';
-
         frames.forEach(frame => {
           if (frame.id === frameId) {
-            // 激活当前 App
             frame.style.display = 'flex';
             setTimeout(() => frame.classList.add('active'), 10);
-
-            // 核心省流逻辑：如果 src 空才赋值
             const iframe = frame.querySelector('iframe');
-            if (iframe && iframe.dataset.src) {
-              iframe.src = iframe.dataset.src;
-            }
+            if (iframe && iframe.dataset.src) iframe.src = iframe.dataset.src;
           } else {
-            // 关闭其他 App
             frame.classList.remove('active');
             frame.style.display = 'none';
             const iframe = frame.querySelector('iframe');
-            if (iframe) iframe.src = ''; // 清理内存
+            if (iframe) iframe.src = '';
           }
         });
         closeMenu();
@@ -1029,63 +1014,41 @@
 
       function goHome() {
         document.body.classList.remove('app-open');
-
-        // 恢复主屏幕
         launcherScreen.style.opacity = '1';
         launcherScreen.style.transform = 'scale(1)';
-
-        // 关闭所有 App
         setTimeout(() => {
           frames.forEach(frame => {
             frame.classList.remove('active');
             frame.style.display = 'none';
-            // 清理 iframe
             const iframe = frame.querySelector('iframe');
             if (iframe) iframe.src = '';
           });
         }, 300);
         closeMenu();
-
-        // 回到主页时，如果处于隐身模式，自动恢复显示（可选，已注释）
-        // showFab();
       }
 
-      // --- [修改] 隐藏功能 ---
       function hideFab() {
         closeMenu();
-
-        // 1. 获取当前位置并固定（保持不变，防止乱跑）
         const mainRect = fabMain.getBoundingClientRect();
         fabContainer.style.left = mainRect.left + 'px';
         fabContainer.style.top = mainRect.top + 'px';
         fabContainer.style.bottom = 'auto';
         fabContainer.style.right = 'auto';
-
-        // 2. 开启隐身模式
         fabContainer.classList.add('ghost-mode');
-
-        // 修改这里的提示文字
         showToast('已隐藏。双击屏幕顶部或者底部唤出。');
       }
 
-      // 恢复显示
-      function showFab() {
-        fabContainer.classList.remove('ghost-mode');
-      }
+      function showFab() { fabContainer.classList.remove('ghost-mode'); }
 
       function showToast(text) {
         toastMsg.innerText = text;
         toastMsg.classList.add('show');
-        setTimeout(() => {
-          toastMsg.classList.remove('show');
-        }, 3000);
+        setTimeout(() => toastMsg.classList.remove('show'), 3000);
       }
 
       function toggleMenu() {
-        // 如果处于隐身模式，点击主按钮就是“现身”
         if (fabContainer.classList.contains('ghost-mode')) {
           showFab();
-          // 现身的同时直接展开菜单，体验更流畅
           setTimeout(() => {
             fabContainer.classList.add('menu-open');
             fabMain.classList.add('expanded');
@@ -1093,15 +1056,9 @@
           }, 50);
           return;
         }
-
         fabContainer.classList.toggle('menu-open');
         fabMain.classList.toggle('expanded');
-
-        if (fabMain.classList.contains('expanded')) {
-          fabMain.innerHTML = closeIconSvg;
-        } else {
-          fabMain.innerHTML = menuIconSvg;
-        }
+        fabMain.innerHTML = fabMain.classList.contains('expanded') ? closeIconSvg : menuIconSvg;
       }
 
       function closeMenu() {
@@ -1111,140 +1068,74 @@
       }
 
       document.addEventListener('click', e => {
-        // 只有在菜单打开且点击外部时才关闭
-        // 如果是隐身模式点击了空白处，不需要做任何事
-        if (!fabContainer.contains(e.target) && fabContainer.classList.contains('menu-open')) {
-          closeMenu();
-        }
+        if (!fabContainer.contains(e.target) && fabContainer.classList.contains('menu-open')) closeMenu();
       });
 
-      // --- 拖拽功能 (保持不变，加了隐身判断) ---
-      let isDragging = false;
-      let hasMoved = false;
-      let startX, startY, initialLeft, initialTop;
+      // 拖拽 FAB
+      let isDragging = false, hasMoved = false, startX, startY, initialLeft, initialTop;
       const dragThreshold = 5;
-
       fabMain.addEventListener('mousedown', startDrag);
       fabMain.addEventListener('touchstart', startDrag, { passive: false });
 
       function startDrag(e) {
-        // 如果是隐身模式，禁止拖拽，只允许点击
-        if (fabContainer.classList.contains('ghost-mode')) {
-          return;
-        }
-
-        if (fabContainer.classList.contains('menu-open')) {
-          closeMenu();
-        }
-
-        isDragging = true;
-        hasMoved = false;
-
-        if (e.type === 'touchstart') {
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
-        } else {
-          startX = e.clientX;
-          startY = e.clientY;
-        }
-
+        if (fabContainer.classList.contains('ghost-mode')) return;
+        if (fabContainer.classList.contains('menu-open')) closeMenu();
+        isDragging = true; hasMoved = false;
+        if (e.type === 'touchstart') { startX = e.touches[0].clientX; startY = e.touches[0].clientY; } 
+        else { startX = e.clientX; startY = e.clientY; }
         const rect = fabContainer.getBoundingClientRect();
-        initialLeft = rect.left;
-        initialTop = rect.top;
-
-        // 关键：拖拽开始时，将定位切换为 left/top，防止 CSS bottom/right 干扰
-        fabContainer.style.bottom = 'auto';
-        fabContainer.style.right = 'auto';
-        fabContainer.style.left = initialLeft + 'px';
-        fabContainer.style.top = initialTop + 'px';
-
-        document.addEventListener('mousemove', onDrag);
-        document.addEventListener('touchmove', onDrag, { passive: false });
-        document.addEventListener('mouseup', stopDrag);
-        document.addEventListener('touchend', stopDrag);
+        initialLeft = rect.left; initialTop = rect.top;
+        fabContainer.style.bottom = 'auto'; fabContainer.style.right = 'auto';
+        fabContainer.style.left = initialLeft + 'px'; fabContainer.style.top = initialTop + 'px';
+        document.addEventListener('mousemove', onDrag); document.addEventListener('touchmove', onDrag, { passive: false });
+        document.addEventListener('mouseup', stopDrag); document.addEventListener('touchend', stopDrag);
       }
 
       function onDrag(e) {
         if (!isDragging) return;
         e.preventDefault();
-
         let clientX, clientY;
-        if (e.type === 'touchmove') {
-          clientX = e.touches[0].clientX;
-          clientY = e.touches[0].clientY;
-        } else {
-          clientX = e.clientX;
-          clientY = e.clientY;
-        }
-
-        const deltaX = clientX - startX;
-        const deltaY = clientY - startY;
-
-        if (Math.abs(deltaX) > dragThreshold || Math.abs(deltaY) > dragThreshold) {
-          hasMoved = true;
-        }
-
-        fabContainer.style.left = initialLeft + deltaX + 'px';
-        fabContainer.style.top = initialTop + deltaY + 'px';
+        if (e.type === 'touchmove') { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
+        else { clientX = e.clientX; clientY = e.clientY; }
+        const deltaX = clientX - startX; const deltaY = clientY - startY;
+        if (Math.abs(deltaX) > dragThreshold || Math.abs(deltaY) > dragThreshold) hasMoved = true;
+        fabContainer.style.left = initialLeft + deltaX + 'px'; fabContainer.style.top = initialTop + deltaY + 'px';
       }
 
       function stopDrag() {
         isDragging = false;
-        document.removeEventListener('mousemove', onDrag);
-        document.removeEventListener('touchmove', onDrag);
-        document.removeEventListener('mouseup', stopDrag);
-        document.removeEventListener('touchend', stopDrag);
+        document.removeEventListener('mousemove', onDrag); document.removeEventListener('touchmove', onDrag);
+        document.removeEventListener('mouseup', stopDrag); document.removeEventListener('touchend', stopDrag);
       }
 
       fabMain.addEventListener('click', e => {
         e.stopPropagation();
-        // 无论是拖拽结束还是普通点击，如果没有发生位移，都视为点击
-        if (!hasMoved) {
-          toggleMenu();
-        }
+        if (!hasMoved) toggleMenu();
       });
 
-      // SW 注册
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          // --- [新增] 双击屏幕顶部或者底部唤出 ---
+      // 双击唤醒
+      document.addEventListener('dblclick', () => { if (fabContainer.classList.contains('ghost-mode')) { showFab(); showToast('已唤出菜单'); } });
+      let lastTapTime = 0;
+      document.addEventListener('touchend', e => {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTapTime;
+        if (tapLength < 300 && tapLength > 0) {
+          if (fabContainer.classList.contains('ghost-mode')) {
+            showFab(); showToast('已唤出菜单'); e.preventDefault();
+          }
+        }
+        lastTapTime = currentTime;
+      });
 
-          // 1. 电脑端双击 (dblclick)
-          document.addEventListener('dblclick', () => {
-            if (fabContainer.classList.contains('ghost-mode')) {
-              showFab();
-              showToast('已唤出菜单');
-            }
-          });
-
-          // 2. 手机端双击 (通过监听两次触摸的时间间隔)
-          let lastTapTime = 0;
-          document.addEventListener('touchend', e => {
-            const currentTime = new Date().getTime();
-            const tapLength = currentTime - lastTapTime;
-
-            // 如果两次点击间隔小于 300ms 且大于 0，视为双击
-            if (tapLength < 300 && tapLength > 0) {
-              if (fabContainer.classList.contains('ghost-mode')) {
-                showFab();
-                showToast('已唤出菜单');
-                e.preventDefault(); // 防止双击触发缩放等默认行为
-              }
-            }
-            lastTapTime = currentTime;
-          });
-          navigator.serviceWorker.register('sw.js');
-        });
-      }
       /* ===========================
-         第5步：逻辑核心 V5.0 (含拖拽/预设/全备份)
+         2. AI终端核心逻辑 V5.0 (完整版)
          =========================== */
       let timerPages = [];
       let activeRoleId = 0; 
       let activePageIndex = 0;
       let roles = [];
       
-      // 全局设置 (含默认预设)
+      // 全局设置
       const DEFAULT_GLOBAL = {
         copyTemplate: "此条内容是ai写作指导，角色不可见。以下是角色原本的日程计划，注意角色可能之前之后都不按照原计划进行，请你根据上下文语境进行判断剧情发展：\n当前的世界是${currTime}，${timercontent}\n必须根据上下文判断角色是否之前或之后进行原计划，以及根据当前对话场景角色是否会提及此事，角色也可能已经忘记此事或直接根本不提。你作为ai必须自行判断做出有活人感的反应与结果。",
         tplPast: "${min}分钟前，${char}原计划是在${time}${act}",
@@ -1270,15 +1161,15 @@
         if(savedGlobal) globalSettings = {...globalSettings, ...JSON.parse(savedGlobal)};
         // 回填设置
         Object.keys(globalSettings).forEach(k => {
-           if(k === 'copyTemplate') document.getElementById('global-copy-template').value = globalSettings[k];
-           else if(k === 'tplPast') document.getElementById('status-tpl-past').value = globalSettings[k];
-           else if(k === 'tplFuture') document.getElementById('status-tpl-future').value = globalSettings[k];
-           else if(k === 'flowMode') document.getElementById('flow-mode').value = globalSettings[k];
-           else if(k === 'flowRange') document.getElementById('flow-range').value = globalSettings[k];
-           else if(k === 'flowWidth') document.getElementById('flow-width').value = globalSettings[k];
-           else if(k === 'iconNormal') document.getElementById('flow-icon-normal').value = globalSettings[k];
-           else if(k === 'iconActive') document.getElementById('flow-icon-active').value = globalSettings[k];
-           else if(k === 'iconSize') document.getElementById('flow-icon-size').value = globalSettings[k];
+           if(k === 'copyTemplate') { const el = document.getElementById('global-copy-template'); if(el) el.value = globalSettings[k]; }
+           else if(k === 'tplPast') { const el = document.getElementById('status-tpl-past'); if(el) el.value = globalSettings[k]; }
+           else if(k === 'tplFuture') { const el = document.getElementById('status-tpl-future'); if(el) el.value = globalSettings[k]; }
+           else if(k === 'flowMode') { const el = document.getElementById('flow-mode'); if(el) el.value = globalSettings[k]; }
+           else if(k === 'flowRange') { const el = document.getElementById('flow-range'); if(el) el.value = globalSettings[k]; }
+           else if(k === 'flowWidth') { const el = document.getElementById('flow-width'); if(el) el.value = globalSettings[k]; }
+           else if(k === 'iconNormal') { const el = document.getElementById('flow-icon-normal'); if(el) el.value = globalSettings[k]; }
+           else if(k === 'iconActive') { const el = document.getElementById('flow-icon-active'); if(el) el.value = globalSettings[k]; }
+           else if(k === 'iconSize') { const el = document.getElementById('flow-icon-size'); if(el) el.value = globalSettings[k]; }
         });
 
         const savedRoles = localStorage.getItem(STORAGE_KEYS.roles);
@@ -1286,7 +1177,6 @@
         else roles = [{ id: Date.now(), name: "默认角色", pages: [{ id: Date.now(), name: "主日程", promptPreset: "", data: [], exportEnabled: true, exportMode: 'both' }] }];
         activeRoleId = roles[0].id;
 
-        // 初始化默认提示词和文案预设
         initDefaultPreset('prompt', '默认日程', {'prompt-content': DEFAULT_PROMPT});
         initDefaultPreset('text', '默认文案', {
            'global-copy-template': DEFAULT_GLOBAL.copyTemplate,
@@ -1312,50 +1202,26 @@
       /* --- 拖拽逻辑 --- */
       function makeDraggable(elm) {
         let pos1=0, pos2=0, pos3=0, pos4=0;
-        elm.onmousedown = dragMouseDown;
-        elm.ontouchstart = dragMouseDown;
-
+        elm.onmousedown = dragMouseDown; elm.ontouchstart = dragMouseDown;
         function dragMouseDown(e) {
-          e = e || window.event;
-          // 如果点击的是内部内容，不一定拖拽，但为了防止冲突，这里设为整体拖拽
-          // 注意：点击事件可能会冲突，这里做简单区分：移动了算拖拽，没移动算点击
-          elm.dataset.isDragging = "false";
-          pos3 = e.clientX || e.touches[0].clientX;
-          pos4 = e.clientY || e.touches[0].clientY;
-          document.onmouseup = closeDragElement;
-          document.onmousemove = elementDrag;
-          document.ontouchend = closeDragElement;
-          document.ontouchmove = elementDrag;
+          e = e || window.event; elm.dataset.isDragging = "false";
+          pos3 = e.clientX || e.touches[0].clientX; pos4 = e.clientY || e.touches[0].clientY;
+          document.onmouseup = closeDragElement; document.onmousemove = elementDrag;
+          document.ontouchend = closeDragElement; document.ontouchmove = elementDrag;
         }
-
         function elementDrag(e) {
-          e = e || window.event;
-          // e.preventDefault(); // 阻止滚动
-          elm.dataset.isDragging = "true";
-          let cx = e.clientX || e.touches[0].clientX;
-          let cy = e.clientY || e.touches[0].clientY;
-          pos1 = pos3 - cx;
-          pos2 = pos4 - cy;
-          pos3 = cx;
-          pos4 = cy;
-          elm.style.top = (elm.offsetTop - pos2) + "px";
-          elm.style.left = (elm.offsetLeft - pos1) + "px";
-          elm.style.right = "auto"; // 清除right定位
+          e = e || window.event; elm.dataset.isDragging = "true";
+          let cx = e.clientX || e.touches[0].clientX; let cy = e.clientY || e.touches[0].clientY;
+          pos1 = pos3 - cx; pos2 = pos4 - cy; pos3 = cx; pos4 = cy;
+          elm.style.top = (elm.offsetTop - pos2) + "px"; elm.style.left = (elm.offsetLeft - pos1) + "px"; elm.style.right = "auto";
         }
-
-        function closeDragElement() {
-          document.onmouseup = null;
-          document.onmousemove = null;
-          document.ontouchend = null;
-          document.ontouchmove = null;
-        }
+        function closeDragElement() { document.onmouseup = null; document.onmousemove = null; document.ontouchend = null; document.ontouchmove = null; }
       }
 
       /* --- 悬浮窗逻辑 --- */
       function toggleFlowWindow() {
         globalSettings.flowVisible = !globalSettings.flowVisible;
         saveGlobalSettings();
-        updateFlowWindowVisibility();
       }
       function updateFlowWindowVisibility() {
         const widget = document.getElementById('flow-widget');
@@ -1366,15 +1232,11 @@
         const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
         const role = roles.find(r => r.id === activeRoleId);
         if(!role) return { active: [], next: null };
-        
-        let activeItems = [];
-        let nextItems = [];
+        let activeItems = [], nextItems = [];
         role.pages.forEach(p => {
           if(!p.exportEnabled) return;
           p.data.forEach(item => {
-            const [h,m] = item.time.split(':').map(Number);
-            const t = h*60+m;
-            const diff = Math.abs(t - curM);
+            const [h,m] = item.time.split(':').map(Number); const t = h*60+m; const diff = Math.abs(t - curM);
             if(diff <= globalSettings.flowRange) activeItems.push({ ...item, pageName: p.name });
             else if (t > curM) nextItems.push({ ...item, t: t });
           });
@@ -1382,16 +1244,12 @@
         nextItems.sort((a,b) => a.t - b.t);
         return { active: activeItems, next: nextItems[0] };
       }
-
-      // 轮播索引
-      let flowCycleIdx = 0;
       function renderFlowWindow() {
         if(!globalSettings.flowVisible) return;
         const widget = document.getElementById('flow-widget');
         const { active, next } = getActiveEventsForFlow();
         const charName = document.getElementById('char-name').value || "TA";
         const w = globalSettings.flowWidth || 200;
-        
         if(globalSettings.flowMode === 'icon') {
           const url = active.length>0 ? globalSettings.iconActive : globalSettings.iconNormal;
           const size = globalSettings.iconSize;
@@ -1399,13 +1257,12 @@
         } else {
           let html = "";
           if (active.length > 0) {
-            // 轮播展示
+            // 轮播
             const idx = Math.floor(Date.now() / 3000) % active.length;
             const item = active[idx];
             const [h,m] = item.time.split(':').map(Number);
             const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
             const diff = Math.abs(curM - (h*60+m));
-            
             if(globalSettings.flowMode === 'detail') {
                const tpl = (curM > h*60+m) ? globalSettings.tplPast : globalSettings.tplFuture;
                const txt = tpl.replace(/\${min}/g, diff).replace(/\${char}/g, charName).replace(/\${act}/g, item.description).replace(/\${time}/g, item.time);
@@ -1419,22 +1276,17 @@
                const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
                const diff = (h*60+m) - curM;
                html = `<div class="flow-card-simple" style="width:${w}px;opacity:0.7">Next: ${diff}min<br>${next.description.substring(0,8)}</div>`;
-            } else {
-               html = `<div class="flow-card-simple" style="width:${w}px;opacity:0.5">💤 空闲</div>`;
-            }
+            } else { html = `<div class="flow-card-simple" style="width:${w}px;opacity:0.5">💤 空闲</div>`; }
           }
           widget.innerHTML = html;
         }
       }
-
       function copyFromFlowWindow() {
         const w = document.getElementById('flow-widget');
-        if(w.dataset.isDragging === "true") return; // 拖拽时不触发复制
-
+        if(w.dataset.isDragging === "true") return; 
         const { active } = getActiveEventsForFlow();
         const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
         const charName = document.getElementById('char-name').value || "TA";
-        
         if(active.length > 0) {
            let lines = [];
            active.forEach(item => {
@@ -1445,9 +1297,7 @@
            });
            const txt = globalSettings.copyTemplate.replace("${currTime}", now.toLocaleString()).replace("${timercontent}", lines.join("；"));
            navigator.clipboard.writeText(txt).then(()=>showToast("已复制状态")).catch(()=>showToast("失败"));
-        } else {
-           showToast("当前无活跃事件");
-        }
+        } else { showToast("无活跃事件"); }
       }
 
       /* --- 基础管理 --- */
@@ -1586,14 +1436,22 @@
         return res;
       }
 
-      function exportData() {
-        const d={}; 
-        Object.keys(STORAGE_KEYS).forEach(k=>d[k]=localStorage.getItem(STORAGE_KEYS[k]));
-        const b=new Blob([JSON.stringify(d)],{type:'application/json'}); 
-        const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); 
+      function copyGlobalContext() {
+        const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
+        const role = getActiveRole();
+        let all = [];
+        role.pages.forEach(p => {
+          if(p.exportEnabled!==false) {
+             const s = getStatusStringForPage(p, curM, true);
+             if(s.length) all.push(s.join("；"));
+          }
+        });
+        const txt = globalSettings.copyTemplate.replace("${currTime}", now.toLocaleString()).replace("${timercontent}", all.join("\n"));
+        navigator.clipboard.writeText(txt).then(()=>showToast("已复制上下文")).catch(()=>showToast("失败"));
       }
+
+      function exportData() { const d={}; Object.keys(STORAGE_KEYS).forEach(k=>d[k]=localStorage.getItem(STORAGE_KEYS[k])); const b=new Blob([JSON.stringify(d)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); }
       function importData(i) { const f=i.files[0]; if(!f)return; const r=new FileReader(); r.onload=e=>{try{const d=JSON.parse(e.target.result);Object.keys(d).forEach(k=>localStorage.setItem(k,d[k]));alert("导入成功");location.reload();}catch(x){alert("错误")}}; r.readAsText(f); }
-    
     </script>
   </body>
 </html>
