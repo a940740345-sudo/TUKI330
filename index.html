@@ -570,10 +570,10 @@
       .edge-sensor.right { top: 30px; bottom: 30px; right: 0; width: 15px; }
       /* ★★★★★ 这里是你要复制进去的代码 结束 ★★★★★ */
 /* ===========================
-         AI终端 V6.0 终极升级版样式
+         AI终端 V7.0 (修复拖拽/循环展示) 样式
          =========================== */
       
-      /* 1. 修复刘海屏 & 容器优化 */
+      /* 1. 布局优化 */
       .schedule-container { padding: 60px 20px 120px 20px; height: 100%; overflow-y: auto; box-sizing: border-box; }
       .schedule-header { font-size: 20px; color: #5d4037; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px dashed #e6ceac; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
 
@@ -581,42 +581,42 @@
       .icon-bg-desktop svg { width: 50%; height: 50%; fill: #eceff1; }
       .icon-bg-desktop span { font-size: 28px; }
 
-      /* 3. 智能悬浮窗 (Flow Widget) - 高级灰半透明版 */
+      /* 3. 智能悬浮窗 (Flow Widget) - 核心修复版 */
       #flow-widget {
         position: fixed; 
         z-index: 9999;
         display: none; /* 由开关控制 */
-        /* 默认位置，会被JS覆盖 */
-        top: 100px; left: 20px;
-        /* 允许点击穿透吗？不，因为要拖拽 */
+        /* 初始位置 */
+        top: 150px; left: 30px;
+        /* 关键：允许鼠标交互，但禁止文本选中，防止拖拽变选字 */
         user-select: none;
         -webkit-user-select: none;
-        touch-action: none; /* 防止拖拽时触发滚动 */
+        cursor: move; /* 鼠标放上去显示移动图标 */
+        touch-action: none; /* 禁止浏览器的默认滚动，完全交给JS处理 */
       }
       
       /* 详细模式 & 不剧透模式的通用卡片样式 */
       .flow-card-glass {
-        background: rgba(60, 60, 60, 0.65); /* 深灰色半透明 */
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); /* 毛玻璃 */
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        border-radius: 20px; /* 圆润 */
+        background: rgba(60, 60, 60, 0.75); /*稍微深一点，增加可读性*/
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        border-radius: 25px; 
         padding: 0 16px;
-        height: 40px; /* 固定高度，显精致 */
+        height: 44px; /*稍微加高一点，手指好点*/
         display: flex;
         align-items: center;
         color: #fff;
         font-size: 13px;
-        font-weight: 500;
+        font-weight: bold;
         letter-spacing: 0.5px;
         overflow: hidden;
         white-space: nowrap;
-        transition: width 0.3s;
-        cursor: grab; /* 抓手光标 */
+        transition: width 0.3s, transform 0.1s;
       }
-      .flow-card-glass:active { cursor: grabbing; background: rgba(40, 40, 40, 0.8); }
+      .flow-card-glass:active { transform: scale(0.96); background: rgba(40, 40, 40, 0.9); }
 
-      /* 跑马灯效果 (用于详细展示) */
+      /* 跑马灯效果 */
       .marquee-container {
         overflow: hidden;
         white-space: nowrap;
@@ -625,11 +625,11 @@
       .marquee-text {
         display: inline-block;
         padding-left: 0;
-        animation: marquee 10s linear infinite;
+        /* 稍微慢一点，看起来优雅 */
+        animation: marquee 8s linear infinite; 
       }
-      /* 如果文字短，不需要滚动，JS会控制移除这个类 */
       .marquee-text.scroll {
-        padding-left: 100%; /* 初始位置在右侧外 */
+        padding-left: 100%; 
       }
 
       @keyframes marquee {
@@ -637,24 +637,23 @@
         100% { transform: translateX(-100%); }
       }
 
-      /* 呼吸灯效果 (用于不剧透展示) */
+      /* 呼吸灯效果 */
       .breathing-text {
         animation: breathe 3s ease-in-out infinite;
       }
       @keyframes breathe {
         0%, 100% { opacity: 1; }
-        50% { opacity: 0.4; }
+        50% { opacity: 0.5; }
       }
 
       /* 图标模式：纯净图片 */
       .flow-icon-pure {
         display: block;
-        border-radius: 0; /* 不强制圆角，看图片本身 */
-        cursor: grab;
-        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); /* 图片投影 */
+        border-radius: 0; 
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); 
         transition: transform 0.2s;
+        pointer-events: none; /* 让点击穿透到父级div */
       }
-      .flow-icon-pure:active { transform: scale(0.95); cursor: grabbing; }
 
       /* 4. 设置面板组件 */
       .settings-group { margin-bottom: 20px; background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 12px; border: 1px solid #efe6d5; }
@@ -912,18 +911,14 @@
       <!-- 悬浮按钮 -->
       <div id="fab-container">
         <div class="fab-actions">
-          <!-- 330 按钮：换成图片 -->
+         <div class="fab-actions">
           <div class="fab-action-btn" onclick="openApp('app-a')">
             <span class="fab-label">330</span>
             <div class="fab-mini-btn">
-              <img
-                src="https://s3plus.meituan.net/opapisdk/op_ticket_885190757_1756312261242_qdqqd_g0eriz.jpeg"
-                alt="330"
-              />
+              <img src="https://s3plus.meituan.net/opapisdk/op_ticket_885190757_1756312261242_qdqqd_g0eriz.jpeg" alt="330" />
             </div>
           </div>
 
-          <!-- 兔K 按钮：换成图片 -->
           <div class="fab-action-btn" onclick="openApp('app-b')">
             <span class="fab-label">兔K</span>
             <div class="fab-mini-btn">
@@ -932,41 +927,31 @@
           </div>
 
           <div class="desktop-app-icon" onclick="openApp('app-settings')">
-                      <div class="icon-bg-desktop" style="background: #455a64;">
-                        <svg viewBox="0 0 24 24" style="width:50%; height:50%; fill:#eceff1;"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-                      </div>
-                      <span class="label">配置</span>
-                    </div>
+            <span class="fab-label">配置</span>
+            <div class="fab-mini-btn" style="background: #455a64;">
+              <svg viewBox="0 0 24 24" style="width:60%; height:60%; fill:#eceff1;"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+            </div>
+          </div>
                     
-                    <div class="desktop-app-icon" onclick="openApp('app-schedule')">
-                      <div class="icon-bg-desktop" style="background: #e6ceac;">
-                        <span style="font-size:30px;">📅</span>
-                      </div>
-                      <span class="label">计时</span>
-                    </div>
+          <div class="desktop-app-icon" onclick="openApp('app-schedule')">
+            <span class="fab-label">计时</span>
+            <div class="fab-mini-btn" style="background: #e6ceac;">
+              <span style="font-size:20px;">📅</span>
+            </div>
+          </div>
           
-          <!-- 隐藏按钮：换成 SVG (眼睛关闭图标) -->
           <div class="fab-action-btn" onclick="toggleFlowWindow()">
             <span class="fab-label">悬浮窗开关</span>
             <div class="fab-mini-btn" style="background:#b3e5fc;"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg></div>
-          </div>
-          <div class="fab-action-btn" onclick="copyGlobalContext()">
-            <span class="fab-label">复制AI上下文</span>
-            <div class="fab-mini-btn" style="background:#ffcc80;"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></div>
           </div>
           
           <div class="fab-action-btn" onclick="hideFab()">
             <span class="fab-label">隐藏</span>
             <div class="fab-mini-btn">
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46A11.804 11.804 0 0 0 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"
-                />
-              </svg>
+              <svg viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46A11.804 11.804 0 0 0 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>
             </div>
           </div>
 
-          <!-- 主页按钮：换成 SVG (房子图标) -->
           <div class="fab-action-btn" onclick="goHome()">
             <span class="fab-label">主页</span>
             <div class="fab-mini-btn">
@@ -974,9 +959,11 @@
             </div>
           </div>
         </div>
+        </div>
 
         <div id="fab-main"></div>
       </div>
+
     <!-- ★★★★★ 这里是你要复制进去的代码 开始 ★★★★★ -->
     <!-- 全屏边缘感应层 (用于在App内双击唤醒) -->
     <div class="edge-sensor top"></div>
@@ -1249,14 +1236,13 @@
         });
       }
       /* ===========================
-         V6.0 逻辑核心：全量备份、高级悬浮窗、预设管理
+         V7.0 逻辑核心：拖拽修复、循环展示、一键复制
          =========================== */
       let timerPages = [];
       let activeRoleId = 0; 
       let activePageIndex = 0;
       let roles = [];
       
-      // 默认设置值，会尝试从本地读取
       let globalSettings = {
         tplPast: "${min}分钟前，${char}原计划是${act}",
         tplFuture: "${min}分钟后，${char}原计划是${act}",
@@ -1267,17 +1253,12 @@
         iconActive: "https://i.postimg.cc/1tF2fZKF/16.png",
         iconSize: 50,
         flowWidth: 200,
-        // 悬浮窗位置
         widgetX: 20,
         widgetY: 120
       };
 
       const DEFAULT_GLOBAL_TEMPLATE = "此条内容是ai写作指导，角色不可见。以下是角色原本的日程计划，注意角色可能之前之后都不按照原计划进行，请你根据上下文语境进行判断剧情发展：\n${timercontent}\n必须根据上下文判断角色是否之前或之后进行原计划，以及根据当前对话场景角色是否会提及此事，角色也可能已经忘记此事或直接根本不提。你作为ai必须自行判断做出有活人感的反应与结果。";
-
-      // 存储键名，增加了 copy 预设的 key
       const STORAGE_KEYS = { api:'tuki_presets_api', char:'tuki_presets_char', user:'tuki_presets_user', prompt:'tuki_presets_prompt', copy:'tuki_presets_copy', roles:'tuki_roles_v1', global:'tuki_global_settings' };
-      
-      // 字段映射，增加了 copy 的字段
       const FIELD_MAP = { 
         api:['api-preset-name','api-host','api-key','model-name'], 
         char:['char-preset-name','char-name','char-persona','world-info','chat-history'], 
@@ -1285,40 +1266,38 @@
         prompt:['prompt-preset-name','prompt-content'],
         copy:['copy-preset-name','global-copy-template','status-tpl-past','status-tpl-future'] 
       };
-
       const DEFAULT_PROMPT = `# 角色扮演任务\n请根据"\${chat.name}"的人设，推演接下来24小时的行为轨迹。\n# 参数\n角色：\${chat.name}\n人设：\${chat.settings.aiPersona}\n# 输出规则\n1. 返回JSON数组。2. 时间格式 "HH:mm"。3. 包含 'html_snippet' (可选)。\n[{"time":"08:00","description":"...","icon":"⏰"}]`;
 
       window.addEventListener('load', () => {
-        // 1. 初始化所有下拉框
         ['api','char','user','prompt','copy'].forEach(refreshDropdown);
         
-        // 2. 加载全局设置
         const savedGlobal = localStorage.getItem(STORAGE_KEYS.global);
         if(savedGlobal) globalSettings = {...globalSettings, ...JSON.parse(savedGlobal)};
         
-        // 3. 填充界面默认值
-        document.getElementById('global-copy-template').value = DEFAULT_GLOBAL_TEMPLATE; // 默认值
-        document.getElementById('status-tpl-past').value = globalSettings.tplPast;
-        document.getElementById('status-tpl-future').value = globalSettings.tplFuture;
-        document.getElementById('flow-mode').value = globalSettings.flowMode;
-        document.getElementById('flow-range').value = globalSettings.flowRange;
-        document.getElementById('flow-width').value = globalSettings.flowWidth;
-        document.getElementById('flow-icon-normal').value = globalSettings.iconNormal;
-        document.getElementById('flow-icon-active').value = globalSettings.iconActive;
-        document.getElementById('flow-icon-size').value = globalSettings.iconSize;
+        // 恢复 UI 状态
+        const setVal = (id, val) => { const el=document.getElementById(id); if(el) el.value=val; }
+        setVal('global-copy-template', DEFAULT_GLOBAL_TEMPLATE);
+        setVal('status-tpl-past', globalSettings.tplPast);
+        setVal('status-tpl-future', globalSettings.tplFuture);
+        setVal('flow-mode', globalSettings.flowMode);
+        setVal('flow-range', globalSettings.flowRange);
+        setVal('flow-width', globalSettings.flowWidth);
+        setVal('flow-icon-normal', globalSettings.iconNormal);
+        setVal('flow-icon-active', globalSettings.iconActive);
+        setVal('flow-icon-size', globalSettings.iconSize);
         
-        // 4. 恢复悬浮窗位置
+        // 恢复位置
         const widget = document.getElementById('flow-widget');
-        widget.style.left = globalSettings.widgetX + 'px';
-        widget.style.top = globalSettings.widgetY + 'px';
+        if(widget) {
+            widget.style.left = globalSettings.widgetX + 'px';
+            widget.style.top = globalSettings.widgetY + 'px';
+        }
 
-        // 5. 加载角色数据
         const savedRoles = localStorage.getItem(STORAGE_KEYS.roles);
         if(savedRoles) roles = JSON.parse(savedRoles);
         else roles = [{ id: Date.now(), name: "默认角色", pages: [{ id: Date.now(), name: "主日程", promptPreset: "", data: [] }] }];
         activeRoleId = roles[0].id;
 
-        // 6. 检查是否有默认提示词
         const prompts = getPresets('prompt');
         if(Object.keys(prompts).length===0) {
           prompts["默认日程"] = { "prompt-preset-name": "默认日程", "prompt-content": DEFAULT_PROMPT };
@@ -1326,7 +1305,6 @@
           refreshDropdown('prompt');
         }
         
-        // 7. 检查是否有默认文案预设
         const copies = getPresets('copy');
         if(Object.keys(copies).length===0) {
            copies["系统默认"] = {
@@ -1342,14 +1320,18 @@
         renderRoleUI();
         updateFlowWindowVisibility();
         
-        // 启动定时器：更新时间状态、渲染悬浮窗
-        setInterval(() => { updateRealTimeStatus(); renderFlowWindow(); }, 1000);
+        // 启动循环器
+        setInterval(() => { 
+           flowCycleIndex++; // 每秒递增，用于轮播
+           updateRealTimeStatus(); 
+           renderFlowWindow(); 
+        }, 3000); // 3秒切换一次展示内容
         
-        // 初始化悬浮窗拖拽
+        // 初始化拖拽
         initWidgetDrag();
       });
 
-      /* --- 悬浮窗逻辑 (含拖拽) --- */
+      /* --- 悬浮窗逻辑 (修复拖拽与点击) --- */
       function toggleFlowWindow() {
         globalSettings.flowVisible = !globalSettings.flowVisible;
         saveGlobalSettings();
@@ -1357,7 +1339,7 @@
       }
       function updateFlowWindowVisibility() {
         const widget = document.getElementById('flow-widget');
-        widget.style.display = globalSettings.flowVisible ? 'block' : 'none';
+        if(widget) widget.style.display = globalSettings.flowVisible ? 'block' : 'none';
         renderFlowWindow();
       }
       
@@ -1365,25 +1347,28 @@
         globalSettings.widgetX = 20;
         globalSettings.widgetY = 120;
         const widget = document.getElementById('flow-widget');
-        widget.style.left = '20px'; widget.style.top = '120px';
+        if(widget) {
+            widget.style.left = '20px'; widget.style.top = '120px';
+        }
         saveGlobalSettings();
       }
 
       function initWidgetDrag() {
         const widget = document.getElementById('flow-widget');
+        if(!widget) return;
         let isDragging = false;
         let startX, startY, initialLeft, initialTop;
+        let hasMoved = false;
 
         const onStart = (e) => {
-          // 如果是 icon 模式或者 flow-card-glass 模式，允许拖拽
-          // 但要防止与点击冲突，不过这里没有点击事件了
           isDragging = true;
+          hasMoved = false; // 重置移动标记
           const evt = e.touches ? e.touches[0] : e;
           startX = evt.clientX;
           startY = evt.clientY;
           initialLeft = widget.offsetLeft;
           initialTop = widget.offsetTop;
-          e.preventDefault(); // 防止默认滚动
+          // 不要 preventDefault，否则 input 无法输入
         };
 
         const onMove = (e) => {
@@ -1391,23 +1376,35 @@
           const evt = e.touches ? e.touches[0] : e;
           const deltaX = evt.clientX - startX;
           const deltaY = evt.clientY - startY;
-          widget.style.left = (initialLeft + deltaX) + 'px';
-          widget.style.top = (initialTop + deltaY) + 'px';
+          
+          // 如果移动超过 5px，才视为拖拽，否则视为点击
+          if(Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+             hasMoved = true;
+             widget.style.left = (initialLeft + deltaX) + 'px';
+             widget.style.top = (initialTop + deltaY) + 'px';
+             e.preventDefault(); // 拖拽时防止屏幕滚动
+          }
         };
 
-        const onEnd = () => {
+        const onEnd = (e) => {
           if(!isDragging) return;
           isDragging = false;
-          // 保存位置
-          globalSettings.widgetX = parseInt(widget.style.left);
-          globalSettings.widgetY = parseInt(widget.style.top);
-          saveGlobalSettings();
+          
+          if(hasMoved) {
+              // 是拖拽，保存位置
+              globalSettings.widgetX = parseInt(widget.style.left);
+              globalSettings.widgetY = parseInt(widget.style.top);
+              saveGlobalSettings();
+          } else {
+              // 没有移动，视为点击 -> 触发复制
+              copyFromFlowWindow();
+          }
         };
 
         widget.addEventListener('mousedown', onStart);
-        widget.addEventListener('touchstart', onStart);
+        widget.addEventListener('touchstart', onStart, {passive: false});
         window.addEventListener('mousemove', onMove);
-        window.addEventListener('touchmove', onMove);
+        window.addEventListener('touchmove', onMove, {passive: false});
         window.addEventListener('mouseup', onEnd);
         window.addEventListener('touchend', onEnd);
       }
@@ -1415,7 +1412,7 @@
       function getActiveEventsForFlow() {
         const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
         const role = roles.find(r => r.id === activeRoleId);
-        if(!role) return { active: [], next: null };
+        if(!role) return [];
         
         let activeItems = [];
         role.pages.forEach(p => {
@@ -1431,42 +1428,50 @@
         return activeItems;
       }
       
-      // 轮播索引
       let flowCycleIndex = 0;
-      let lastCycleTime = 0;
 
       function renderFlowWindow() {
         if(!globalSettings.flowVisible) return;
         const widget = document.getElementById('flow-widget');
+        if(!widget) return;
+        
         const active = getActiveEventsForFlow();
         const hasActive = active.length > 0;
-        const charName = document.getElementById('char-name').value || "TA";
+        const charName = document.getElementById('char-name')?.value || "TA";
         
+        // 准备显示内容
+        let displayContent = "";
+        
+        // 如果有活动项目，进行循环显示
+        let currentItem = null;
+        if(hasActive) {
+            const idx = flowCycleIndex % active.length;
+            currentItem = active[idx];
+        }
+
         // 图标模式
         if(globalSettings.flowMode === 'icon') {
           const url = hasActive ? globalSettings.iconActive : globalSettings.iconNormal;
           const size = globalSettings.iconSize;
           widget.innerHTML = `<img src="${url}" class="flow-icon-pure" style="width:${size}px;height:${size}px;">`;
         } 
-        // 详细模式 (单行滚动)
+        // 详细模式 (详细文案)
         else if(globalSettings.flowMode === 'detail') {
            const width = globalSettings.flowWidth;
            let txt = "";
-           if(hasActive) {
-               // 显示第一个活跃事件，或者循环显示
-               const item = active[0]; 
-               const [h,m] = item.time.split(':').map(Number);
+           if(currentItem) {
+               const [h,m] = currentItem.time.split(':').map(Number);
                const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
                const diff = Math.abs(curM - (h*60+m));
                const tpl = (curM > h*60+m) ? globalSettings.tplPast : globalSettings.tplFuture;
-               txt = tpl.replace(/\${min}/g, diff).replace(/\${char}/g, charName).replace(/\${act}/g, item.description).replace(/\${time}/g, item.time);
+               txt = tpl.replace(/\${min}/g, diff).replace(/\${char}/g, charName).replace(/\${act}/g, currentItem.description).replace(/\${time}/g, currentItem.time);
+               // 如果有多个，加个指示器
+               if(active.length > 1) txt = `[${(flowCycleIndex % active.length)+1}/${active.length}] ` + txt;
            } else {
                txt = `${charName} 暂时无事发生...`;
            }
            
-           // 判断字数是否需要滚动 (简单按字符数估算，或者直接滚动)
            const needScroll = txt.length * 14 > width; 
-           
            widget.innerHTML = `
              <div class="flow-card-glass" style="width:${width}px;">
                <div class="marquee-container">
@@ -1474,23 +1479,12 @@
                </div>
              </div>`;
         } 
-        // 不剧透模式 (呼吸灯轮播)
+        // 不剧透模式 (名字+时间)
         else {
-           // 简单的呼吸灯轮播逻辑
-           const nowTs = Date.now();
-           if(nowTs - lastCycleTime > 3000) { // 每3秒切一次
-              flowCycleIndex++;
-              lastCycleTime = nowTs;
-           }
-           
-           let displayContent = "";
-           if(active.length > 0) {
-              const idx = flowCycleIndex % active.length;
-              const item = active[idx];
-              const [h,m] = item.time.split(':').map(Number);
-              const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
-              const diff = Math.abs(curM - (h*60+m));
-              displayContent = `${item.time} ${charName}`; // 只显示时间名字
+           if(currentItem) {
+               const idx = flowCycleIndex % active.length;
+               displayContent = `${currentItem.time} ${charName}`;
+               if(active.length > 1) displayContent += ` (${idx+1})`;
            } else {
                displayContent = "💤";
            }
@@ -1502,37 +1496,73 @@
         }
       }
 
+      function copyFromFlowWindow() {
+        const active = getActiveEventsForFlow();
+        const charName = document.getElementById('char-name')?.value || "TA";
+        const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
+
+        // 获取当前显示的那个条目（基于循环索引）
+        // 如果没有活动条目，尝试复制“无事发生”或下一个预告
+        if(active.length === 0) {
+             showToast("当前无活动事件");
+             return;
+        }
+
+        // 核心逻辑：获取当前轮播到的那个条目
+        const idx = flowCycleIndex % active.length;
+        const item = active[idx];
+
+        const [h,m] = item.time.split(':').map(Number);
+        const diff = Math.abs(curM - (h*60+m));
+        const tpl = (curM > h*60+m) ? globalSettings.tplPast : globalSettings.tplFuture;
+        
+        // 生成单条文案
+        const line = tpl.replace(/\${min}/g, diff).replace(/\${char}/g, charName).replace(/\${act}/g, item.description).replace(/\${time}/g, item.time);
+        
+        // 生成最终复制内容 (套用全局模板)
+        let globalTpl = document.getElementById('global-copy-template')?.value;
+        if(!globalTpl) globalTpl = globalSettings.copyTemplate || DEFAULT_GLOBAL_TEMPLATE;
+        
+        const finalTxt = globalTpl.replace("${timercontent}", line).replace("${currTime}", now.toLocaleString());
+
+        navigator.clipboard.writeText(finalTxt).then(()=>showToast(`已复制: ${item.time}`)).catch(()=>showToast("复制失败"));
+      }
+
       /* --- 基础管理 (预设与存储) --- */
       function getPresets(type) { return JSON.parse(localStorage.getItem(STORAGE_KEYS[type])) || {}; }
       function refreshDropdown(type) {
-        const presets = getPresets(type); const select = document.getElementById(`${type}-preset-select`);
+        const select = document.getElementById(`${type}-preset-select`);
+        if(!select) return;
+        const presets = getPresets(type); 
         const cur = select.value; select.innerHTML = '<option value="">-- 新建/选择 --</option>';
         Object.keys(presets).forEach(n => { const opt = document.createElement('option'); opt.value=n; opt.innerText=n; select.appendChild(opt); });
         if(presets[cur]) select.value = cur;
-        // 如果是 Prompt，还得更新页签里的选择框
         if(type==='prompt') {
            const ps = document.getElementById('page-prompt-select');
-           if(ps && getActivePage()) { ps.innerHTML='<option value="">-- 规则 --</option>'; Object.keys(presets).forEach(n=>{const o=document.createElement('option');o.value=n;o.innerText=n;ps.appendChild(o)}); ps.value=getActivePage().promptPreset||""; }
+           if(ps && getActivePage()) { 
+               ps.innerHTML='<option value="">-- 规则 --</option>'; 
+               Object.keys(presets).forEach(n=>{const o=document.createElement('option');o.value=n;o.innerText=n;ps.appendChild(o)}); 
+               ps.value=getActivePage().promptPreset||""; 
+           }
         }
       }
-      function loadPreset(type, name) { const f=FIELD_MAP[type]; if(!name){f.forEach(i=>document.getElementById(i).value='');return;} const d=getPresets(type)[name]; if(d)f.forEach(i=>{const e=document.getElementById(i);if(e)e.value=d[i]||''}); }
+      function loadPreset(type, name) { const f=FIELD_MAP[type]; if(!name){f.forEach(i=>{const e=document.getElementById(i);if(e)e.value=''});return;} const d=getPresets(type)[name]; if(d)f.forEach(i=>{const e=document.getElementById(i);if(e)e.value=d[i]||''}); }
       function savePreset(type) { const n=document.getElementById(`${type}-preset-name`).value.trim(); if(!n)return showToast('无名称'); const p=getPresets(type), d={}; FIELD_MAP[type].forEach(i=>d[i]=document.getElementById(i).value); p[n]=d; localStorage.setItem(STORAGE_KEYS[type],JSON.stringify(p)); refreshDropdown(type); document.getElementById(`${type}-preset-select`).value=n; showToast('已保存'); }
       function deletePreset(type) { const n=document.getElementById(`${type}-preset-select`).value; if(n&&confirm('删除?')){const p=getPresets(type);delete p[n];localStorage.setItem(STORAGE_KEYS[type],JSON.stringify(p));loadPreset(type,'');refreshDropdown(type);showToast('已删除');} }
       
       function saveGlobalSettings() {
-        // 保存文案配置
-        const copyTpl = document.getElementById('global-copy-template').value;
-        if(copyTpl) globalSettings.copyTemplate = copyTpl; // 只是临时存一下变量，实际预设单独存
-        globalSettings.tplPast = document.getElementById('status-tpl-past').value;
-        globalSettings.tplFuture = document.getElementById('status-tpl-future').value;
+        const copyTpl = document.getElementById('global-copy-template')?.value;
+        if(copyTpl) globalSettings.copyTemplate = copyTpl; 
         
-        // 保存悬浮窗配置
-        globalSettings.flowMode = document.getElementById('flow-mode').value;
-        globalSettings.flowRange = parseInt(document.getElementById('flow-range').value);
-        globalSettings.flowWidth = parseInt(document.getElementById('flow-width').value);
-        globalSettings.iconNormal = document.getElementById('flow-icon-normal').value;
-        globalSettings.iconActive = document.getElementById('flow-icon-active').value;
-        globalSettings.iconSize = parseInt(document.getElementById('flow-icon-size').value);
+        const getV = (id) => document.getElementById(id)?.value;
+        globalSettings.tplPast = getV('status-tpl-past');
+        globalSettings.tplFuture = getV('status-tpl-future');
+        globalSettings.flowMode = getV('flow-mode');
+        globalSettings.flowRange = parseInt(getV('flow-range'));
+        globalSettings.flowWidth = parseInt(getV('flow-width'));
+        globalSettings.iconNormal = getV('flow-icon-normal');
+        globalSettings.iconActive = getV('flow-icon-active');
+        globalSettings.iconSize = parseInt(getV('flow-icon-size'));
         
         localStorage.setItem(STORAGE_KEYS.global, JSON.stringify(globalSettings));
         showToast("设置已应用"); updateFlowWindowVisibility();
@@ -1548,20 +1578,26 @@
 
       /* --- 角色与页签 --- */
       function renderRoleUI() {
-        const s = document.getElementById('role-select'); s.innerHTML='';
+        const s = document.getElementById('role-select'); 
+        if(!s) return;
+        s.innerHTML='';
         roles.forEach(r=>{const o=document.createElement('option');o.value=r.id;o.innerText=r.name;s.appendChild(o)}); s.value=activeRoleId; renderTabs();
       }
       function getActiveRole() { return roles.find(r=>r.id==activeRoleId); }
-      function getActivePage() { return getActiveRole().pages[activePageIndex]; }
+      function getActivePage() { const r=getActiveRole(); return r ? r.pages[activePageIndex] : null; }
       function switchRole(id) { activeRoleId=parseInt(id); activePageIndex=0; renderTabs(); }
       function addNewRole() { const n=prompt("角色名:"); if(n){roles.push({id:Date.now(),name:n,pages:[{id:Date.now(),name:"日程",promptPreset:"",data:[]}]});activeRoleId=roles[roles.length-1].id;activePageIndex=0;saveRoles();renderRoleUI();} }
-      function renameRole() { const r=getActiveRole(), n=prompt("重命名:",r.name); if(n){r.name=n;saveRoles();renderRoleUI();} }
+      function renameRole() { const r=getActiveRole(); if(!r) return; const n=prompt("重命名:",r.name); if(n){r.name=n;saveRoles();renderRoleUI();} }
       function deleteRole() { if(roles.length<=1)return; if(confirm("删除角色?")){roles=roles.filter(r=>r.id!=activeRoleId);activeRoleId=roles[0].id;activePageIndex=0;saveRoles();renderRoleUI();} }
       function saveRoles() { localStorage.setItem(STORAGE_KEYS.roles, JSON.stringify(roles)); }
 
       function renderTabs() {
-        const c=document.getElementById('timer-tabs'); c.innerHTML='';
-        getActiveRole().pages.forEach((p,i)=>{const t=document.createElement('div');t.className=`tab-item ${i===activePageIndex?'active':''}`;t.innerText=p.name;t.onclick=()=>{activePageIndex=i;renderTabs()};c.appendChild(t)});
+        const c=document.getElementById('timer-tabs'); 
+        if(!c) return;
+        c.innerHTML='';
+        const role = getActiveRole();
+        if(!role) return;
+        role.pages.forEach((p,i)=>{const t=document.createElement('div');t.className=`tab-item ${i===activePageIndex?'active':''}`;t.innerText=p.name;t.onclick=()=>{activePageIndex=i;renderTabs()};c.appendChild(t)});
         const b=document.createElement('div');b.className='tab-add-btn';b.innerText='+';b.onclick=addNewPage;c.appendChild(b);
         const cp=getActivePage(); if(cp){ refreshDropdown('prompt'); renderTimeline(); }
       }
@@ -1596,11 +1632,12 @@
 
       /* --- 渲染与手动复制 --- */
       function renderTimeline() {
-        const b=document.getElementById('schedule-result-area'), d=getActivePage()?.data||[];
+        const b=document.getElementById('schedule-result-area');
+        if(!b) return;
+        const d=getActivePage()?.data||[];
         b.innerHTML = d.length ? '' : '<div style="text-align:center;color:#aaa;padding:20px">暂无数据</div>';
         d.forEach((item,i)=>{
           const c=document.createElement('div'); c.className='timeline-card'; c.id=`card-${i}`;
-          // 增加了复制按钮 (copySingleItem)
           c.innerHTML=`<div class="t-header"><div class="t-time">${item.time}</div><div style="font-size:20px">${item.icon||'📱'}</div></div><div class="t-desc">${item.description}</div>${item.html_snippet||''}<div class="card-actions"><button class="card-btn copy" onclick="copySingleItem(${i})">📑 复制</button><button class="card-btn edit" onclick="editItem(${i})">✏️</button><button class="card-btn del" onclick="delItem(${i})">🗑️</button></div>`;
           b.appendChild(c);
         });
@@ -1609,11 +1646,9 @@
       function editItem(i) { const d=getActivePage().data, v=prompt("修改:",d[i].description); if(v){d[i].description=v;saveRoles();renderTimeline();} }
       function delItem(i) { if(confirm("删除?")){getActivePage().data.splice(i,1);saveRoles();renderTimeline();} }
       
-      // 单条目复制功能
       function copySingleItem(i) {
         const item = getActivePage().data[i];
         const charName = document.getElementById('char-name').value || "TA";
-        // 格式: ${char}在${time}${act}
         const txt = `${charName}在${item.time}${item.description}`;
         navigator.clipboard.writeText(txt).then(()=>showToast("已复制单条")).catch(()=>showToast("复制失败"));
       }
@@ -1627,76 +1662,36 @@
         for(let i=0;i<d.length;i++){const[h,m]=d[i].time.split(':').map(Number);if(curM>=h*60+m)aidx=i;else break;}
         if(aidx!==-1) document.getElementById(`card-${aidx}`)?.classList.add('active-now');
         
-        // 实时面板简略显示
-        const fmt = (t,min,act,tm) => t.replace(/\${min}/g,min).replace(/\${char}/g,"").replace(/\${act}/g,act).replace(/\${time}/g,tm);
-        const char = document.getElementById('char-name').value || "TA";
-        
+        const rtPast = document.getElementById('rt-past');
+        const rtFuture = document.getElementById('rt-future');
+        if(!rtPast || !rtFuture) return;
+
         if(aidx!==-1) {
              const it=d[aidx], [h,m]=it.time.split(':').map(Number);
              const diff = curM-(h*60+m);
-             document.getElementById('rt-past').innerText = `正在进行(${diff}m前): ${it.description}`;
+             rtPast.innerText = `正在进行(${diff}m前): ${it.description}`;
         } else {
-             document.getElementById('rt-past').innerText = "无正在进行事件";
+             rtPast.innerText = "无正在进行事件";
         }
         
         let nidx = aidx===-1 ? 0 : aidx+1;
         if(nidx < d.length) {
              const it=d[nidx], [h,m]=it.time.split(':').map(Number);
              const diff = (h*60+m)-curM;
-             document.getElementById('rt-future').innerText = `即将开始(${diff}m后): ${it.description}`;
+             rtFuture.innerText = `即将开始(${diff}m后): ${it.description}`;
         } else {
-             document.getElementById('rt-future').innerText = "无后续事件";
+             rtFuture.innerText = "无后续事件";
         }
-      }
-
-      function copyGlobalContext() {
-        const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
-        const role = getActiveRole();
-        const char = document.getElementById('char-name').value || "TA";
-        
-        let allLines = [];
-        
-        // 遍历当前角色所有页面
-        role.pages.forEach(p => {
-            let idx = -1;
-            for(let i=0;i<p.data.length;i++){const[h,m]=p.data[i].time.split(':').map(Number);if(curM>=h*60+m)idx=i;else break;}
-            
-            // 过去事件 (当前这一条)
-            if(idx!==-1) {
-               const it=p.data[idx], [h,m]=it.time.split(':').map(Number);
-               allLines.push(globalSettings.tplPast.replace(/\${min}/g, curM-(h*60+m)).replace(/\${char}/g, char).replace(/\${act}/g, it.description).replace(/\${time}/g, it.time));
-            }
-            // 未来事件 (下一条)
-            let nidx = idx===-1 ? 0 : idx+1;
-            if(nidx < p.data.length) {
-               const it=p.data[nidx], [h,m]=it.time.split(':').map(Number);
-               allLines.push(globalSettings.tplFuture.replace(/\${min}/g, (h*60+m)-curM).replace(/\${char}/g, char).replace(/\${act}/g, it.description).replace(/\${time}/g, it.time));
-            }
-        });
-        
-        // 替换全局模板
-        let tpl = document.getElementById('global-copy-template').value || DEFAULT_GLOBAL_TEMPLATE;
-        // 如果用户在textarea里写了，优先用textarea的，否则用默认
-        const content = allLines.join("；");
-        const finalTxt = tpl.replace("${timercontent}", content).replace("${currTime}", now.toLocaleString());
-        
-        navigator.clipboard.writeText(finalTxt).then(()=>showToast("已复制上下文")).catch(()=>showToast("失败"));
       }
 
       /* --- 全量备份与恢复 --- */
       function exportData() { 
-          // 强制收集当前界面上的未保存内容到Settings变量里，确保备份最新
           try {
-             globalSettings.copyTemplate = document.getElementById('global-copy-template').value;
-             globalSettings.tplPast = document.getElementById('status-tpl-past').value;
-             globalSettings.tplFuture = document.getElementById('status-tpl-future').value;
-             localStorage.setItem(STORAGE_KEYS.global, JSON.stringify(globalSettings));
+             saveGlobalSettings(); // 先保存一下当前的设置
           } catch(e){}
 
           const d={}; 
-          // 循环备份所有 KEYS
           Object.keys(STORAGE_KEYS).forEach(k=>d[k]=localStorage.getItem(STORAGE_KEYS[k])); 
-          
           const b=new Blob([JSON.stringify(d)],{type:'application/json'}); 
           const a=document.createElement('a'); 
           a.href=URL.createObjectURL(b); 
@@ -1717,7 +1712,6 @@
           }; 
           r.readAsText(f); 
       }
-      
     </script>
   </body>
 </html>
