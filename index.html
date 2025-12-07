@@ -113,7 +113,7 @@
       #fab-main.expanded { transform: rotate(90deg); background: #fff; background-image: none; }
       #fab-main.expanded::before, #fab-main.expanded::after { opacity: 0; }
       
-      /* 菜单列表 - 已修复嵌套问题 */
+      /* 菜单列表 - 结构已优化 */
       .fab-actions {
         position: absolute; bottom: 80px; right: 0; display: flex; flex-direction: column; align-items: flex-end;
         gap: 12px; opacity: 0; visibility: hidden; transform: translateY(15px); transition: 0.3s; pointer-events: none; width: max-content;
@@ -454,13 +454,16 @@
           if (frame.id === frameId) {
             frame.style.display = 'flex';
             setTimeout(() => frame.classList.add('active'), 10);
+            
+            // [核心修复] 首次加载，之后保持不变，不清理，确保不丢进度
             const iframe = frame.querySelector('iframe');
-            if (iframe && iframe.dataset.src) iframe.src = iframe.dataset.src; 
+            if (iframe && !iframe.src && iframe.dataset.src) {
+                iframe.src = iframe.dataset.src;
+            }
           } else {
+            // [核心修复] 只是隐藏，不清除src
             frame.classList.remove('active');
             frame.style.display = 'none';
-            const iframe = frame.querySelector('iframe');
-            if (iframe) iframe.src = ''; 
           }
         });
         closeMenu();
@@ -472,10 +475,9 @@
         launcherScreen.style.transform = 'scale(1)';
         setTimeout(() => {
           frames.forEach(frame => {
+            // [核心修复] 只是隐藏，不清除src
             frame.classList.remove('active');
             frame.style.display = 'none';
-            const iframe = frame.querySelector('iframe');
-            if (iframe) iframe.src = '';
           });
         }, 300);
         closeMenu();
@@ -556,9 +558,7 @@
       };
       const DEFAULT_PROMPT = `# 角色扮演任务\n请根据"\${chat.name}"的人设，推演接下来24小时的行为轨迹。\n# 参数\n角色：\${chat.name}\n人设：\${chat.settings.aiPersona}\n# 输出规则\n1. 返回JSON数组。2. 时间格式 "HH:mm"。3. 包含 'html_snippet' (可选)。\n[{"time":"08:00","description":"...","icon":"⏰"}]`;
 
-      // ★★★ 核心修复：单一且强制的初始化入口 ★★★
       window.addEventListener('load', () => {
-        // 1. 双击唤醒逻辑
         document.addEventListener('dblclick', () => { if(fabContainer.classList.contains('ghost-mode')){ showFab(); showToast('已唤出菜单'); } });
         let lastTapTime = 0;
         document.addEventListener('touchend', e => {
@@ -569,18 +569,14 @@
           lastTapTime = currentTime;
         });
 
-        // 2. Service Worker
         if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
-        // 3. 数据恢复逻辑 (修复备份丢失问题)
         try {
           ensureDefaultPresets();
           
-          // 恢复全局设置
           const savedGlobal = localStorage.getItem(STORAGE_KEYS.global);
           if(savedGlobal) globalSettings = {...globalSettings, ...JSON.parse(savedGlobal)};
           
-          // 应用设置到UI
           const safeVal = (id, val) => { const el=document.getElementById(id); if(el) el.value=val; };
           safeVal('global-copy-template', DEFAULT_GLOBAL_TEMPLATE);
           safeVal('flow-mode', globalSettings.flowMode);
@@ -595,18 +591,15 @@
           const widget = document.getElementById('flow-widget');
           if(widget) { widget.style.left = globalSettings.widgetX + 'px'; widget.style.top = globalSettings.widgetY + 'px'; }
 
-          // 恢复角色数据
           const savedRoles = localStorage.getItem(STORAGE_KEYS.roles);
           if(savedRoles) {
             roles = JSON.parse(savedRoles);
-            // 修复：如果读取成功但数组为空，或者数据损坏，重置为默认
             if(!Array.isArray(roles) || roles.length === 0) roles = [{ id: Date.now(), name: "默认角色", pages: [{ id: Date.now(), name: "主日程", data: [], exportMode: "both" }] }];
           } else {
             roles = [{ id: Date.now(), name: "默认角色", pages: [{ id: Date.now(), name: "主日程", data: [], exportMode: "both" }] }];
           }
           activeRoleId = roles[0].id;
           
-          // 渲染UI
           renderRoleUI();
           ['api','char','user','prompt','copy'].forEach(refreshDropdown);
           
@@ -615,11 +608,10 @@
           initFlowLoop();
           initWidgetDrag();
           
-          // 提示用户数据加载成功
           if(savedRoles) showToast('✅ 备份已恢复');
           
         } catch(e) {
-          alert("数据初始化失败，请截图反馈：" + e.message);
+          alert("数据初始化失败：" + e.message);
         }
       });
 
