@@ -570,113 +570,150 @@
       .edge-sensor.right { top: 30px; bottom: 30px; right: 0; width: 15px; }
       /* ★★★★★ 这里是你要复制进去的代码 结束 ★★★★★ */
 /* ===========================
-         AI终端 V10.0 最终形态样式
-         (修复UI对齐 / 增强显示逻辑 / 新图标适配)
+         V10.0 UI 皮肤：深空灰·磨砂玻璃 (Dark Frost)
+         只针对 #app-settings 和 #app-schedule 生效
          =========================== */
       
-      /* 1. 基础容器优化 */
-      .schedule-container { padding: 60px 20px 120px 20px; height: 100%; overflow-y: auto; box-sizing: border-box; }
-      .schedule-header { font-size: 20px; color: #5d4037; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px dashed #e6ceac; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-
-      /* 2. 桌面图标 */
-      .icon-bg-desktop svg { width: 50%; height: 50%; fill: #eceff1; }
-      .icon-bg-desktop span { font-size: 28px; }
-
-      /* 3. 智能悬浮窗 (Flow Widget) */
-      #flow-widget {
-        position: fixed; 
-        z-index: 9999;
-        display: none; 
-        top: 100px; left: 20px;
-        touch-action: none; 
-        user-select: none;
-        -webkit-user-select: none;
-        cursor: move;
-        opacity: 0;
-        transition: opacity 0.5s;
+      /* 1. 窗口背景：深色磨砂 */
+      #app-settings, #app-schedule {
+        background: rgba(30, 32, 36, 0.92) !important; /* 深灰背景 */
+        backdrop-filter: blur(25px) !important;        /* 强力毛玻璃 */
+        -webkit-backdrop-filter: blur(25px) !important;
       }
-      #flow-widget.visible { opacity: 1; }
-      
-      .flow-card-glass {
-        background: rgba(60, 60, 60, 0.85);
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        border-radius: 20px;
-        padding: 0 16px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        color: #fff;
-        font-size: 13px;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        overflow: hidden;
-        white-space: nowrap;
-        transition: width 0.3s;
+
+      /* 2. 字体与标题：银白色系 */
+      #app-settings .schedule-header,
+      #app-schedule .schedule-header {
+        color: #eceff1 !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        letter-spacing: 1px;
       }
-      .flow-card-glass:active { transform: scale(0.96); background: rgba(40, 40, 40, 0.95); }
-
-      /* 跑马灯 & 呼吸灯 */
-      .marquee-container {
-        position: relative; overflow: hidden; white-space: nowrap; width: 100%; height: 100%; display: flex; align-items: center; pointer-events: none;
+      
+      /* 3. 卡片容器：半透明悬浮层 */
+      #app-settings .settings-group, 
+      #app-schedule .page-config-panel {
+        background: rgba(255, 255, 255, 0.04) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+        margin-bottom: 20px !important;
+        padding: 15px !important;
       }
-      .marquee-text { position: absolute; white-space: nowrap; will-change: transform; }
-      .breathing-content { width: 100%; text-align: center; pointer-events: none; }
-      .flow-icon-pure { display: block; cursor: move; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); transition: transform 0.2s; }
-      .flow-icon-pure:active { transform: scale(0.9); }
-
-      /* 4. 设置与绑定面板 */
-      .settings-group { margin-bottom: 20px; background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 12px; border: 1px solid #efe6d5; }
-      .settings-title { font-size: 14px; color: #8d6e63; margin-bottom: 10px; font-weight: bold; border-left: 3px solid #e6ceac; padding-left: 8px; display: flex; justify-content: space-between; align-items: center;}
-      .input-row { margin-bottom: 10px; }
-      .input-label { font-size: 12px; color: #5d4037; margin-bottom: 4px; display: block; }
-      .custom-input, .custom-textarea { width: 100%; padding: 8px; border: 1px solid #e0d0b8; border-radius: 6px; background: #fffdf5; font-size: 13px; color: #3e2723; box-sizing: border-box; outline: none; transition: 0.3s;}
-      .custom-input:focus, .custom-textarea:focus { background: #fff; border-color: #8d6e63; }
-      .custom-textarea { resize: vertical; min-height: 60px; font-family: monospace; }
       
-      .btn-row { display: flex; gap: 10px; margin-top: 10px; }
-      .btn-primary { flex: 1; background: #eecfa1; color: #5d4037; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-      .btn-secondary { flex: 1; background: #fff; border: 1px solid #d7ccc8; color: #8d6e63; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-      .icon-btn { width: 30px; height: 30px; border: 1px solid #d7ccc8; background: #fff; border-radius: 4px; cursor: pointer; display: flex; justify-content: center; align-items: center; color: #8d6e63; font-size: 14px; padding:0; }
-      .preset-bar { display: flex; gap: 8px; margin-bottom: 10px; background: #fffdf5; padding: 8px; border-radius: 8px; border: 1px dashed #d7ccc8; align-items: center; }
-      .preset-select { flex: 1; padding: 6px; border: 1px solid #e0d0b8; border-radius: 4px; background: #fff; font-size: 12px; color: #5d4037; }
-      
-      /* --- 绑定面板 --- */
-      .page-config-panel { background: #fff8e1; border: 1px dashed #d7ccc8; border-radius: 12px; padding: 12px; margin-bottom: 20px; }
-      .page-config-title { font-size: 12px; font-weight: bold; color: #e65100; margin-bottom: 8px; text-align: center; border-bottom: 1px solid #ffe0b2; padding-bottom: 5px; }
-      .page-config-row { display: flex; align-items: center; margin-bottom: 6px; font-size: 12px; }
-      .page-config-label { width: 70px; color: #5d4037; font-weight: bold; flex-shrink: 0; }
-      .page-config-select { flex: 1; padding: 4px; border: 1px solid #ffe0b2; border-radius: 4px; background: #fff; color: #333; font-size: 11px; }
+      /* 绑定面板的特殊微调 */
+      #app-schedule .page-config-panel {
+        background: rgba(255, 255, 255, 0.02) !important; /* 更淡一点 */
+      }
 
-      /* 其他组件 */
-      .role-bar { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; background: #efe6d5; padding: 8px; border-radius: 8px; }
-      .mini-btn { width: 24px; height: 24px; border: 1px solid #d7ccc8; background: #fff; border-radius: 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #8d6e63; font-size: 12px; }
-      .tabs-header { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 10px; border-bottom: 1px solid #efe6d5; }
-      .tab-item { padding: 6px 12px; background: #fff; border: 1px solid #e0d0b8; border-radius: 6px 6px 0 0; font-size: 12px; color: #8d6e63; cursor: pointer; white-space: nowrap; }
-      .tab-item.active { background: #eecfa1; color: #5d4037; font-weight: bold; border-bottom: 1px solid #eecfa1; }
-      .tab-add-btn { padding: 6px 10px; background: #efe6d5; border: 1px dashed #bbb; border-radius: 6px; cursor: pointer; color: #5d4037; }
-      .prompt-toolbar { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; padding: 5px; background: #efe6d5; border-radius: 6px; }
-      .var-btn { background: #fff; border: 1px solid #d7ccc8; border-radius: 4px; padding: 2px 6px; font-size: 10px; color: #5d4037; cursor: pointer; font-family: monospace; }
-      #realtime-status-panel { background: #3e2723; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(62,39,35,0.4); border: 1px solid #5d4037; display: none; }
-      .rt-content { font-size: 15px; font-weight: bold; color: #fff8e1; margin: 5px 0; line-height: 1.4; }
-      .rt-divider { border: 0; border-top: 1px dashed #8d6e63; margin: 10px 0; }
-      .timeline-card { background: #fff; border: 1px solid #efe6d5; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.03); transition: 0.3s; }
-      .timeline-card.active-now { border: 2px solid #ffb74d; background: #fff3e0; transform: scale(1.02); z-index: 2; box-shadow: 0 8px 20px rgba(255, 183, 77, 0.3); }
-      .t-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
-      .t-time { font-family: monospace; font-weight: 900; font-size: 16px; color: #5d4037; background: #eecfa1; padding: 2px 8px; border-radius: 4px; }
-      .t-desc { font-size: 14px; color: #4e342e; line-height: 1.5; white-space: pre-wrap; }
-      .card-actions { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #eee; display: flex; justify-content: flex-end; gap: 10px; }
-      .card-btn { font-size: 11px; padding: 4px 8px; border-radius: 4px; cursor: pointer; border: 1px solid transparent; background: transparent; }
-      .card-btn.edit { color: #8d6e63; border-color: #d7ccc8; }
-      .card-btn.copy { color: #fff; background: #8d6e63; border-color: #5d4037; }
-      .card-btn.del { color: #e57373; border-color: #ffcdd2; }
+      /* 4. 标题文字：取消原来的颜色，改为冷灰色 */
+      .settings-title, .page-config-title {
+        color: #b0bec5 !important;
+        border-color: #546e7a !important; /* 左侧竖线改为蓝灰 */
+        font-weight: 600 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 12px;
+      }
+      .page-config-title {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        color: #90a4ae !important;
+      }
 
-      /* --- [悬浮菜单统一美化] --- */
+      /* 5. 输入框与下拉框：极简深邃风 */
+      .custom-input, .custom-textarea, .preset-select, .page-config-select, #bind-mode {
+        background: rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #fff !important;
+        border-radius: 8px !important;
+        font-family: monospace;
+        transition: all 0.3s;
+      }
+      .custom-input:focus, .custom-textarea:focus {
+        background: rgba(0, 0, 0, 0.6) !important;
+        border-color: #81d4fa !important; /* 聚焦时亮蓝光 */
+        box-shadow: 0 0 8px rgba(129, 212, 250, 0.2);
+      }
+      .input-label, .page-config-label {
+        color: #78909c !important; /* 标签文字变暗 */
+      }
+
+      /* 6. 按钮升级：科技感 */
+      .btn-primary {
+        background: linear-gradient(135deg, #455a64, #263238) !important;
+        color: #fff !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
+      }
+      .btn-secondary {
+        background: transparent !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: #b0bec5 !important;
+      }
+      .icon-btn, .mini-btn, .var-btn {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: none !important;
+        color: #eceff1 !important;
+        border-radius: 6px !important;
+      }
+      .preset-bar, .prompt-toolbar {
+        background: transparent !important;
+        border: 1px dashed rgba(255, 255, 255, 0.1) !important;
+      }
+
+      /* 7. 时间轴卡片：黑胶唱片质感 */
+      .timeline-card {
+        background: rgba(20, 20, 20, 0.6) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border-radius: 12px !important;
+        color: #cfd8dc !important;
+      }
+      .timeline-card .t-time {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: #81d4fa !important; /* 时间高亮色 */
+        font-family: 'Courier New', monospace;
+      }
+      .timeline-card .t-desc {
+        color: #b0bec5 !important;
+      }
+      /* 当前活跃卡片：流光金 */
+      .timeline-card.active-now {
+        background: rgba(255, 193, 7, 0.05) !important;
+        border: 1px solid rgba(255, 193, 7, 0.3) !important;
+        box-shadow: 0 0 15px rgba(255, 193, 7, 0.1) !important;
+      }
+
+      /* 8. 角色栏 & 页签 */
+      .role-bar {
+        background: rgba(0,0,0,0.3) !important;
+        border: 1px solid rgba(255,255,255,0.05) !important;
+      }
+      .tab-item {
+        background: rgba(255,255,255,0.03) !important;
+        color: #78909c !important;
+        border: none !important;
+      }
+      .tab-item.active {
+        background: rgba(255,255,255,0.1) !important;
+        color: #fff !important;
+        border-bottom: 2px solid #81d4fa !important; /* 激活时底部蓝条 */
+      }
+
+      /* 9. 实时状态面板 */
+      #realtime-status-panel {
+        background: linear-gradient(to right, #232526, #414345) !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3) !important;
+      }
+      .rt-content { color: #81d4fa !important; }
+      .rt-divider { border-top: 1px dashed rgba(255,255,255,0.1) !important; }
+
+      /* [关键修复] 悬浮菜单样式 */
       .fab-action-item {
         display: flex;
         align-items: center;
-        justify-content: flex-end; /* 让文字在左，图标在右 */
+        justify-content: flex-end; 
         gap: 12px;
         cursor: pointer;
         width: 100%;
@@ -684,7 +721,6 @@
         -webkit-tap-highlight-color: transparent;
       }
       .fab-action-item:active { transform: scale(0.95); }
-      
       .fab-item-label {
         background: #fff;
         color: #5d4037;
@@ -695,22 +731,36 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         white-space: nowrap;
       }
-      
       .fab-item-icon {
-        width: 48px; 
-        height: 48px;
-        border-radius: 50%;
-        background: #fff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        border: 2px solid #fff;
-        overflow: hidden;
+        width: 48px; height: 48px; border-radius: 50%;
+        background: #fff; display: flex; justify-content: center; align-items: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 2px solid #fff; overflow: hidden;
       }
-      /* 图片填满，不留白边，像应用图标 */
       .fab-item-icon img { width: 100%; height: 100%; object-fit: cover; }
       .fab-item-icon svg { width: 24px; height: 24px; fill: #5d4037; }
+      
+      /* 基础容器修正 */
+      .schedule-container { padding: 60px 20px 120px 20px; height: 100%; overflow-y: auto; box-sizing: border-box; }
+      .icon-bg-desktop svg { width: 50%; height: 50%; fill: #eceff1; }
+      
+      /* 悬浮窗修正 */
+      #flow-widget {
+        position: fixed; z-index: 9999; display: none; top: 100px; left: 20px;
+        touch-action: none; user-select: none; -webkit-user-select: none; cursor: move;
+        opacity: 0; transition: opacity 0.5s;
+      }
+      #flow-widget.visible { opacity: 1; }
+      .flow-card-glass {
+        background: rgba(60, 60, 60, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        border-radius: 20px; padding: 0 16px; height: 40px; display: flex; align-items: center;
+        color: #fff; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; overflow: hidden;
+        white-space: nowrap; transition: width 0.3s;
+      }
+      .marquee-container { position: relative; overflow: hidden; white-space: nowrap; width: 100%; height: 100%; display: flex; align-items: center; pointer-events: none; }
+      .marquee-text { position: absolute; white-space: nowrap; will-change: transform; }
+      .breathing-content { width: 100%; text-align: center; pointer-events: none; }
+      .flow-icon-pure { display: block; cursor: move; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); transition: transform 0.2s; }
 
     </style>
   </head>
@@ -789,7 +839,7 @@
             </div>
           </div>
           
-          <div style="padding:10px; background:#e1f5fe; color:#0277bd; font-size:12px; border-radius:8px; margin-bottom:15px;">
+          <div style="padding:10px; background:rgba(255,255,255,0.1); color:#81d4fa; font-size:12px; border-radius:8px; margin-bottom:15px; border:1px solid rgba(255,255,255,0.1);">
             ℹ️ 说明：这里只负责<b>编辑和保存预设</b>。要让计时器生效，请去“计时”界面，为每个计时器页签<b>绑定</b>对应的预设。
           </div>
 
@@ -931,7 +981,7 @@
              </div>
              <div class="page-config-row">
                <div class="page-config-label">👀 显示范围:</div>
-               <select id="bind-mode" class="page-config-select" style="border-color:#ffb74d; color:#e65100; font-weight:bold;" onchange="updatePageBinding('exportMode', this.value)">
+               <select id="bind-mode" class="page-config-select" style="border-color:#81d4fa; color:#81d4fa; font-weight:bold;" onchange="updatePageBinding('exportMode', this.value)">
                  <option value="both">未来 + 过去 (双向)</option>
                  <option value="future">只显示未来</option>
                  <option value="past">只显示过去</option>
