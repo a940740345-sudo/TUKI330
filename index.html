@@ -570,19 +570,28 @@
       .edge-sensor.right { top: 30px; bottom: 30px; right: 0; width: 15px; }
       /* ★★★★★ 这里是你要复制进去的代码 结束 ★★★★★ */
 /* ===========================
-         AI终端 V12.0 终极UI：高级灰半透明版
+         AI终端 V13.0 界面美化：高级灰半透明 (Dark Glass)
          =========================== */
       
-      /* 1. 基础容器优化 */
-      .schedule-container { padding: 60px 20px 120px 20px; height: 100%; overflow-y: auto; box-sizing: border-box; }
+      /* 1. 全局容器与字体优化 */
+      .schedule-container { 
+          padding: 60px 20px 120px 20px; 
+          height: 100%; 
+          overflow-y: auto; 
+          box-sizing: border-box; 
+          /* 隐藏滚动条但保留功能 */
+          scrollbar-width: none; 
+      }
+      .schedule-container::-webkit-scrollbar { display: none; }
+
       .schedule-header { 
           font-size: 20px; color: #eceff1; margin-bottom: 20px; padding-bottom: 15px; 
           border-bottom: 1px solid rgba(255,255,255,0.1); 
           font-weight: bold; display: flex; justify-content: space-between; align-items: center; 
-          letter-spacing: 1px;
+          letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
       }
 
-      /* 2. 桌面图标 */
+      /* 2. 桌面图标适配 (保持不变) */
       .icon-bg-desktop svg { width: 50%; height: 50%; fill: #eceff1; }
       .icon-bg-desktop span { font-size: 28px; }
 
@@ -595,18 +604,16 @@
       #flow-widget.visible { opacity: 1; }
       
       .flow-card-glass {
-        background: rgba(30, 30, 30, 0.85);
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        background: rgba(30, 30, 30, 0.85); /* 深灰底色 */
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); /* 强毛玻璃 */
+        border: 1px solid rgba(255, 255, 255, 0.15); /* 细微白边 */
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4); /* 深度投影 */
         border-radius: 24px;
         padding: 0 18px;
         height: 44px;
         display: flex; align-items: center;
-        color: #f5f5f5;
-        font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
-        overflow: hidden; white-space: nowrap;
-        transition: width 0.3s;
+        color: #f5f5f5; font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
+        overflow: hidden; white-space: nowrap; transition: width 0.3s;
       }
       .flow-card-glass:active { transform: scale(0.96); background: rgba(50, 50, 50, 0.95); }
 
@@ -617,126 +624,180 @@
       .flow-icon-pure { display: block; cursor: move; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); transition: transform 0.2s; border-radius: 12px; }
       .flow-icon-pure:active { transform: scale(0.9); }
 
-      /* 4. 核心UI重绘：高级灰半透明面板 */
+      /* 4. [核心美化] App窗口：高级灰半透明风格 */
+      
+      /* 强制覆盖 App 窗口背景为深空灰渐变 */
       #app-settings, #app-schedule {
-          background: linear-gradient(135deg, #1c1c1c 0%, #0f0f0f 100%) !important;
-          color: #e0e0e0;
+          background: linear-gradient(135deg, #263238 0%, #102027 100%) !important;
+          color: #b0bec5;
       }
 
-      /* 设置分组卡片 */
+      /* 设置分组卡片：深色磨砂玻璃 */
       .settings-group { 
-          margin-bottom: 20px; background: rgba(255, 255, 255, 0.03); padding: 20px; 
-          border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08); 
-          box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+          margin-bottom: 20px; 
+          background: rgba(255, 255, 255, 0.04); 
+          padding: 20px; 
+          border-radius: 16px; 
+          border: 1px solid rgba(255, 255, 255, 0.08); 
+          box-shadow: 0 8px 32px rgba(0,0,0,0.3);
       }
       .settings-title { 
-          font-size: 14px; color: #b0bec5; margin-bottom: 15px; font-weight: bold; 
-          border-left: 3px solid #607d8b; padding-left: 10px; 
+          font-size: 14px; color: #80cbc4; margin-bottom: 15px; font-weight: bold; 
+          border-left: 3px solid #009688; padding-left: 10px; 
           display: flex; justify-content: space-between; align-items: center;
+          text-transform: uppercase; letter-spacing: 1px;
       }
 
-      /* 输入控件 */
+      /* 输入控件：深邃质感 */
       .input-row { margin-bottom: 15px; }
       .input-label { font-size: 12px; color: #78909c; margin-bottom: 6px; display: block; font-weight: 600; }
+      
       .custom-input, .custom-textarea, .preset-select, .page-config-select { 
-          width: 100%; padding: 10px 12px; 
-          border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; 
-          background: rgba(0, 0, 0, 0.3); font-size: 13px; color: #fff; 
-          box-sizing: border-box; outline: none; transition: 0.3s; font-family: sans-serif;
+          width: 100%; padding: 12px; 
+          border: 1px solid rgba(255, 255, 255, 0.1); 
+          border-radius: 10px; 
+          background: rgba(0, 0, 0, 0.4); 
+          font-size: 13px; color: #eceff1; 
+          box-sizing: border-box; outline: none; transition: 0.3s;
+          font-family: sans-serif;
       }
       .custom-input:focus, .custom-textarea:focus, .preset-select:focus, .page-config-select:focus { 
-          background: rgba(0, 0, 0, 0.5); border-color: #90a4ae; box-shadow: 0 0 0 2px rgba(144, 164, 174, 0.2);
+          background: rgba(0, 0, 0, 0.6); 
+          border-color: #80cbc4; 
+          box-shadow: 0 0 0 2px rgba(128, 203, 196, 0.2);
       }
-      .custom-textarea { resize: vertical; min-height: 80px; font-family: monospace; line-height: 1.5;}
+      .custom-textarea { resize: vertical; min-height: 80px; font-family: monospace; line-height: 1.5; color: #cfd8dc; }
 
-      /* 按钮组 */
+      /* 按钮系统 */
       .btn-row { display: flex; gap: 12px; margin-top: 15px; }
       .btn-primary { 
-          flex: 1; background: linear-gradient(135deg, #546e7a 0%, #455a64 100%); 
+          flex: 1; 
+          background: linear-gradient(135deg, #009688 0%, #00796b 100%); 
           color: #fff; border: none; padding: 12px; border-radius: 10px; 
-          font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: 0.2s;
+          font-weight: bold; cursor: pointer; 
+          box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+          transition: transform 0.1s, box-shadow 0.1s;
       }
-      .btn-primary:active { transform: translateY(1px); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+      .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+      
       .btn-secondary { 
-          flex: 1; background: transparent; border: 1px solid rgba(255,255,255,0.2); 
-          color: #b0bec5; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer;
+          flex: 1; 
+          background: rgba(255,255,255,0.05); 
+          border: 1px solid rgba(255,255,255,0.1); 
+          color: #b0bec5; padding: 12px; border-radius: 10px; 
+          font-weight: bold; cursor: pointer; transition: 0.2s;
       }
-      .btn-secondary:active { background: rgba(255,255,255,0.05); }
+      .btn-secondary:active { background: rgba(255,255,255,0.1); }
+
       .icon-btn { 
-          width: 32px; height: 32px; border: 1px solid rgba(255,255,255,0.1); 
-          background: rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; 
-          display: flex; justify-content: center; align-items: center; color: #ccc; font-size: 14px; padding:0; transition: 0.2s;
+          width: 36px; height: 36px; 
+          border: 1px solid rgba(255,255,255,0.1); 
+          background: rgba(255,255,255,0.05); 
+          border-radius: 10px; cursor: pointer; 
+          display: flex; justify-content: center; align-items: center; 
+          color: #cfd8dc; font-size: 16px; padding:0; transition: 0.2s;
       }
-      .icon-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+      .icon-btn:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.3); }
       
-      .preset-bar { 
-          display: flex; gap: 10px; margin-bottom: 15px; background: rgba(0,0,0,0.2); 
-          padding: 10px; border-radius: 10px; border: 1px dashed rgba(255,255,255,0.1); align-items: center; 
-      }
-      
-      /* 绑定配置面板 */
-      .page-config-panel {
-        background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 16px; padding: 15px; margin-bottom: 25px;
-      }
-      .page-config-title {
-        font-size: 12px; font-weight: bold; color: #90a4ae; margin-bottom: 12px; text-align: center;
-        border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; letter-spacing: 1px;
-      }
-      .page-config-row { display: flex; align-items: center; margin-bottom: 10px; font-size: 13px; }
-      .page-config-label { width: 80px; color: #cfd8dc; font-weight: 500; flex-shrink: 0; }
-      
-      /* 其他组件 */
-      .role-bar { 
-          display: flex; gap: 10px; margin-bottom: 15px; align-items: center; 
-          background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);
+      /* 预设栏 & 角色栏 */
+      .preset-bar, .role-bar { 
+          display: flex; gap: 10px; margin-bottom: 15px; 
+          background: rgba(0,0,0,0.3); 
+          padding: 10px; border-radius: 12px; 
+          border: 1px dashed rgba(255,255,255,0.15); align-items: center; 
       }
       .mini-btn { 
-          width: 28px; height: 28px; border: 1px solid rgba(255,255,255,0.1); 
-          background: rgba(255,255,255,0.05); border-radius: 6px; 
-          display: flex; justify-content: center; align-items: center; cursor: pointer; color: #aaa; font-size: 12px; 
+          width: 30px; height: 30px; 
+          border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); 
+          border-radius: 8px; display: flex; justify-content: center; align-items: center; 
+          cursor: pointer; color: #b0bec5; font-size: 12px; transition: 0.2s;
       }
+      .mini-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+      /* [新增] 计时器页面的绑定面板 (高亮显示) */
+      .page-config-panel {
+        background: linear-gradient(to bottom, rgba(38, 50, 56, 0.9), rgba(33, 33, 33, 0.9));
+        border: 1px solid rgba(128, 203, 196, 0.3);
+        border-radius: 16px;
+        padding: 15px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      }
+      .page-config-title {
+        font-size: 12px; font-weight: bold; color: #80cbc4; margin-bottom: 12px; text-align: center;
+        border-bottom: 1px solid rgba(128, 203, 196, 0.2); padding-bottom: 8px; letter-spacing: 1px;
+      }
+      .page-config-row { display: flex; align-items: center; margin-bottom: 10px; font-size: 13px; }
+      .page-config-label { width: 80px; color: #b0bec5; font-weight: 600; flex-shrink: 0; }
+      
+      /* 标签页 */
       .tabs-header { 
-          display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 15px; 
+          display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; 
           border-bottom: 1px solid rgba(255,255,255,0.1); 
       }
       .tab-item { 
-          padding: 8px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); 
-          border-radius: 8px 8px 0 0; font-size: 12px; color: #78909c; cursor: pointer; white-space: nowrap; 
+          padding: 8px 18px; 
+          background: rgba(255,255,255,0.03); 
+          border: 1px solid rgba(255,255,255,0.05); 
+          border-radius: 10px 10px 0 0; 
+          font-size: 12px; color: #78909c; cursor: pointer; white-space: nowrap; transition: 0.3s;
       }
-      .tab-item.active { background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border-bottom: 2px solid #90a4ae; }
-      .tab-add-btn { padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; color: #aaa; }
-      .prompt-toolbar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 8px; }
+      .tab-item.active { 
+          background: rgba(255,255,255,0.1); 
+          color: #fff; font-weight: bold; 
+          border-top: 2px solid #80cbc4;
+          box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
+      }
+      .tab-add-btn { padding: 8px 14px; background: rgba(255,255,255,0.05); border-radius: 10px; cursor: pointer; color: #80cbc4; font-weight:bold;}
+
+      /* 提示词工具条 */
+      .prompt-toolbar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 10px; }
       .var-btn { 
-          background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
-          border-radius: 4px; padding: 4px 8px; font-size: 11px; color: #b0bec5; cursor: pointer; font-family: monospace; 
+          background: rgba(33, 150, 243, 0.1); border: 1px solid rgba(33, 150, 243, 0.3); 
+          border-radius: 6px; padding: 5px 10px; font-size: 11px; 
+          color: #90caf9; cursor: pointer; font-family: monospace; transition: 0.2s;
       }
+      .var-btn:hover { background: rgba(33, 150, 243, 0.2); color: #fff; }
+
+      /* 实时面板 */
       #realtime-status-panel { 
-          background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.4)); 
+          background: linear-gradient(to right, #37474f, #263238); 
           color: #fff; padding: 20px; border-radius: 16px; margin-bottom: 25px; 
-          box-shadow: 0 4px 20px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); 
+          box-shadow: 0 8px 25px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); 
       }
-      .rt-content { font-size: 14px; font-weight: 500; color: #e0e0e0; margin: 6px 0; line-height: 1.5; font-family: monospace;}
-      .rt-divider { border: 0; border-top: 1px dashed rgba(255,255,255,0.1); margin: 12px 0; }
+      .rt-content { font-size: 14px; font-weight: 500; color: #eceff1; margin: 6px 0; line-height: 1.6; font-family: monospace; text-shadow: 0 1px 2px rgba(0,0,0,0.5);}
+      .rt-divider { border: 0; border-top: 1px dashed rgba(255,255,255,0.2); margin: 15px 0; }
+      
+      /* 时间轴卡片 */
       .timeline-card { 
-          background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); 
-          border-radius: 14px; padding: 18px; margin-bottom: 18px; position: relative; transition: 0.3s; 
+          background: rgba(255, 255, 255, 0.05); 
+          border: 1px solid rgba(255, 255, 255, 0.05); 
+          border-radius: 14px; padding: 18px; margin-bottom: 18px; 
+          position: relative; transition: 0.3s; 
+          backdrop-filter: blur(5px);
       }
       .timeline-card.active-now { 
-          border: 1px solid #90a4ae; background: rgba(144, 164, 174, 0.1); 
-          box-shadow: 0 0 20px rgba(144, 164, 174, 0.1); transform: scale(1.01); z-index: 2; 
+          border: 1px solid #80cbc4; 
+          background: rgba(0, 150, 136, 0.15); 
+          box-shadow: 0 0 25px rgba(0, 150, 136, 0.2); 
+          transform: scale(1.02); z-index: 2; 
       }
-      .t-header { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
+      .t-header { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
       .t-time { 
           font-family: monospace; font-weight: bold; font-size: 15px; 
-          color: #fff; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; 
+          color: #e0f2f1; background: rgba(0, 150, 136, 0.6); 
+          padding: 4px 12px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
       }
-      .t-desc { font-size: 14px; color: #bdbdbd; line-height: 1.6; white-space: pre-wrap; }
-      .card-actions { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: flex-end; gap: 8px; }
-      .card-btn { font-size: 11px; padding: 6px 12px; border-radius: 6px; cursor: pointer; border: 1px solid transparent; background: transparent; transition: 0.2s;}
-      .card-btn.edit { color: #b0bec5; border-color: rgba(255,255,255,0.1); }
-      .card-btn.copy { color: #fff; background: rgba(255,255,255,0.1); }
-      .card-btn.del { color: #ef9a9a; border-color: rgba(239, 83, 80, 0.2); }
+      .t-desc { font-size: 14px; color: #cfd8dc; line-height: 1.6; white-space: pre-wrap; }
+      
+      .card-actions { margin-top: 15px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: flex-end; gap: 10px; }
+      .card-btn { font-size: 11px; padding: 6px 14px; border-radius: 6px; cursor: pointer; border: 1px solid transparent; background: transparent; transition: 0.2s;}
+      .card-btn.edit { color: #90a4ae; border-color: rgba(255,255,255,0.1); }
+      .card-btn.edit:hover { background: rgba(255,255,255,0.1); color: #fff; }
+      .card-btn.copy { color: #fff; background: rgba(255,255,255,0.15); }
+      .card-btn.copy:hover { background: rgba(255,255,255,0.25); }
+      .card-btn.del { color: #ef9a9a; border-color: rgba(239, 83, 80, 0.3); }
+      .card-btn.del:hover { background: rgba(239, 83, 80, 0.1); }
 
       /* [悬浮菜单统一美化] */
       .fab-action-item {
@@ -828,17 +889,17 @@
             <span>⚙️ 终端预设库</span>
             <div>
               <button class="icon-btn" onclick="exportData()" title="全部备份">📤</button>
-              <button class="icon-btn" onclick="document.getElementById('import-file').click()" title="恢复备份" style="margin-left:5px;">📥</button>
+              <button class="icon-btn" onclick="document.getElementById('import-file').click()" title="恢复备份" style="margin-left:10px;">📥</button>
               <input type="file" id="import-file" style="display:none" onchange="importData(this)">
             </div>
           </div>
           
-          <div style="padding:12px; background:rgba(33, 150, 243, 0.1); border:1px solid rgba(33, 150, 243, 0.2); color:#64b5f6; font-size:12px; border-radius:8px; margin-bottom:20px;">
-            ℹ️ 说明：这里负责<b>编辑和保存预设</b>。要让计时器生效，请去“计时”界面，为每个计时器页签<b>绑定</b>对应的预设。
+          <div style="padding:15px; background:rgba(0, 150, 136, 0.15); border:1px solid rgba(0, 150, 136, 0.3); color:#80cbc4; font-size:12px; border-radius:12px; margin-bottom:25px; line-height:1.5;">
+            ℹ️ <b>系统说明</b>：此处仅用于编辑和保存【预设模版】。要让功能生效，请前往<b>计时界面</b>，为每个计时器页签<b>绑定</b>对应的预设。
           </div>
 
           <div class="settings-group">
-            <div class="settings-title" style="color:#b39ddb;">🎈 悬浮窗全局设置</div>
+            <div class="settings-title" style="color:#b39ddb;">🎈 悬浮窗全局参数</div>
             <div class="input-row"><label class="input-label">显示模式</label>
               <select id="flow-mode" class="custom-input" onchange="saveGlobalSettings()">
                 <option value="detail">详细展示 (循环滚动)</option>
@@ -854,14 +915,14 @@
             <div class="input-row"><label class="input-label">默认图标 (未绑定时用)</label><input type="text" id="flow-icon-normal" class="custom-input" value="https://i.postimg.cc/B6FkXGCL/15.png" onchange="saveGlobalSettings()"></div>
             <div class="input-row"><label class="input-label">活跃图标 (未绑定时用)</label><input type="text" id="flow-icon-active" class="custom-input" value="https://i.postimg.cc/1tF2fZKF/16.png" onchange="saveGlobalSettings()"></div>
             <div class="input-row"><label class="input-label">图标尺寸(px)</label><input type="number" id="flow-icon-size" class="custom-input" value="50" onchange="saveGlobalSettings()"></div>
-            <div class="input-row"><button class="btn-secondary" onclick="resetWidgetPosition()">重置悬浮窗位置</button></div>
+            <div class="input-row"><button class="btn-secondary" onclick="resetWidgetPosition()">↺ 重置悬浮窗位置</button></div>
           </div>
 
           <div class="settings-group">
             <div class="settings-title" style="color:#80cbc4;">📋 文案/复制预设</div>
             <div class="preset-bar">
               <select id="copy-preset-select" class="preset-select" onchange="loadPreset('copy', this.value)"><option value="">-- 新建/选择 --</option></select>
-              <button class="icon-btn" onclick="savePreset('copy')">💾</button> <button class="icon-btn delete" onclick="deletePreset('copy')">🗑️</button>
+              <button class="icon-btn" onclick="savePreset('copy')">💾</button> <button class="icon-btn" onclick="deletePreset('copy')">🗑️</button>
             </div>
             <div class="input-row"><label class="input-label">配置名称 (保存用)</label><input type="text" id="copy-preset-name" class="custom-input"></div>
             
@@ -880,7 +941,7 @@
             <div class="settings-title" style="color:#90caf9;">📡 API 预设</div>
             <div class="preset-bar">
               <select id="api-preset-select" class="preset-select" onchange="loadPreset('api', this.value)"><option value="">-- 新建/选择 --</option></select>
-              <button class="icon-btn" onclick="savePreset('api')">💾</button> <button class="icon-btn delete" onclick="deletePreset('api')">🗑️</button>
+              <button class="icon-btn" onclick="savePreset('api')">💾</button> <button class="icon-btn" onclick="deletePreset('api')">🗑️</button>
             </div>
             <div class="input-row"><label class="input-label">配置名称</label><input type="text" id="api-preset-name" class="custom-input"></div>
             <div class="input-row"><label class="input-label">API Host</label><input type="text" id="api-host" class="custom-input" placeholder="https://api.openai.com"></div>
@@ -893,10 +954,10 @@
           </div>
 
           <div class="settings-group">
-            <div class="settings-title">📝 提示词预设</div>
+            <div class="settings-title" style="color:#ef9a9a;">📝 提示词预设</div>
             <div class="preset-bar">
               <select id="prompt-preset-select" class="preset-select" onchange="loadPreset('prompt', this.value)"><option value="">-- 新建/选择 --</option></select>
-              <button class="icon-btn" onclick="savePreset('prompt')">💾</button> <button class="icon-btn delete" onclick="deletePreset('prompt')">🗑️</button>
+              <button class="icon-btn" onclick="savePreset('prompt')">💾</button> <button class="icon-btn" onclick="deletePreset('prompt')">🗑️</button>
             </div>
             <div class="input-row"><label class="input-label">预设名称</label><input type="text" id="prompt-preset-name" class="custom-input"></div>
             <div class="input-row">
@@ -910,10 +971,10 @@
           </div>
 
           <div class="settings-group">
-            <div class="settings-title">🎭 角色预设</div>
+            <div class="settings-title" style="color:#ffcc80;">🎭 角色预设</div>
             <div class="preset-bar">
               <select id="char-preset-select" class="preset-select" onchange="loadPreset('char', this.value)"><option value="">-- 新建/选择 --</option></select>
-              <button class="icon-btn" onclick="savePreset('char')">💾</button> <button class="icon-btn delete" onclick="deletePreset('char')">🗑️</button>
+              <button class="icon-btn" onclick="savePreset('char')">💾</button> <button class="icon-btn" onclick="deletePreset('char')">🗑️</button>
             </div>
             <div class="input-row"><label class="input-label">配置名称</label><input type="text" id="char-preset-name" class="custom-input"></div>
             <div class="input-row"><label class="input-label">角色名字</label><input type="text" id="char-name" class="custom-input"></div>
@@ -922,10 +983,10 @@
             <div class="input-row"><label class="input-label">聊天历史</label><textarea id="chat-history" class="custom-textarea"></textarea></div>
           </div>
           <div class="settings-group">
-            <div class="settings-title">👤 用户预设</div>
+            <div class="settings-title" style="color:#ce93d8;">👤 用户预设</div>
             <div class="preset-bar">
               <select id="user-preset-select" class="preset-select" onchange="loadPreset('user', this.value)"><option value="">-- 新建/选择 --</option></select>
-              <button class="icon-btn" onclick="savePreset('user')">💾</button> <button class="icon-btn delete" onclick="deletePreset('user')">🗑️</button>
+              <button class="icon-btn" onclick="savePreset('user')">💾</button> <button class="icon-btn" onclick="deletePreset('user')">🗑️</button>
             </div>
             <div class="input-row"><label class="input-label">配置名称</label><input type="text" id="user-preset-name" class="custom-input"></div>
             <div class="input-row"><label class="input-label">你的名字</label><input type="text" id="user-name" class="custom-input"></div>
@@ -984,7 +1045,7 @@
           </div>
 
           <div id="realtime-status-panel">
-            <div class="rt-content" id="rt-past" style="color:#bcaaa4;">--</div>
+            <div class="rt-content" id="rt-past" style="color:#b0bec5;">--</div>
             <div class="rt-divider"></div>
             <div class="rt-content" id="rt-future" style="color:#80cbc4;">--</div>
           </div>
@@ -1330,8 +1391,7 @@
         });
       }
       /* ===========================
-         V12.0 逻辑核心 (自动存档/修复版)
-         特性：自动默认值 / 持久化选项 / 完善备份
+         V13.0 逻辑核心 (防数据丢失 + 自动初始化)
          =========================== */
       let timerPages = [];
       let activeRoleId = 0; 
@@ -1364,10 +1424,9 @@
       const DEFAULT_PROMPT = `# 角色扮演任务\n请根据"\${chat.name}"的人设，推演接下来24小时的行为轨迹。\n# 参数\n角色：\${chat.name}\n人设：\${chat.settings.aiPersona}\n# 输出规则\n1. 返回JSON数组。2. 时间格式 "HH:mm"。3. 包含 'html_snippet' (可选)。\n[{"time":"08:00","description":"...","icon":"⏰"}]`;
 
       window.addEventListener('load', () => {
-        // [修复] 确保有默认预设，防止下拉框为空
+        // [核心修复] 自动创建默认预设，防止数据丢失或空列表
         ensureDefaultPresets();
 
-        // 初始化所有下拉框
         ['api','char','user','prompt','copy'].forEach(refreshDropdown);
         
         const savedGlobal = localStorage.getItem(STORAGE_KEYS.global);
@@ -1399,7 +1458,7 @@
         initWidgetDrag();
       });
 
-      // [核心修复] 自动创建默认预设，避免“每次都要保存”的问题
+      // [核心修复] 仅当本地没有数据时才写入默认值，绝对不覆盖用户数据
       function ensureDefaultPresets() {
           const defaults = {
               api: { "默认API": { "api-preset-name": "默认API", "api-host": "https://api.openai.com", "api-key": "", "model-name": "gpt-3.5-turbo" } },
@@ -1640,7 +1699,6 @@
       function getPresets(type) { return JSON.parse(localStorage.getItem(STORAGE_KEYS[type])) || {}; }
       
       function refreshDropdown(type) {
-        // 刷新设置页下拉框
         const select = document.getElementById(`${type}-preset-select`);
         const presets = getPresets(type); 
         if(select) {
@@ -1649,8 +1707,6 @@
             Object.keys(presets).forEach(n => { const opt = document.createElement('option'); opt.value=n; opt.innerText=n; select.appendChild(opt); });
             if(presets[cur]) select.value = cur;
         }
-        
-        // 刷新绑定面板下拉框
         const bindSelect = document.getElementById(`bind-${type}`);
         if(bindSelect && getActivePage()) {
             bindSelect.innerHTML = '<option value="">-- 未绑定 --</option>';
@@ -1658,8 +1714,6 @@
             const pageKey = type + 'Preset'; 
             bindSelect.value = getActivePage()[pageKey] || "";
         }
-        
-        // [修复] 确保显示范围下拉框状态正确
         const modeSelect = document.getElementById('bind-mode');
         if(modeSelect && getActivePage()) {
             modeSelect.value = getActivePage().exportMode || 'both';
@@ -1707,16 +1761,12 @@
         c.innerHTML=''; const role = getActiveRole(); if(!role) return;
         role.pages.forEach((p,i)=>{const t=document.createElement('div');t.className=`tab-item ${i===activePageIndex?'active':''}`;t.innerText=p.name;t.onclick=()=>{activePageIndex=i;renderTabs()};c.appendChild(t)});
         const b=document.createElement('div');b.className='tab-add-btn';b.innerText='+';b.onclick=addNewPage;c.appendChild(b);
-        
-        // [核心修复] 每次切换标签页时，重新填充绑定下拉框并设置正确的值
         const cp=getActivePage(); 
         if(cp){ 
             ['api','char','user','prompt','copy'].forEach(type => {
                 const sel = document.getElementById(`bind-${type}`);
                 if(sel) {
-                    // 确保选项存在
                     refreshDropdown(type);
-                    // 恢复选中状态
                     sel.value = cp[type+'Preset'] || "";
                 }
             });
@@ -1729,7 +1779,6 @@
       function deleteCurrentPage() { if(getActiveRole().pages.length<=1)return; if(confirm("删除页签?")){getActiveRole().pages.splice(activePageIndex,1);activePageIndex=0;saveRoles();renderTabs();} }
       function clearCurrentPage() { if(confirm("清空数据?")){getActivePage().data=[];saveRoles();renderTimeline();} }
       
-      // 更新绑定时自动保存到Local Storage
       function updatePageBinding(key, value) {
           const page = getActivePage();
           if(page) { page[key] = value; saveRoles(); showToast("绑定已更新"); }
@@ -1782,7 +1831,6 @@
       
       function copySingleItem(i) {
         const page = getActivePage(); const item = page.data[i];
-        
         let charName = "TA";
         if(page.charPreset) {
             const charCfg = getPresets('char')[page.charPreset];
@@ -1791,7 +1839,6 @@
             const role = roles.find(r=>r.id==activeRoleId);
             if(role) charName = role.name;
         }
-
         const txt = `${charName}在${item.time}${item.description}`;
         navigator.clipboard.writeText(txt).then(()=>showToast("已复制: " + txt)).catch(()=>showToast("复制失败"));
       }
@@ -1810,18 +1857,15 @@
         if(nidx < d.length) { const it=d[nidx], [h,m]=it.time.split(':').map(Number); const diff = (h*60+m)-curM; rtFuture.innerText = `即将开始(${diff}m后): ${it.description}`; } else { rtFuture.innerText = "无后续事件"; }
       }
       
-      // [核心修复] 全量备份：只导出本功能相关的 tuki_ 键值，并且修改了文件名
       function exportData() { 
           try { const el = id => document.getElementById(id).value; globalSettings.flowWidth = parseInt(el('flow-width')); localStorage.setItem(STORAGE_KEYS.global, JSON.stringify(globalSettings)); } catch(e){}
           
           const d={}; 
-          // 只导出 STORAGE_KEYS 定义的键，保证不污染其他数据
           Object.keys(STORAGE_KEYS).forEach(k=>d[k]=localStorage.getItem(STORAGE_KEYS[k])); 
           
           const b=new Blob([JSON.stringify(d)],{type:'application/json'}); 
           const a=document.createElement('a'); 
           a.href=URL.createObjectURL(b); 
-          // 修正文件名
           const dateStr = new Date().toISOString().slice(0,10);
           a.download=`计时器备份-${dateStr}.json`; 
           a.click(); 
