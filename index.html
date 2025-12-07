@@ -7,7 +7,6 @@
       content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes"
     />
     <title>EPhone PWA</title>
-    <link rel="stylesheet" href="style.css" />
     <link
       rel="apple-touch-icon"
       href="https://i.postimg.cc/Fz25WLbr/7D99384EE38C42D2BA98F53E4582FEA8.jpg"
@@ -25,805 +24,201 @@
     <meta name="theme-color" content="#f0f2f5" />
 
     <style>
-      /* --- 核心配色：蜂蜜黄油 & 焦糖复古 --- */
+      /* ===========================
+         PART A: 原始版本核心样式 (保持不变)
+         =========================== */
       :root {
-        --bg-color: #fdfbf7; /* 暖米白 */
-        --glass-base: rgba(255, 253, 240, 0.65); /* 奶油底色玻璃 */
-        --border-color: #efe6d5; /* 柔和的边框色 */
-        --accent-gold: #e6ceac; /* 复古金 */
-        --text-brown: #8d6e63; /* 焦糖棕色字 */
-        --text-deep: #5d4037; /* 深咖啡色字 */
-        --shadow-warm: 0 15px 30px rgba(210, 180, 140, 0.25); /* 暖棕色投影 */
-        --font-main: 'Courier New', Courier, monospace; /* 复古打字机字体 */
+        --bg-color: #fdfbf7;
+        --text-brown: #8d6e63;
+        --text-deep: #5d4037;
+        --font-main: 'Courier New', Courier, monospace;
       }
 
-      html {
-        height: 100%;
-        -webkit-text-size-adjust: 100%;
-      }
+      html { height: 100%; -webkit-text-size-adjust: 100%; }
       body {
-        margin: 0;
-        font-family: var(--font-main);
-        font-weight: bold;
-        height: 100%;
-        overflow: hidden;
-        background-color: var(--bg-color);
-        /* 背景：极淡的复古格子 */
+        margin: 0; font-family: var(--font-main); font-weight: bold; height: 100%;
+        overflow: hidden; background-color: var(--bg-color);
         background-image: linear-gradient(rgba(230, 206, 172, 0.2) 1px, transparent 1px),
           linear-gradient(90deg, rgba(230, 206, 172, 0.2) 1px, transparent 1px);
-        background-size: 40px 40px;
-        color: var(--text-brown);
+        background-size: 40px 40px; color: var(--text-brown);
       }
 
-      #phone-screen {
-        width: 100%;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
-      }
-      .screen {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        transition: 0.3s;
-      }
-      #home-screen {
-        padding-top: calc(30px + env(safe-area-inset-top));
-        padding-bottom: 20px;
-        box-sizing: border-box;
-        z-index: 10;
-      }
-      #home-screen-pages-container {
-        flex-grow: 1;
-        width: 100%;
-        height: 100%;
-        position: relative;
-      }
-      #home-screen-pages {
-        width: 100%;
-        height: 100%;
-        display: flex;
-      }
-      .home-screen-page {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-      #main-content-area {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
+      #phone-screen { width: 100%; height: 100vh; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+      .screen { width: 100%; height: 100%; position: absolute; display: flex; flex-direction: column; transition: 0.3s; }
+      #home-screen { padding-top: calc(30px + env(safe-area-inset-top)); padding-bottom: 20px; box-sizing: border-box; z-index: 10; }
+      #home-screen-pages-container { flex-grow: 1; width: 100%; height: 100%; position: relative; }
+      #home-screen-pages { width: 100%; height: 100%; display: flex; }
+      .home-screen-page { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      #main-content-area { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
 
-      /* --- 播放器主体：精致的奶油方糖 --- */
-      #desktop-layout {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        padding: 0 15px;
-        box-sizing: border-box;
-      }
-
+      /* 桌面磁带播放器样式 */
+      #desktop-layout { width: 100%; display: flex; justify-content: center; padding: 0 15px; box-sizing: border-box; }
       #desktop-app-container {
-        /* 实体奶油塑料质感 */
         background: linear-gradient(to bottom, #fdfbf7 0%, #f4eadd 100%);
-        /* 塑料的厚实边框 */
-        border: 1px solid #e0d0b8;
-        /* 模拟塑料注塑的圆润感 */
-        border-radius: 20px;
-        /* 稍微宽一点，给磁带留空间 */
-        padding: 50px 35px 60px 35px;
-        display: flex;
-        gap: 35px; /* 拉大两个卷轴的距离 */
-        position: relative;
-        /* 立体投影：像放在桌面上一样 */
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), /* 顶部高光 */ inset 0 -3px 5px rgba(0, 0, 0, 0.05),
-          /* 底部阴影 */ 0 15px 35px rgba(141, 110, 99, 0.25), /* 桌面投影 */ 0 5px 10px rgba(0, 0, 0, 0.05);
-        align-items: center;
-        justify-content: center;
-        min-width: 320px;
+        border: 1px solid #e0d0b8; border-radius: 20px;
+        padding: 50px 35px 60px 35px; display: flex; gap: 35px; position: relative;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -3px 5px rgba(0, 0, 0, 0.05),
+          0 15px 35px rgba(141, 110, 99, 0.25), 0 5px 10px rgba(0, 0, 0, 0.05);
+        align-items: center; justify-content: center; min-width: 320px;
       }
-
-      /* 顶部铭牌：EPHONE MIX (复古金属牌风格) */
       #desktop-app-container::before {
-        content: 'EPHONE MIX';
-        position: absolute;
-        top: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 11px;
-        font-family: Helvetica, Arial, sans-serif; /* 铭牌用无衬线体显得更工业复古 */
-        color: #a1887f; /* 浅咖色字 */
-
-        /* 铭牌背景：做成凹进去的浅金色 */
-        background: linear-gradient(to bottom, #fffcf5, #f1e9d2);
-        padding: 4px 16px;
-        border-radius: 4px;
-        letter-spacing: 2px;
-        font-weight: 900;
-
-        /* 铭牌的立体感 */
-        border: 1px solid #d7ccc8;
-        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 0 #fff;
-        z-index: 10;
+        content: 'EPHONE MIX'; position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+        font-size: 11px; font-family: Helvetica, Arial, sans-serif; color: #a1887f;
+        background: linear-gradient(to bottom, #fffcf5, #f1e9d2); padding: 4px 16px;
+        border-radius: 4px; letter-spacing: 2px; font-weight: 900;
+        border: 1px solid #d7ccc8; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 0 #fff; z-index: 10;
       }
-
-      /* 螺丝钉：复古黄铜色 */
-      .screw {
-        position: absolute;
-        width: 9px;
-        height: 9px;
-        background: linear-gradient(135deg, #e6ceac, #bf9e74); /* 金属光泽 */
-        border-radius: 50%;
-        box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.8), 0 1px 2px rgba(0, 0, 0, 0.1);
-      }
-      /* 给螺丝加个小一字槽，增加精致度 */
-      .screw::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 5px;
-        height: 1px;
-        background: rgba(93, 64, 55, 0.3);
-      }
-
-      .screw.tl {
-        top: 12px;
-        left: 12px;
-      }
-      .screw.tr {
-        top: 12px;
-        right: 12px;
-      }
-      .screw.bl {
-        bottom: 12px;
-        left: 12px;
-      }
-      .screw.br {
-        bottom: 12px;
-        right: 12px;
-      }
+      .screw { position: absolute; width: 9px; height: 9px; background: linear-gradient(135deg, #e6ceac, #bf9e74); border-radius: 50%; box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.8), 0 1px 2px rgba(0, 0, 0, 0.1); }
+      .screw::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 5px; height: 1px; background: rgba(93, 64, 55, 0.3); }
+      .screw.tl { top: 12px; left: 12px; } .screw.tr { top: 12px; right: 12px; } .screw.bl { bottom: 12px; left: 12px; } .screw.br { bottom: 12px; right: 12px; }
       .tape-window-bg {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 240px; /* 变宽，连接两个卷轴 */
-        height: 90px;
-        /* 贴纸质感：米黄色 */
-        background: #fffdf5;
-        /* 贴纸边框 */
-        border: 2px solid #e6ceac;
-        border-radius: 35px; /* 变成胶囊形状 */
-        z-index: 0;
-        /* 内部纹理：横线，像可以写字的地方 */
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 240px; height: 90px;
+        background: #fffdf5; border: 2px solid #e6ceac; border-radius: 35px; z-index: 0;
         background-image: repeating-linear-gradient(transparent, transparent 19px, #f2e6d9 20px);
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
       }
-
-      /* --- 图标部分 --- */
-      .desktop-app-icon {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-        cursor: pointer;
-        width: 85px;
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      /* --- 1. 磁带卷轴动画与质感 --- */
-
-      /* 定义旋转动画 */
-      @keyframes reel-spin {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
+      .desktop-app-icon { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; width: 85px; -webkit-tap-highlight-color: transparent; }
+      @keyframes reel-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
       .icon-bg-desktop {
-        width: 76px;
-        height: 76px;
-        border-radius: 50%;
-        /* 卷轴背景：深色 */
-        background: #3e2723;
-        /* 关键：齿轮边框效果 */
-        border: 4px dashed #d7ccc8;
-        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), /* 内部深邃感 */ 0 2px 5px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        transition: transform 0.3s;
-        position: relative;
+        width: 76px; height: 76px; border-radius: 50%; background: #3e2723; border: 4px dashed #d7ccc8;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex; justify-content: center; align-items: center; overflow: hidden; transition: transform 0.3s; position: relative;
       }
-      /* 给图片一点内缩，露出齿轮 */
-      .icon-bg-desktop img {
-        width: 86%;
-        height: 86%;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        animation: reel-spin 10s linear infinite;
-        opacity: 0.95;
-      }
-      /* 磁带底部的梯形区域 */
-      .tape-bottom-deco {
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 220px;
-        height: 35px;
-        /* 颜色稍微深一点，模拟磁带下半部分 */
-        background: #f0e6d2;
-        /* 做成梯形效果 */
-        clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
-        border-top: 1px solid #e0d0b8;
-        z-index: 5;
-      }
+      .icon-bg-desktop img { width: 86%; height: 86%; object-fit: cover; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.2); animation: reel-spin 10s linear infinite; opacity: 0.95; }
+      .icon-bg-desktop::after { content: ''; position: absolute; width: 12px; height: 12px; background: #fff; border-radius: 50%; z-index: 5; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
+      .tape-bottom-deco { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 220px; height: 35px; background: #f0e6d2; clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%); border-top: 1px solid #e0d0b8; z-index: 5; }
+      .tape-holes { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); width: 120px; height: 12px; display: flex; justify-content: space-between; }
+      .tape-holes::before, .tape-holes::after { content: ''; width: 12px; height: 12px; background: #5d4037; border-radius: 50%; box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.3); }
+      .desktop-app-icon .label { font-size: 12px; color: var(--text-deep); background: #fffdf0; padding: 3px 8px; border: 1px solid #efe6d5; border-radius: 2px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.05); font-weight: bold; transform: rotate(-2deg); }
+      .desktop-app-icon:last-child .label { transform: rotate(1deg); }
+      .desktop-app-icon:active .icon-bg-desktop { transform: scale(0.92); }
 
-      /* 装饰性的小孔 */
-      .tape-holes {
-        position: absolute;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 120px;
-        height: 12px;
-        display: flex;
-        justify-content: space-between;
-      }
-      .tape-holes::before,
-      .tape-holes::after {
-        content: '';
-        width: 12px;
-        height: 12px;
-        background: #5d4037; /* 深孔颜色 */
-        border-radius: 50%;
-        box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.3);
-      }
+      /* App 窗口基础 */
+      .app-window { width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: #fff; z-index: 50; display: none; flex-direction: column; opacity: 0; transform: scale(0.95); transition: 0.3s; }
+      .app-window.active { display: flex; opacity: 1; transform: scale(1); }
+      .app-iframe { width: 100%; height: 100%; border: none; background: #fff; }
 
-      /* 图片应用旋转动画 */
-      .icon-bg-desktop img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-        /* 这里添加动画：10秒转一圈，线性无限循环 */
-        animation: reel-spin 10s linear infinite;
-        opacity: 0.9; /* 稍微透明一点更有复古感 */
-      }
-
-      /* 给卷轴加一个中心轴装饰，看起来更像磁带 */
-      .icon-bg-desktop::after {
-        content: '';
-        position: absolute;
-        width: 12px;
-        height: 12px;
-        background: #fff;
-        border-radius: 50%;
-        z-index: 5;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-      }
-      .icon-bg-desktop img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-      }
-
-      /* 标签：复古打字机纸条 */
-      .desktop-app-icon .label {
-        font-size: 12px;
-        color: var(--text-deep);
-        /* 米黄色纸张感 */
-        background: #fffdf0;
-        padding: 3px 8px;
-        border: 1px solid #efe6d5;
-        border-radius: 2px; /* 几乎直角 */
-        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.05);
-        font-weight: bold;
-        transform: rotate(-2deg); /* 微微歪 */
-      }
-      .desktop-app-icon:last-child .label {
-        transform: rotate(1deg);
-      }
-
-      .desktop-app-icon:active .icon-bg-desktop {
-        transform: scale(0.92);
-      }
-
-      /* App 窗口 */
-      .app-window {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        background: #fff;
-        z-index: 50;
-        display: none;
-        flex-direction: column;
-        opacity: 0;
-        transform: scale(0.95);
-        transition: 0.3s;
-      }
-      .app-window.active {
-        display: flex;
-        opacity: 1;
-        transform: scale(1);
-      }
-      .app-iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        background: #fff;
-      }
-
-      /* --- 右下角唱片按钮：蜂蜜黄胶 --- */
-      #fab-container {
-        position: fixed;
-        bottom: 50px;
-        right: 25px;
-        z-index: 1000;
-        width: 64px;
-        height: 64px;
-      }
-
+      /* 悬浮按钮 (FAB) */
+      #fab-container { position: fixed; bottom: 50px; right: 25px; z-index: 1000; width: 64px; height: 64px; }
       #fab-main {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        /* 修改颜色：使用更柔和的复古金色 */
-        background-color: #eecfa1;
-
-        /* 修改纹理：让纹理对比度低一点，更精致 */
-        background-image: repeating-radial-gradient(
-          #eecfa1 0,
-          #eecfa1 2px,
-          #e0b878 3px,
-          /* 稍微深一点的金 */ #eecfa1 4px
-        );
-
-        /* 阴影稍微加深一点 */
-        box-shadow: 0 0 0 3px #fff, 0 6px 15px rgba(161, 136, 127, 0.4);
+        width: 100%; height: 100%; border-radius: 50%; background-color: #eecfa1;
+        background-image: repeating-radial-gradient(#eecfa1 0, #eecfa1 2px, #e0b878 3px, #eecfa1 4px);
         box-shadow: 0 0 0 3px #fff, 0 6px 15px rgba(251, 192, 45, 0.3);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        transition: 0.4s;
-        position: relative;
+        display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.4s; position: relative;
       }
-
-      /* 中间标签 */
-      #fab-main::before {
-        content: '';
-        position: absolute;
-        width: 26px;
-        height: 26px;
-        background: #fff8e1; /* 奶白色标签 */
-        border-radius: 50%;
-        z-index: 1;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-      }
-      /* 中间孔 */
-      #fab-main::after {
-        content: '';
-        position: absolute;
-        width: 6px;
-        height: 6px;
-        background: var(--text-deep);
-        border-radius: 50%;
-        z-index: 2;
-      }
-      #fab-main svg {
-        width: 18px;
-        height: 18px;
-        fill: var(--text-deep);
-        z-index: 3;
-        position: relative;
-        transition: 0.3s;
-      }
-
-      #fab-main:active {
-        transform: rotate(15deg) scale(0.95);
-      }
-      #fab-main.expanded {
-        transform: rotate(90deg);
-        background: #fff;
-        background-image: none;
-      }
-      #fab-main.expanded::before,
-      #fab-main.expanded::after {
-        opacity: 0;
-      }
-
-      /* 菜单 */
+      #fab-main::before { content: ''; position: absolute; width: 26px; height: 26px; background: #fff8e1; border-radius: 50%; z-index: 1; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
+      #fab-main::after { content: ''; position: absolute; width: 6px; height: 6px; background: var(--text-deep); border-radius: 50%; z-index: 2; }
+      #fab-main svg { width: 18px; height: 18px; fill: var(--text-deep); z-index: 3; position: relative; transition: 0.3s; }
+      #fab-main:active { transform: rotate(15deg) scale(0.95); }
+      #fab-main.expanded { transform: rotate(90deg); background: #fff; background-image: none; }
+      #fab-main.expanded::before, #fab-main.expanded::after { opacity: 0; }
+      
+      /* 菜单列表 - 已修复嵌套问题 */
       .fab-actions {
-        position: absolute;
-        bottom: 80px;
-        right: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 12px;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(15px);
-        transition: 0.3s;
-        pointer-events: none;
-        width: max-content;
+        position: absolute; bottom: 80px; right: 0; display: flex; flex-direction: column; align-items: flex-end;
+        gap: 12px; opacity: 0; visibility: hidden; transform: translateY(15px); transition: 0.3s; pointer-events: none; width: max-content;
       }
-      #fab-container.menu-open .fab-actions {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-        pointer-events: auto;
-      }
+      #fab-container.menu-open .fab-actions { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }
+      #fab-container.ghost-mode { opacity: 0; pointer-events: none; }
+      #fab-container.ghost-mode .fab-actions { display: none; }
 
-      .fab-mini-btn {
-        width: 44px;
-        height: 44px;
-        background: #fff;
-        border-radius: 50%;
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-        color: var(--text-brown);
-        font-size: 14px;
-        border: 1px solid #f0f0f0;
-        padding: 0; /* 去掉内边距 */
-        overflow: hidden; /* 确保图片不溢出 */
-        background: #fff;
-      }
-      /* 图片填满按钮 */
-      .fab-mini-btn img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      /* SVG 图标大小适配 */
-      .fab-mini-btn svg {
-        width: 20px;
-        height: 20px;
-        fill: var(--text-deep); /* 使用深棕色填充 */
-      }
-      .fab-label {
-        background: #fff;
-        color: var(--text-deep);
-        padding: 5px 10px;
-        border-radius: 4px;
-        font-size: 12px;
-        margin-right: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        font-weight: bold;
-      }
-
-      /* 隐身模式 */
-      #fab-container.ghost-mode {
-        opacity: 0; /* 完全透明，看不见 */
-        pointer-events: none; /* 鼠标穿透，点不到原位置 */
-      }
-
-      #fab-container.ghost-mode .fab-actions {
-        display: none;
-      }
+      /* 边缘感应 */
+      .edge-sensor { position: fixed; z-index: 1500; background: transparent; }
+      .edge-sensor.top { top: 0; left: 0; width: 100%; height: 30px; }
+      .edge-sensor.bottom { bottom: 0; left: 0; width: 100%; height: 30px; }
+      .edge-sensor.left { top: 30px; bottom: 30px; left: 0; width: 15px; }
+      .edge-sensor.right { top: 30px; bottom: 30px; right: 0; width: 15px; }
 
       /* Toast */
       #toast-msg {
-        position: fixed;
-        bottom: 50px;
-        left: 50%;
-        transform: translateX(-50%) translateY(20px);
-        background: var(--text-deep);
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-size: 13px;
-        opacity: 0;
-        visibility: hidden;
-        transition: 0.3s;
-        z-index: 2000;
+        position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%) translateY(20px);
+        background: var(--text-deep); color: #fff; padding: 10px 20px; border-radius: 6px;
+        font-size: 13px; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 2000;
       }
-      #toast-msg.show {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(-50%) translateY(0);
-      }
+      #toast-msg.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 
-      /* ★★★★★ 这里是你要复制进去的代码 开始 ★★★★★ */
-      /* 边缘感应层样式 */
-      .edge-sensor {
-        position: fixed;
-        z-index: 1500; /* 必须比App高 */
-        background: transparent; /* 透明看不见 */
-      }
-      /* 顶部感应条 */
-      .edge-sensor.top { top: 0; left: 0; width: 100%; height: 30px; }
-      /* 底部感应条 */
-      .edge-sensor.bottom { bottom: 0; left: 0; width: 100%; height: 30px; }
-      /* 左侧感应条 */
-      .edge-sensor.left { top: 30px; bottom: 30px; left: 0; width: 15px; }
-      /* 右侧感应条 */
-      .edge-sensor.right { top: 30px; bottom: 30px; right: 0; width: 15px; }
-      /* ★★★★★ 这里是你要复制进去的代码 结束 ★★★★★ */
-/* ===========================
-         AI终端 V13.0 界面美化：高级灰半透明 (Dark Glass)
+      /* ===========================
+         PART B: V13 升级样式 (高级灰 / 悬浮窗 / 配置)
          =========================== */
       
-      /* 1. 全局容器与字体优化 */
-      .schedule-container { 
-          padding: 60px 20px 120px 20px; 
-          height: 100%; 
-          overflow-y: auto; 
-          box-sizing: border-box; 
-          /* 隐藏滚动条但保留功能 */
-          scrollbar-width: none; 
-      }
-      .schedule-container::-webkit-scrollbar { display: none; }
-
-      .schedule-header { 
-          font-size: 20px; color: #eceff1; margin-bottom: 20px; padding-bottom: 15px; 
-          border-bottom: 1px solid rgba(255,255,255,0.1); 
-          font-weight: bold; display: flex; justify-content: space-between; align-items: center; 
-          letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-      }
-
-      /* 2. 桌面图标适配 (保持不变) */
-      .icon-bg-desktop svg { width: 50%; height: 50%; fill: #eceff1; }
-      .icon-bg-desktop span { font-size: 28px; }
-
-      /* 3. 智能悬浮窗 (Flow Widget) */
+      /* 1. App内背景强制深色 */
+      #app-settings, #app-schedule { background: linear-gradient(135deg, #263238 0%, #102027 100%) !important; color: #b0bec5; }
+      
+      /* 2. 悬浮窗 (Flow Widget) */
       #flow-widget {
         position: fixed; z-index: 9999; display: none; top: 100px; left: 20px;
         touch-action: none; user-select: none; -webkit-user-select: none; cursor: move;
         opacity: 0; transition: opacity 0.5s;
       }
       #flow-widget.visible { opacity: 1; }
-      
       .flow-card-glass {
-        background: rgba(30, 30, 30, 0.85); /* 深灰底色 */
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); /* 强毛玻璃 */
-        border: 1px solid rgba(255, 255, 255, 0.15); /* 细微白边 */
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4); /* 深度投影 */
-        border-radius: 24px;
-        padding: 0 18px;
-        height: 44px;
-        display: flex; align-items: center;
+        background: rgba(30, 30, 30, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        border-radius: 24px; padding: 0 18px; height: 44px; display: flex; align-items: center;
         color: #f5f5f5; font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
         overflow: hidden; white-space: nowrap; transition: width 0.3s;
       }
       .flow-card-glass:active { transform: scale(0.96); background: rgba(50, 50, 50, 0.95); }
-
-      /* 动画组件 */
       .marquee-container { position: relative; overflow: hidden; white-space: nowrap; width: 100%; height: 100%; display: flex; align-items: center; pointer-events: none; }
       .marquee-text { position: absolute; white-space: nowrap; will-change: transform; }
       .breathing-content { width: 100%; text-align: center; pointer-events: none; }
       .flow-icon-pure { display: block; cursor: move; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); transition: transform 0.2s; border-radius: 12px; }
       .flow-icon-pure:active { transform: scale(0.9); }
 
-      /* 4. [核心美化] App窗口：高级灰半透明风格 */
-      
-      /* 强制覆盖 App 窗口背景为深空灰渐变 */
-      #app-settings, #app-schedule {
-          background: linear-gradient(135deg, #263238 0%, #102027 100%) !important;
-          color: #b0bec5;
+      /* 3. 配置与计时界面样式 */
+      .schedule-container { padding: 60px 20px 120px 20px; height: 100%; overflow-y: auto; box-sizing: border-box; scrollbar-width: none; }
+      .schedule-container::-webkit-scrollbar { display: none; }
+      .schedule-header { 
+          font-size: 20px; color: #eceff1; margin-bottom: 20px; padding-bottom: 15px; 
+          border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; display: flex; justify-content: space-between; align-items: center; 
       }
-
-      /* 设置分组卡片：深色磨砂玻璃 */
-      .settings-group { 
-          margin-bottom: 20px; 
-          background: rgba(255, 255, 255, 0.04); 
-          padding: 20px; 
-          border-radius: 16px; 
-          border: 1px solid rgba(255, 255, 255, 0.08); 
-          box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      }
-      .settings-title { 
-          font-size: 14px; color: #80cbc4; margin-bottom: 15px; font-weight: bold; 
-          border-left: 3px solid #009688; padding-left: 10px; 
-          display: flex; justify-content: space-between; align-items: center;
-          text-transform: uppercase; letter-spacing: 1px;
-      }
-
-      /* 输入控件：深邃质感 */
+      .settings-group { margin-bottom: 20px; background: rgba(255, 255, 255, 0.04); padding: 20px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08); }
+      .settings-title { font-size: 14px; color: #80cbc4; margin-bottom: 15px; font-weight: bold; border-left: 3px solid #009688; padding-left: 10px; }
       .input-row { margin-bottom: 15px; }
       .input-label { font-size: 12px; color: #78909c; margin-bottom: 6px; display: block; font-weight: 600; }
-      
       .custom-input, .custom-textarea, .preset-select, .page-config-select { 
-          width: 100%; padding: 12px; 
-          border: 1px solid rgba(255, 255, 255, 0.1); 
-          border-radius: 10px; 
-          background: rgba(0, 0, 0, 0.4); 
-          font-size: 13px; color: #eceff1; 
-          box-sizing: border-box; outline: none; transition: 0.3s;
-          font-family: sans-serif;
-      }
-      .custom-input:focus, .custom-textarea:focus, .preset-select:focus, .page-config-select:focus { 
-          background: rgba(0, 0, 0, 0.6); 
-          border-color: #80cbc4; 
-          box-shadow: 0 0 0 2px rgba(128, 203, 196, 0.2);
+          width: 100%; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; 
+          background: rgba(0, 0, 0, 0.4); font-size: 13px; color: #eceff1; box-sizing: border-box; outline: none;
       }
       .custom-textarea { resize: vertical; min-height: 80px; font-family: monospace; line-height: 1.5; color: #cfd8dc; }
-
-      /* 按钮系统 */
       .btn-row { display: flex; gap: 12px; margin-top: 15px; }
-      .btn-primary { 
-          flex: 1; 
-          background: linear-gradient(135deg, #009688 0%, #00796b 100%); 
-          color: #fff; border: none; padding: 12px; border-radius: 10px; 
-          font-weight: bold; cursor: pointer; 
-          box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
-          transition: transform 0.1s, box-shadow 0.1s;
-      }
-      .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+      .btn-primary { flex: 1; background: linear-gradient(135deg, #009688 0%, #00796b 100%); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: bold; }
+      .btn-secondary { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #b0bec5; padding: 12px; border-radius: 10px; font-weight: bold; }
+      .icon-btn { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); border-radius: 10px; color: #cfd8dc; display: flex; justify-content: center; align-items: center; }
       
-      .btn-secondary { 
-          flex: 1; 
-          background: rgba(255,255,255,0.05); 
-          border: 1px solid rgba(255,255,255,0.1); 
-          color: #b0bec5; padding: 12px; border-radius: 10px; 
-          font-weight: bold; cursor: pointer; transition: 0.2s;
-      }
-      .btn-secondary:active { background: rgba(255,255,255,0.1); }
-
-      .icon-btn { 
-          width: 36px; height: 36px; 
-          border: 1px solid rgba(255,255,255,0.1); 
-          background: rgba(255,255,255,0.05); 
-          border-radius: 10px; cursor: pointer; 
-          display: flex; justify-content: center; align-items: center; 
-          color: #cfd8dc; font-size: 16px; padding:0; transition: 0.2s;
-      }
-      .icon-btn:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.3); }
-      
-      /* 预设栏 & 角色栏 */
-      .preset-bar, .role-bar { 
-          display: flex; gap: 10px; margin-bottom: 15px; 
-          background: rgba(0,0,0,0.3); 
-          padding: 10px; border-radius: 12px; 
-          border: 1px dashed rgba(255,255,255,0.15); align-items: center; 
-      }
-      .mini-btn { 
-          width: 30px; height: 30px; 
-          border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); 
-          border-radius: 8px; display: flex; justify-content: center; align-items: center; 
-          cursor: pointer; color: #b0bec5; font-size: 12px; transition: 0.2s;
-      }
-      .mini-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-
-      /* [新增] 计时器页面的绑定面板 (高亮显示) */
-      .page-config-panel {
-        background: linear-gradient(to bottom, rgba(38, 50, 56, 0.9), rgba(33, 33, 33, 0.9));
-        border: 1px solid rgba(128, 203, 196, 0.3);
-        border-radius: 16px;
-        padding: 15px;
-        margin-bottom: 25px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      }
-      .page-config-title {
-        font-size: 12px; font-weight: bold; color: #80cbc4; margin-bottom: 12px; text-align: center;
-        border-bottom: 1px solid rgba(128, 203, 196, 0.2); padding-bottom: 8px; letter-spacing: 1px;
-      }
+      /* 预设栏 */
+      .preset-bar, .role-bar { display: flex; gap: 10px; margin-bottom: 15px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.15); align-items: center; }
+      .mini-btn { width: 30px; height: 30px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); border-radius: 8px; color: #b0bec5; }
+      .page-config-panel { background: linear-gradient(to bottom, rgba(38, 50, 56, 0.9), rgba(33, 33, 33, 0.9)); border: 1px solid rgba(128, 203, 196, 0.3); border-radius: 16px; padding: 15px; margin-bottom: 25px; }
       .page-config-row { display: flex; align-items: center; margin-bottom: 10px; font-size: 13px; }
       .page-config-label { width: 80px; color: #b0bec5; font-weight: 600; flex-shrink: 0; }
       
-      /* 标签页 */
-      .tabs-header { 
-          display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; 
-          border-bottom: 1px solid rgba(255,255,255,0.1); 
-      }
-      .tab-item { 
-          padding: 8px 18px; 
-          background: rgba(255,255,255,0.03); 
-          border: 1px solid rgba(255,255,255,0.05); 
-          border-radius: 10px 10px 0 0; 
-          font-size: 12px; color: #78909c; cursor: pointer; white-space: nowrap; transition: 0.3s;
-      }
-      .tab-item.active { 
-          background: rgba(255,255,255,0.1); 
-          color: #fff; font-weight: bold; 
-          border-top: 2px solid #80cbc4;
-          box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
-      }
-      .tab-add-btn { padding: 8px 14px; background: rgba(255,255,255,0.05); border-radius: 10px; cursor: pointer; color: #80cbc4; font-weight:bold;}
-
-      /* 提示词工具条 */
-      .prompt-toolbar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 10px; }
-      .var-btn { 
-          background: rgba(33, 150, 243, 0.1); border: 1px solid rgba(33, 150, 243, 0.3); 
-          border-radius: 6px; padding: 5px 10px; font-size: 11px; 
-          color: #90caf9; cursor: pointer; font-family: monospace; transition: 0.2s;
-      }
-      .var-btn:hover { background: rgba(33, 150, 243, 0.2); color: #fff; }
-
-      /* 实时面板 */
-      #realtime-status-panel { 
-          background: linear-gradient(to right, #37474f, #263238); 
-          color: #fff; padding: 20px; border-radius: 16px; margin-bottom: 25px; 
-          box-shadow: 0 8px 25px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); 
-      }
-      .rt-content { font-size: 14px; font-weight: 500; color: #eceff1; margin: 6px 0; line-height: 1.6; font-family: monospace; text-shadow: 0 1px 2px rgba(0,0,0,0.5);}
-      .rt-divider { border: 0; border-top: 1px dashed rgba(255,255,255,0.2); margin: 15px 0; }
-      
-      /* 时间轴卡片 */
-      .timeline-card { 
-          background: rgba(255, 255, 255, 0.05); 
-          border: 1px solid rgba(255, 255, 255, 0.05); 
-          border-radius: 14px; padding: 18px; margin-bottom: 18px; 
-          position: relative; transition: 0.3s; 
-          backdrop-filter: blur(5px);
-      }
-      .timeline-card.active-now { 
-          border: 1px solid #80cbc4; 
-          background: rgba(0, 150, 136, 0.15); 
-          box-shadow: 0 0 25px rgba(0, 150, 136, 0.2); 
-          transform: scale(1.02); z-index: 2; 
-      }
+      /* 标签页与时间轴 */
+      .tabs-header { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+      .tab-item { padding: 8px 18px; background: rgba(255,255,255,0.03); border-radius: 10px 10px 0 0; font-size: 12px; color: #78909c; }
+      .tab-item.active { background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border-top: 2px solid #80cbc4; }
+      .tab-add-btn { padding: 8px 14px; background: rgba(255,255,255,0.05); border-radius: 10px; color: #80cbc4; }
+      .timeline-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 14px; padding: 18px; margin-bottom: 18px; }
+      .timeline-card.active-now { border: 1px solid #80cbc4; background: rgba(0, 150, 136, 0.15); transform: scale(1.02); }
       .t-header { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
-      .t-time { 
-          font-family: monospace; font-weight: bold; font-size: 15px; 
-          color: #e0f2f1; background: rgba(0, 150, 136, 0.6); 
-          padding: 4px 12px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      }
+      .t-time { font-family: monospace; font-weight: bold; font-size: 15px; color: #e0f2f1; background: rgba(0, 150, 136, 0.6); padding: 4px 12px; border-radius: 6px; }
       .t-desc { font-size: 14px; color: #cfd8dc; line-height: 1.6; white-space: pre-wrap; }
-      
       .card-actions { margin-top: 15px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: flex-end; gap: 10px; }
-      .card-btn { font-size: 11px; padding: 6px 14px; border-radius: 6px; cursor: pointer; border: 1px solid transparent; background: transparent; transition: 0.2s;}
-      .card-btn.edit { color: #90a4ae; border-color: rgba(255,255,255,0.1); }
-      .card-btn.edit:hover { background: rgba(255,255,255,0.1); color: #fff; }
-      .card-btn.copy { color: #fff; background: rgba(255,255,255,0.15); }
-      .card-btn.copy:hover { background: rgba(255,255,255,0.25); }
-      .card-btn.del { color: #ef9a9a; border-color: rgba(239, 83, 80, 0.3); }
-      .card-btn.del:hover { background: rgba(239, 83, 80, 0.1); }
-
-      /* [悬浮菜单统一美化] */
-      .fab-action-item {
-        display: flex; align-items: center; justify-content: flex-end; 
-        gap: 15px; cursor: pointer; width: 100%; margin-bottom: 12px; -webkit-tap-highlight-color: transparent;
-      }
-      .fab-action-item:active { transform: scale(0.96); }
-      .fab-item-label {
-        background: rgba(255,255,255,0.95); color: #37474f; padding: 6px 14px; border-radius: 8px;
-        font-size: 13px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.1); white-space: nowrap;
-      }
-      .fab-item-icon {
-        width: 50px; height: 50px; border-radius: 50%; background: #fff;
-        display: flex; justify-content: center; align-items: center;
-        box-shadow: 0 6px 15px rgba(0,0,0,0.2); border: 2px solid #fff; overflow: hidden;
-      }
+      .card-btn { font-size: 11px; padding: 6px 14px; border-radius: 6px; background: transparent; border: 1px solid transparent; color: #b0bec5; }
+      
+      /* 菜单美化 */
+      .fab-action-item { display: flex; align-items: center; justify-content: flex-end; gap: 15px; cursor: pointer; width: 100%; margin-bottom: 12px; }
+      .fab-item-label { background: rgba(255,255,255,0.95); color: #37474f; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.1); white-space: nowrap; }
+      .fab-item-icon { width: 50px; height: 50px; border-radius: 50%; background: #fff; display: flex; justify-content: center; align-items: center; box-shadow: 0 6px 15px rgba(0,0,0,0.2); border: 2px solid #fff; overflow: hidden; }
       .fab-item-icon img { width: 100%; height: 100%; object-fit: cover; }
       .fab-item-icon svg { width: 26px; height: 26px; fill: #455a64; }
-
+      .prompt-toolbar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 10px; }
+      .var-btn { background: rgba(33, 150, 243, 0.1); border: 1px solid rgba(33, 150, 243, 0.3); border-radius: 6px; padding: 5px 10px; font-size: 11px; color: #90caf9; }
+      #realtime-status-panel { background: linear-gradient(to right, #37474f, #263238); color: #fff; padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
     </style>
   </head>
   <body>
     <div id="phone-screen">
-      <!-- 状态栏 HTML 已移除 -->
-
-      <!-- 主屏幕 (Home Screen) -->
       <div id="home-screen" class="screen">
         <div id="home-screen-pages-container">
           <div id="home-screen-pages">
@@ -831,39 +226,17 @@
               <div id="main-content-area">
                 <div id="desktop-layout">
                   <div id="desktop-app-container">
-                    <!-- 装饰：四个角的螺丝钉 -->
-                    <div class="screw tl"></div>
-                    <div class="screw tr"></div>
-                    <div class="screw bl"></div>
-                    <div class="screw br"></div>
-
-                    <!-- 【新增】磁带底部的梯形装饰，更有磁带味 -->
-                    <div class="tape-bottom-deco">
-                      <div class="tape-holes"></div>
-                    </div>
-
-                    <!-- 装饰：中间的磁带视窗背景 -->
+                    <div class="screw tl"></div><div class="screw tr"></div>
+                    <div class="screw bl"></div><div class="screw br"></div>
+                    <div class="tape-bottom-deco"><div class="tape-holes"></div></div>
                     <div class="tape-window-bg"></div>
-
-                    <!-- 左卷轴：330 -->
+                    
                     <div class="desktop-app-icon" onclick="openApp('app-a')">
-                      <div class="icon-bg-desktop">
-                        <img
-                          src="https://s3plus.meituan.net/opapisdk/op_ticket_885190757_1756312261242_qdqqd_g0eriz.jpeg"
-                          alt="330"
-                        />
-                      </div>
+                      <div class="icon-bg-desktop"><img src="https://s3plus.meituan.net/opapisdk/op_ticket_885190757_1756312261242_qdqqd_g0eriz.jpeg" alt="330"/></div>
                       <span class="label">330</span>
                     </div>
-
-                    <!-- 右卷轴：兔K -->
                     <div class="desktop-app-icon" onclick="openApp('app-b')">
-                      <div class="icon-bg-desktop">
-                        <img
-                          src="https://i.postimg.cc/Kj8JnRcp/267611-CC01-F8-A3-B4910-A2-C2-FFDE479-DC.jpg"
-                          alt="兔K"
-                        />
-                      </div>
+                      <div class="icon-bg-desktop"><img src="https://i.postimg.cc/Kj8JnRcp/267611-CC01-F8-A3-B4910-A2-C2-FFDE479-DC.jpg" alt="兔K"/></div>
                       <span class="label">兔K</span>
                     </div>
                   </div>
@@ -877,11 +250,11 @@
       <div id="app-a" class="app-window app-frame">
         <iframe data-src="https://kittykitty0v0.github.io/sfsfdf/" src="" class="app-iframe"></iframe>
       </div>
-
       <div id="app-b" class="app-window app-frame">
         <iframe data-src="https://kittykitty0v0.github.io/-k-/" src="" class="app-iframe"></iframe>
       </div>
-<div id="flow-widget"></div>
+      
+      <div id="flow-widget"></div>
 
       <div id="app-settings" class="app-window app-frame">
         <div class="schedule-container">
@@ -893,13 +266,11 @@
               <input type="file" id="import-file" style="display:none" onchange="importData(this)">
             </div>
           </div>
-          
           <div style="padding:15px; background:rgba(0, 150, 136, 0.15); border:1px solid rgba(0, 150, 136, 0.3); color:#80cbc4; font-size:12px; border-radius:12px; margin-bottom:25px; line-height:1.5;">
-            ℹ️ <b>系统说明</b>：此处仅用于编辑和保存【预设模版】。要让功能生效，请前往<b>计时界面</b>，为每个计时器页签<b>绑定</b>对应的预设。
+            ℹ️ <b>系统说明</b>：在此配置预设。请在“计时”页面将预设绑定给角色，否则不生效。设置会自动保存。
           </div>
-
           <div class="settings-group">
-            <div class="settings-title" style="color:#b39ddb;">🎈 悬浮窗全局参数</div>
+            <div class="settings-title">🎈 悬浮窗参数</div>
             <div class="input-row"><label class="input-label">显示模式</label>
               <select id="flow-mode" class="custom-input" onchange="saveGlobalSettings()">
                 <option value="detail">详细展示 (循环滚动)</option>
@@ -907,90 +278,66 @@
                 <option value="icon">仅图标 (无边框)</option>
               </select>
             </div>
-            <div class="input-row"><label class="input-label">窗口宽度 (详细模式, px)</label><input type="number" id="flow-width" class="custom-input" value="200" onchange="saveGlobalSettings()"></div>
-            <div class="input-row"><label class="input-label">生效时间范围 (前后X分钟)</label><input type="number" id="flow-range" class="custom-input" value="15" onchange="saveGlobalSettings()"></div>
-            <div class="input-row"><label class="input-label">滚动速度 (像素/秒, 越小越慢)</label><input type="number" id="flow-speed-scroll" class="custom-input" value="30" onchange="saveGlobalSettings()"></div>
-            <div class="input-row"><label class="input-label">闪烁/切换间隔 (毫秒)</label><input type="number" id="flow-speed-blink" class="custom-input" value="3000" onchange="saveGlobalSettings()"></div>
-            
-            <div class="input-row"><label class="input-label">默认图标 (未绑定时用)</label><input type="text" id="flow-icon-normal" class="custom-input" value="https://i.postimg.cc/B6FkXGCL/15.png" onchange="saveGlobalSettings()"></div>
-            <div class="input-row"><label class="input-label">活跃图标 (未绑定时用)</label><input type="text" id="flow-icon-active" class="custom-input" value="https://i.postimg.cc/1tF2fZKF/16.png" onchange="saveGlobalSettings()"></div>
-            <div class="input-row"><label class="input-label">图标尺寸(px)</label><input type="number" id="flow-icon-size" class="custom-input" value="50" onchange="saveGlobalSettings()"></div>
+            <div class="input-row"><label class="input-label">时间范围(±分钟)</label><input type="number" id="flow-range" class="custom-input" value="15" onchange="saveGlobalSettings()"></div>
+            <div class="input-row"><label class="input-label">宽度(px)</label><input type="number" id="flow-width" class="custom-input" value="200" onchange="saveGlobalSettings()"></div>
+            <div class="input-row"><label class="input-label">默认图标</label><input type="text" id="flow-icon-normal" class="custom-input" value="https://i.postimg.cc/B6FkXGCL/15.png" onchange="saveGlobalSettings()"></div>
+            <div class="input-row"><label class="input-label">活跃图标</label><input type="text" id="flow-icon-active" class="custom-input" value="https://i.postimg.cc/1tF2fZKF/16.png" onchange="saveGlobalSettings()"></div>
             <div class="input-row"><button class="btn-secondary" onclick="resetWidgetPosition()">↺ 重置悬浮窗位置</button></div>
           </div>
-
           <div class="settings-group">
-            <div class="settings-title" style="color:#80cbc4;">📋 文案/复制预设</div>
+            <div class="settings-title">📋 文案/复制预设</div>
             <div class="preset-bar">
               <select id="copy-preset-select" class="preset-select" onchange="loadPreset('copy', this.value)"><option value="">-- 新建/选择 --</option></select>
               <button class="icon-btn" onclick="savePreset('copy')">💾</button> <button class="icon-btn" onclick="deletePreset('copy')">🗑️</button>
             </div>
-            <div class="input-row"><label class="input-label">配置名称 (保存用)</label><input type="text" id="copy-preset-name" class="custom-input"></div>
-            
-            <div class="input-row"><label class="input-label">全局复制模板 (点击悬浮窗复制的内容)</label>
-              <div class="prompt-toolbar">
-                <button class="var-btn" onclick="insertVarToId('global-copy-template', '${timercontent}')">插入日程内容</button>
-                <button class="var-btn" onclick="insertVarToId('global-copy-template', '${currTime}')">当前时间</button>
-              </div>
+            <div class="input-row"><label class="input-label">配置名称</label><input type="text" id="copy-preset-name" class="custom-input"></div>
+            <div class="input-row"><label class="input-label">复制模板</label>
+              <div class="prompt-toolbar"><button class="var-btn" onclick="insertVarToId('global-copy-template', '${timercontent}')">插入日程内容</button><button class="var-btn" onclick="insertVarToId('global-copy-template', '${currTime}')">当前时间</button></div>
               <textarea id="global-copy-template" class="custom-textarea" style="height:120px;"></textarea>
             </div>
-            <div class="input-row"><label class="input-label">过去事件文案 (悬浮窗展示用)</label><input type="text" id="status-tpl-past" class="custom-input"></div>
-            <div class="input-row"><label class="input-label">未来事件文案 (悬浮窗展示用)</label><input type="text" id="status-tpl-future" class="custom-input"></div>
+            <div class="input-row"><label class="input-label">过去事件文案</label><input type="text" id="status-tpl-past" class="custom-input"></div>
+            <div class="input-row"><label class="input-label">未来事件文案</label><input type="text" id="status-tpl-future" class="custom-input"></div>
           </div>
-
           <div class="settings-group">
-            <div class="settings-title" style="color:#90caf9;">📡 API 预设</div>
+            <div class="settings-title">📡 API 预设</div>
             <div class="preset-bar">
               <select id="api-preset-select" class="preset-select" onchange="loadPreset('api', this.value)"><option value="">-- 新建/选择 --</option></select>
               <button class="icon-btn" onclick="savePreset('api')">💾</button> <button class="icon-btn" onclick="deletePreset('api')">🗑️</button>
             </div>
             <div class="input-row"><label class="input-label">配置名称</label><input type="text" id="api-preset-name" class="custom-input"></div>
-            <div class="input-row"><label class="input-label">API Host</label><input type="text" id="api-host" class="custom-input" placeholder="https://api.openai.com"></div>
-            <div class="input-row"><label class="input-label">API Key</label><input type="password" id="api-key" class="custom-input" placeholder="sk-..."></div>
-            <div class="input-row">
-              <label class="input-label">Model (点击🔍拉取)</label>
-              <div style="display:flex; gap:5px;"><input type="text" id="model-name" class="custom-input" placeholder="gpt-3.5-turbo"><button class="icon-btn" onclick="fetchModels()">🔍</button></div>
-              <select id="model-list-dropdown" class="custom-input" style="display:none; margin-top:5px;" onchange="document.getElementById('model-name').value=this.value"></select>
-            </div>
+            <div class="input-row"><label class="input-label">API Host</label><input type="text" id="api-host" class="custom-input"></div>
+            <div class="input-row"><label class="input-label">API Key</label><input type="password" id="api-key" class="custom-input"></div>
+            <div class="input-row"><label class="input-label">Model</label><input type="text" id="model-name" class="custom-input"></div>
           </div>
-
           <div class="settings-group">
-            <div class="settings-title" style="color:#ef9a9a;">📝 提示词预设</div>
+            <div class="settings-title">📝 提示词预设</div>
             <div class="preset-bar">
               <select id="prompt-preset-select" class="preset-select" onchange="loadPreset('prompt', this.value)"><option value="">-- 新建/选择 --</option></select>
               <button class="icon-btn" onclick="savePreset('prompt')">💾</button> <button class="icon-btn" onclick="deletePreset('prompt')">🗑️</button>
             </div>
-            <div class="input-row"><label class="input-label">预设名称</label><input type="text" id="prompt-preset-name" class="custom-input"></div>
-            <div class="input-row">
-              <label class="input-label">Prompt 内容</label>
-              <div class="prompt-toolbar">
-                <button class="var-btn" onclick="insertVarToId('prompt-content', '${chat.name}')">角色名</button>
-                <button class="var-btn" onclick="insertVarToId('prompt-content', '${chat.settings.aiPersona}')">人设</button>
-              </div>
-              <textarea id="prompt-content" class="custom-textarea" style="height:150px;"></textarea>
-            </div>
-          </div>
-
-          <div class="settings-group">
-            <div class="settings-title" style="color:#ffcc80;">🎭 角色预设</div>
-            <div class="preset-bar">
-              <select id="char-preset-select" class="preset-select" onchange="loadPreset('char', this.value)"><option value="">-- 新建/选择 --</option></select>
-              <button class="icon-btn" onclick="savePreset('char')">💾</button> <button class="icon-btn" onclick="deletePreset('char')">🗑️</button>
-            </div>
-            <div class="input-row"><label class="input-label">配置名称</label><input type="text" id="char-preset-name" class="custom-input"></div>
-            <div class="input-row"><label class="input-label">角色名字</label><input type="text" id="char-name" class="custom-input"></div>
-            <div class="input-row"><label class="input-label">角色人设</label><textarea id="char-persona" class="custom-textarea"></textarea></div>
-            <div class="input-row"><label class="input-label">世界观</label><textarea id="world-info" class="custom-textarea"></textarea></div>
-            <div class="input-row"><label class="input-label">聊天历史</label><textarea id="chat-history" class="custom-textarea"></textarea></div>
+            <div class="input-row"><label class="input-label">名称</label><input type="text" id="prompt-preset-name" class="custom-input"></div>
+            <div class="input-row"><label class="input-label">Prompt</label><textarea id="prompt-content" class="custom-textarea" style="height:150px;"></textarea></div>
           </div>
           <div class="settings-group">
-            <div class="settings-title" style="color:#ce93d8;">👤 用户预设</div>
+            <div class="settings-title">🎭 角色/用户预设</div>
             <div class="preset-bar">
-              <select id="user-preset-select" class="preset-select" onchange="loadPreset('user', this.value)"><option value="">-- 新建/选择 --</option></select>
-              <button class="icon-btn" onclick="savePreset('user')">💾</button> <button class="icon-btn" onclick="deletePreset('user')">🗑️</button>
+              <select id="char-preset-select" class="preset-select" onchange="loadPreset('char', this.value)"><option value="">-- 角色 --</option></select>
+              <button class="icon-btn" onclick="savePreset('char')">💾</button>
+              <select id="user-preset-select" class="preset-select" style="margin-left:10px;" onchange="loadPreset('user', this.value)"><option value="">-- 用户 --</option></select>
+              <button class="icon-btn" onclick="savePreset('user')">💾</button>
             </div>
-            <div class="input-row"><label class="input-label">配置名称</label><input type="text" id="user-preset-name" class="custom-input"></div>
-            <div class="input-row"><label class="input-label">你的名字</label><input type="text" id="user-name" class="custom-input"></div>
-            <div class="input-row"><label class="input-label">你的人设</label><textarea id="user-persona" class="custom-textarea"></textarea></div>
+            <div class="input-row"><label class="input-label">角色配置名/名字/人设/世界/历史</label>
+                <input type="text" id="char-preset-name" class="custom-input" placeholder="配置名">
+                <input type="text" id="char-name" class="custom-input" placeholder="角色名" style="margin-top:5px;">
+                <textarea id="char-persona" class="custom-textarea" placeholder="角色人设" style="margin-top:5px;"></textarea>
+                <textarea id="world-info" class="custom-textarea" placeholder="世界观" style="margin-top:5px;"></textarea>
+                <textarea id="chat-history" class="custom-textarea" placeholder="历史记录" style="margin-top:5px;"></textarea>
+            </div>
+            <div class="input-row"><label class="input-label">用户配置名/名字/人设</label>
+                <input type="text" id="user-preset-name" class="custom-input" placeholder="配置名">
+                <input type="text" id="user-name" class="custom-input" placeholder="你的名字" style="margin-top:5px;">
+                <textarea id="user-persona" class="custom-textarea" placeholder="你的人设" style="margin-top:5px;"></textarea>
+            </div>
           </div>
           <div style="height:100px;"></div>
         </div>
@@ -1000,7 +347,7 @@
         <div class="schedule-container">
           <div class="role-bar">
             <span>🎭</span>
-            <select id="role-select" class="custom-input" style="padding:6px; font-weight:bold; background:rgba(0,0,0,0.2);" onchange="switchRole(this.value)"></select>
+            <select id="role-select" class="custom-input" style="padding:6px; background:rgba(0,0,0,0.2);" onchange="switchRole(this.value)"></select>
             <button class="mini-btn" onclick="addNewRole()">+</button>
             <button class="mini-btn" onclick="renameRole()">✎</button>
             <button class="mini-btn" onclick="deleteRole()" style="color:#ef9a9a;">🗑️</button>
@@ -1008,38 +355,20 @@
           
           <div class="tabs-header" id="timer-tabs"></div>
           <div style="text-align:right; margin-bottom:15px;">
-             <button class="card-btn del" onclick="deleteCurrentPage()">🗑️ 删除页签</button>
-             <button class="card-btn del" onclick="clearCurrentPage()">🧹 清空内容</button>
+             <button class="card-btn del" onclick="deleteCurrentPage()">🗑️ 删除页</button>
+             <button class="card-btn del" onclick="clearCurrentPage()">🧹 清空</button>
           </div>
 
           <div class="page-config-panel">
-             <div class="page-config-title">🔗 当前计时器绑定设置</div>
-             <div class="page-config-row">
-               <div class="page-config-label">📡 API:</div>
-               <select id="bind-api" class="page-config-select" onchange="updatePageBinding('apiPreset', this.value)"></select>
-             </div>
-             <div class="page-config-row">
-               <div class="page-config-label">🎭 角色:</div>
-               <select id="bind-char" class="page-config-select" onchange="updatePageBinding('charPreset', this.value)"></select>
-             </div>
-             <div class="page-config-row">
-               <div class="page-config-label">👤 用户:</div>
-               <select id="bind-user" class="page-config-select" onchange="updatePageBinding('userPreset', this.value)"></select>
-             </div>
-             <div class="page-config-row">
-               <div class="page-config-label">📝 提示词:</div>
-               <select id="bind-prompt" class="page-config-select" onchange="updatePageBinding('promptPreset', this.value)"></select>
-             </div>
-             <div class="page-config-row">
-               <div class="page-config-label">📋 文案:</div>
-               <select id="bind-copy" class="page-config-select" onchange="updatePageBinding('copyPreset', this.value)"></select>
-             </div>
-             <div class="page-config-row">
-               <div class="page-config-label">👀 显示范围:</div>
+             <div class="page-config-title">🔗 绑定设置 (下拉选择预设)</div>
+             <div class="page-config-row"><div class="page-config-label">API:</div><select id="bind-api" class="page-config-select" onchange="updatePageBinding('apiPreset', this.value)"></select></div>
+             <div class="page-config-row"><div class="page-config-label">角色:</div><select id="bind-char" class="page-config-select" onchange="updatePageBinding('charPreset', this.value)"></select></div>
+             <div class="page-config-row"><div class="page-config-label">用户:</div><select id="bind-user" class="page-config-select" onchange="updatePageBinding('userPreset', this.value)"></select></div>
+             <div class="page-config-row"><div class="page-config-label">提示词:</div><select id="bind-prompt" class="page-config-select" onchange="updatePageBinding('promptPreset', this.value)"></select></div>
+             <div class="page-config-row"><div class="page-config-label">文案:</div><select id="bind-copy" class="page-config-select" onchange="updatePageBinding('copyPreset', this.value)"></select></div>
+             <div class="page-config-row"><div class="page-config-label">范围:</div>
                <select id="bind-mode" class="page-config-select" style="border:1px solid #ffcc80; color:#ffcc80;" onchange="updatePageBinding('exportMode', this.value)">
-                 <option value="both">未来 + 过去 (双向)</option>
-                 <option value="future">只显示未来</option>
-                 <option value="past">只显示过去</option>
+                 <option value="both">未来 + 过去</option><option value="future">只显示未来</option><option value="past">只显示过去</option>
                </select>
              </div>
           </div>
@@ -1051,131 +380,87 @@
           </div>
 
           <div style="margin-bottom:20px;">
-             <div class="btn-row">
-               <button class="btn-primary" id="btn-gen-schedule" onclick="generateSchedule(false)">🔄 重新生成</button>
-               <button class="btn-secondary" id="btn-append-schedule" onclick="generateSchedule(true)">➕ 追加生成</button>
-             </div>
-             <div id="schedule-loading" style="display:none; padding:15px; text-align:center; font-size:12px; color:#b0bec5;">🧠 正在根据绑定配置构思...</div>
+             <div class="btn-row"><button class="btn-primary" id="btn-gen-schedule" onclick="generateSchedule(false)">🔄 生成</button><button class="btn-secondary" id="btn-append-schedule" onclick="generateSchedule(true)">➕ 追加</button></div>
+             <div id="schedule-loading" style="display:none; padding:15px; text-align:center; color:#b0bec5;">🧠 思考中...</div>
           </div>
           <div id="schedule-result-area"></div>
           <div style="height:100px;"></div>
         </div>
       </div>
-      <!-- 悬浮按钮 -->
+
       <div id="fab-container">
         <div class="fab-actions">
-          <div class="fab-actions">
           <div class="fab-action-item" onclick="openApp('app-a')">
             <span class="fab-item-label">330</span>
-            <div class="fab-item-icon">
-              <img src="https://s3plus.meituan.net/opapisdk/op_ticket_885190757_1756312261242_qdqqd_g0eriz.jpeg" alt="330" />
-            </div>
+            <div class="fab-item-icon"><img src="https://s3plus.meituan.net/opapisdk/op_ticket_885190757_1756312261242_qdqqd_g0eriz.jpeg" alt="330" /></div>
           </div>
-
           <div class="fab-action-item" onclick="openApp('app-b')">
             <span class="fab-item-label">兔K</span>
-            <div class="fab-item-icon">
-              <img src="https://i.postimg.cc/Kj8JnRcp/267611-CC01-F8-A3-B4910-A2-C2-FFDE479-DC.jpg" alt="兔K" />
-            </div>
+            <div class="fab-item-icon"><img src="https://i.postimg.cc/Kj8JnRcp/267611-CC01-F8-A3-B4910-A2-C2-FFDE479-DC.jpg" alt="兔K" /></div>
           </div>
-
           <div class="fab-action-item" onclick="openApp('app-settings')">
             <span class="fab-item-label">配置</span>
-            <div class="fab-item-icon">
-              <img src="https://i.postimg.cc/MZ7rZWzF/18.png" alt="配置" />
-            </div>
+            <div class="fab-item-icon"><img src="https://i.postimg.cc/MZ7rZWzF/18.png" alt="配置" /></div>
           </div>
-                    
           <div class="fab-action-item" onclick="openApp('app-schedule')">
             <span class="fab-item-label">计时</span>
-            <div class="fab-item-icon">
-              <img src="https://i.postimg.cc/prJ0sB08/21.png" alt="计时" />
-            </div>
+            <div class="fab-item-icon"><img src="https://i.postimg.cc/prJ0sB08/21.png" alt="计时" /></div>
           </div>
-          
           <div class="fab-action-item" onclick="toggleFlowWindow()">
             <span class="fab-item-label">悬窗</span>
-            <div class="fab-item-icon">
-              <img src="https://i.postimg.cc/3rXbrK3S/24.png" alt="悬窗" />
-            </div>
+            <div class="fab-item-icon"><img src="https://i.postimg.cc/3rXbrK3S/24.png" alt="悬窗" /></div>
           </div>
-          
           <div class="fab-action-item" onclick="hideFab()">
             <span class="fab-item-label">隐藏</span>
-            <div class="fab-item-icon">
-              <svg viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46A11.804 11.804 0 0 0 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>
-            </div>
+            <div class="fab-item-icon"><svg viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46A11.804 11.804 0 0 0 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg></div>
           </div>
-
           <div class="fab-action-item" onclick="goHome()">
             <span class="fab-item-label">主页</span>
-            <div class="fab-item-icon">
-              <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg>
-            </div>
+            <div class="fab-item-icon"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></div>
           </div>
         </div>
-        </div>
-
         <div id="fab-main"></div>
       </div>
 
-    <!-- ★★★★★ 这里是你要复制进去的代码 开始 ★★★★★ -->
-    <!-- 全屏边缘感应层 (用于在App内双击唤醒) -->
-    <div class="edge-sensor top"></div>
-    <div class="edge-sensor bottom"></div>
-    <div class="edge-sensor left"></div>
-    <div class="edge-sensor right"></div>
-    <!-- ★★★★★ 这里是你要复制进去的代码 结束 ★★★★★ -->
-
+      <div class="edge-sensor top"></div><div class="edge-sensor bottom"></div>
+      <div class="edge-sensor left"></div><div class="edge-sensor right"></div>
       <div id="toast-msg"></div>
     </div>
 
     <script>
+      // ===========================
+      // 1. 基础 DOM 与 变量
+      // ===========================
       const fabContainer = document.getElementById('fab-container');
       const fabMain = document.getElementById('fab-main');
-
-      // 这里把原来的 id="home-screen" 对应给 launcherScreen
       const launcherScreen = document.getElementById('home-screen');
-
-      // 获取所有的 App 窗口
       const frames = document.querySelectorAll('.app-frame');
       const toastMsg = document.getElementById('toast-msg');
 
-      // 图标定义
-      const menuIconSvg =
-        '<svg viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zM3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1z"/></svg>';
-      const closeIconSvg =
-        '<svg viewBox="0 0 24 24"><path d="M18.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7a.996.996 0 1 0-1.41 1.41L10.59 12 5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>';
-
-      // 初始化图标
+      const menuIconSvg = '<svg viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zM3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1z"/></svg>';
+      const closeIconSvg = '<svg viewBox="0 0 24 24"><path d="M18.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7a.996.996 0 1 0-1.41 1.41L10.59 12 5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>';
+      
       fabMain.innerHTML = menuIconSvg;
 
-      // --- 2. 核心功能逻辑 ---
-
+      // ===========================
+      // 2. 原始版本核心逻辑 (切换/隐藏/拖拽)
+      // ===========================
       function openApp(frameId) {
         document.body.classList.add('app-open');
-
-        // 隐藏主屏幕 (模拟)
         launcherScreen.style.opacity = '0';
         launcherScreen.style.transform = 'scale(0.95)';
-
+        
         frames.forEach(frame => {
           if (frame.id === frameId) {
-            // 激活当前 App
             frame.style.display = 'flex';
             setTimeout(() => frame.classList.add('active'), 10);
-
-            // 核心省流逻辑：如果 src 空才赋值
             const iframe = frame.querySelector('iframe');
-            if (iframe && iframe.dataset.src) {
-              iframe.src = iframe.dataset.src;
-            }
+            if (iframe && iframe.dataset.src) iframe.src = iframe.dataset.src; 
           } else {
-            // 关闭其他 App
             frame.classList.remove('active');
             frame.style.display = 'none';
             const iframe = frame.querySelector('iframe');
-            if (iframe) iframe.src = ''; // 清理内存
+            if (iframe) iframe.src = ''; 
           }
         });
         closeMenu();
@@ -1183,236 +468,84 @@
 
       function goHome() {
         document.body.classList.remove('app-open');
-
-        // 恢复主屏幕
         launcherScreen.style.opacity = '1';
         launcherScreen.style.transform = 'scale(1)';
-
-        // 关闭所有 App
         setTimeout(() => {
           frames.forEach(frame => {
             frame.classList.remove('active');
             frame.style.display = 'none';
-            // 清理 iframe
             const iframe = frame.querySelector('iframe');
             if (iframe) iframe.src = '';
           });
         }, 300);
         closeMenu();
-
-        // 回到主页时，如果处于隐身模式，自动恢复显示（可选，已注释）
-        // showFab();
       }
 
-      // --- [修改] 隐藏功能 ---
       function hideFab() {
         closeMenu();
-
-        // 1. 获取当前位置并固定（保持不变，防止乱跑）
         const mainRect = fabMain.getBoundingClientRect();
         fabContainer.style.left = mainRect.left + 'px';
         fabContainer.style.top = mainRect.top + 'px';
-        fabContainer.style.bottom = 'auto';
-        fabContainer.style.right = 'auto';
-
-        // 2. 开启隐身模式
+        fabContainer.style.bottom = 'auto'; fabContainer.style.right = 'auto';
         fabContainer.classList.add('ghost-mode');
-
-        // 修改这里的提示文字
         showToast('已隐藏。双击屏幕顶部或者底部唤出。');
       }
-
-      // 恢复显示
-      function showFab() {
-        fabContainer.classList.remove('ghost-mode');
-      }
-
-      function showToast(text) {
-        toastMsg.innerText = text;
-        toastMsg.classList.add('show');
-        setTimeout(() => {
-          toastMsg.classList.remove('show');
-        }, 3000);
-      }
+      function showFab() { fabContainer.classList.remove('ghost-mode'); }
+      function showToast(text) { toastMsg.innerText = text; toastMsg.classList.add('show'); setTimeout(() => toastMsg.classList.remove('show'), 3000); }
 
       function toggleMenu() {
-        // 如果处于隐身模式，点击主按钮就是“现身”
         if (fabContainer.classList.contains('ghost-mode')) {
           showFab();
-          // 现身的同时直接展开菜单，体验更流畅
-          setTimeout(() => {
-            fabContainer.classList.add('menu-open');
-            fabMain.classList.add('expanded');
-            fabMain.innerHTML = closeIconSvg;
-          }, 50);
+          setTimeout(() => { fabContainer.classList.add('menu-open'); fabMain.classList.add('expanded'); fabMain.innerHTML = closeIconSvg; }, 50);
           return;
         }
-
         fabContainer.classList.toggle('menu-open');
         fabMain.classList.toggle('expanded');
-
-        if (fabMain.classList.contains('expanded')) {
-          fabMain.innerHTML = closeIconSvg;
-        } else {
-          fabMain.innerHTML = menuIconSvg;
-        }
+        fabMain.innerHTML = fabMain.classList.contains('expanded') ? closeIconSvg : menuIconSvg;
       }
+      function closeMenu() { fabContainer.classList.remove('menu-open'); fabMain.classList.remove('expanded'); fabMain.innerHTML = menuIconSvg; }
+      
+      document.addEventListener('click', e => { if (!fabContainer.contains(e.target) && fabContainer.classList.contains('menu-open')) closeMenu(); });
 
-      function closeMenu() {
-        fabContainer.classList.remove('menu-open');
-        fabMain.classList.remove('expanded');
-        fabMain.innerHTML = menuIconSvg;
-      }
-
-      document.addEventListener('click', e => {
-        // 只有在菜单打开且点击外部时才关闭
-        // 如果是隐身模式点击了空白处，不需要做任何事
-        if (!fabContainer.contains(e.target) && fabContainer.classList.contains('menu-open')) {
-          closeMenu();
-        }
-      });
-
-      // --- 拖拽功能 (保持不变，加了隐身判断) ---
-      let isDragging = false;
-      let hasMoved = false;
-      let startX, startY, initialLeft, initialTop;
-      const dragThreshold = 5;
-
-      fabMain.addEventListener('mousedown', startDrag);
-      fabMain.addEventListener('touchstart', startDrag, { passive: false });
-
+      // 拖拽逻辑
+      let isDragging = false, hasMoved = false, startX, startY, initialLeft, initialTop;
+      fabMain.addEventListener('mousedown', startDrag); fabMain.addEventListener('touchstart', startDrag, { passive: false });
+      
       function startDrag(e) {
-        // 如果是隐身模式，禁止拖拽，只允许点击
-        if (fabContainer.classList.contains('ghost-mode')) {
-          return;
-        }
-
-        if (fabContainer.classList.contains('menu-open')) {
-          closeMenu();
-        }
-
-        isDragging = true;
-        hasMoved = false;
-
-        if (e.type === 'touchstart') {
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
-        } else {
-          startX = e.clientX;
-          startY = e.clientY;
-        }
-
+        if (fabContainer.classList.contains('ghost-mode')) return;
+        if (fabContainer.classList.contains('menu-open')) closeMenu();
+        isDragging = true; hasMoved = false;
+        const evt = e.touches ? e.touches[0] : e;
+        startX = evt.clientX; startY = evt.clientY;
         const rect = fabContainer.getBoundingClientRect();
-        initialLeft = rect.left;
-        initialTop = rect.top;
-
-        // 关键：拖拽开始时，将定位切换为 left/top，防止 CSS bottom/right 干扰
-        fabContainer.style.bottom = 'auto';
-        fabContainer.style.right = 'auto';
-        fabContainer.style.left = initialLeft + 'px';
-        fabContainer.style.top = initialTop + 'px';
-
-        document.addEventListener('mousemove', onDrag);
-        document.addEventListener('touchmove', onDrag, { passive: false });
-        document.addEventListener('mouseup', stopDrag);
-        document.addEventListener('touchend', stopDrag);
+        initialLeft = rect.left; initialTop = rect.top;
+        fabContainer.style.bottom = 'auto'; fabContainer.style.right = 'auto';
+        fabContainer.style.left = initialLeft + 'px'; fabContainer.style.top = initialTop + 'px';
+        document.addEventListener('mousemove', onDrag); document.addEventListener('touchmove', onDrag, { passive: false });
+        document.addEventListener('mouseup', stopDrag); document.addEventListener('touchend', stopDrag);
       }
-
       function onDrag(e) {
         if (!isDragging) return;
         e.preventDefault();
-
-        let clientX, clientY;
-        if (e.type === 'touchmove') {
-          clientX = e.touches[0].clientX;
-          clientY = e.touches[0].clientY;
-        } else {
-          clientX = e.clientX;
-          clientY = e.clientY;
-        }
-
-        const deltaX = clientX - startX;
-        const deltaY = clientY - startY;
-
-        if (Math.abs(deltaX) > dragThreshold || Math.abs(deltaY) > dragThreshold) {
-          hasMoved = true;
-        }
-
-        fabContainer.style.left = initialLeft + deltaX + 'px';
-        fabContainer.style.top = initialTop + deltaY + 'px';
+        const evt = e.touches ? e.touches[0] : e;
+        if (Math.abs(evt.clientX - startX) > 5 || Math.abs(evt.clientY - startY) > 5) hasMoved = true;
+        fabContainer.style.left = initialLeft + (evt.clientX - startX) + 'px';
+        fabContainer.style.top = initialTop + (evt.clientY - startY) + 'px';
       }
-
       function stopDrag() {
         isDragging = false;
-        document.removeEventListener('mousemove', onDrag);
-        document.removeEventListener('touchmove', onDrag);
-        document.removeEventListener('mouseup', stopDrag);
-        document.removeEventListener('touchend', stopDrag);
+        document.removeEventListener('mousemove', onDrag); document.removeEventListener('touchmove', onDrag);
+        document.removeEventListener('mouseup', stopDrag); document.removeEventListener('touchend', stopDrag);
       }
+      fabMain.addEventListener('click', e => { e.stopPropagation(); if (!hasMoved) toggleMenu(); });
 
-      fabMain.addEventListener('click', e => {
-        e.stopPropagation();
-        // 无论是拖拽结束还是普通点击，如果没有发生位移，都视为点击
-        if (!hasMoved) {
-          toggleMenu();
-        }
-      });
-
-      // SW 注册
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          // --- [新增] 双击屏幕顶部或者底部唤出 ---
-
-          // 1. 电脑端双击 (dblclick)
-          document.addEventListener('dblclick', () => {
-            if (fabContainer.classList.contains('ghost-mode')) {
-              showFab();
-              showToast('已唤出菜单');
-            }
-          });
-
-          // 2. 手机端双击 (通过监听两次触摸的时间间隔)
-          let lastTapTime = 0;
-          document.addEventListener('touchend', e => {
-            const currentTime = new Date().getTime();
-            const tapLength = currentTime - lastTapTime;
-
-            // 如果两次点击间隔小于 300ms 且大于 0，视为双击
-            if (tapLength < 300 && tapLength > 0) {
-              if (fabContainer.classList.contains('ghost-mode')) {
-                showFab();
-                showToast('已唤出菜单');
-                e.preventDefault(); // 防止双击触发缩放等默认行为
-              }
-            }
-            lastTapTime = currentTime;
-          });
-          navigator.serviceWorker.register('sw.js');
-        });
-      }
-      /* ===========================
-         V13.0 逻辑核心 (防数据丢失 + 自动初始化)
-         =========================== */
-      let timerPages = [];
-      let activeRoleId = 0; 
-      let activePageIndex = 0;
-      let roles = [];
+      // ===========================
+      // 3. V13 核心数据逻辑 (确保备份不丢失)
+      // ===========================
+      let timerPages = []; let activeRoleId = 0; let activePageIndex = 0; let roles = [];
+      let globalSettings = { flowMode: 'simple', flowRange: 15, flowVisible: false, iconNormal: "https://i.postimg.cc/B6FkXGCL/15.png", iconActive: "https://i.postimg.cc/1tF2fZKF/16.png", iconSize: 50, flowWidth: 200, flowSpeedScroll: 30, flowSpeedBlink: 3000, widgetX: 20, widgetY: 120 };
       
-      let globalSettings = {
-        flowMode: 'simple', 
-        flowRange: 15,
-        flowVisible: false,
-        iconNormal: "https://i.postimg.cc/B6FkXGCL/15.png",
-        iconActive: "https://i.postimg.cc/1tF2fZKF/16.png",
-        iconSize: 50,
-        flowWidth: 200,
-        flowSpeedScroll: 30,
-        flowSpeedBlink: 3000,
-        widgetX: 20, widgetY: 120
-      };
-
       const DEFAULT_GLOBAL_TEMPLATE = "此条内容是ai写作指导，角色不可见。以下是角色原本的日程计划，注意角色可能之前之后都不按照原计划进行，请你根据上下文语境进行判断剧情发展：\n${timercontent}\n必须根据上下文判断角色是否之前或之后进行原计划，以及根据当前对话场景角色是否会提及此事，角色也可能已经忘记此事或直接根本不提。你作为ai必须自行判断做出有活人感的反应与结果。";
-
       const STORAGE_KEYS = { api:'tuki_presets_api', char:'tuki_presets_char', user:'tuki_presets_user', prompt:'tuki_presets_prompt', copy:'tuki_presets_copy', roles:'tuki_roles_v1', global:'tuki_global_settings' };
       const FIELD_MAP = { 
         api:['api-preset-name','api-host','api-key','model-name'], 
@@ -1423,42 +556,73 @@
       };
       const DEFAULT_PROMPT = `# 角色扮演任务\n请根据"\${chat.name}"的人设，推演接下来24小时的行为轨迹。\n# 参数\n角色：\${chat.name}\n人设：\${chat.settings.aiPersona}\n# 输出规则\n1. 返回JSON数组。2. 时间格式 "HH:mm"。3. 包含 'html_snippet' (可选)。\n[{"time":"08:00","description":"...","icon":"⏰"}]`;
 
+      // ★★★ 核心修复：单一且强制的初始化入口 ★★★
       window.addEventListener('load', () => {
-        // [核心修复] 自动创建默认预设，防止数据丢失或空列表
-        ensureDefaultPresets();
+        // 1. 双击唤醒逻辑
+        document.addEventListener('dblclick', () => { if(fabContainer.classList.contains('ghost-mode')){ showFab(); showToast('已唤出菜单'); } });
+        let lastTapTime = 0;
+        document.addEventListener('touchend', e => {
+          const currentTime = new Date().getTime(); const tapLength = currentTime - lastTapTime;
+          if (tapLength < 300 && tapLength > 0) {
+            if (fabContainer.classList.contains('ghost-mode')) { showFab(); showToast('已唤出菜单'); e.preventDefault(); }
+          }
+          lastTapTime = currentTime;
+        });
 
-        ['api','char','user','prompt','copy'].forEach(refreshDropdown);
-        
-        const savedGlobal = localStorage.getItem(STORAGE_KEYS.global);
-        if(savedGlobal) globalSettings = {...globalSettings, ...JSON.parse(savedGlobal)};
-        
-        const safeVal = (id, val) => { const el=document.getElementById(id); if(el) el.value=val; };
-        safeVal('global-copy-template', DEFAULT_GLOBAL_TEMPLATE);
-        safeVal('flow-mode', globalSettings.flowMode);
-        safeVal('flow-range', globalSettings.flowRange);
-        safeVal('flow-width', globalSettings.flowWidth);
-        safeVal('flow-speed-scroll', globalSettings.flowSpeedScroll);
-        safeVal('flow-speed-blink', globalSettings.flowSpeedBlink);
-        safeVal('flow-icon-normal', globalSettings.iconNormal);
-        safeVal('flow-icon-active', globalSettings.iconActive);
-        safeVal('flow-icon-size', globalSettings.iconSize);
-        
-        const widget = document.getElementById('flow-widget');
-        if(widget) { widget.style.left = globalSettings.widgetX + 'px'; widget.style.top = globalSettings.widgetY + 'px'; }
+        // 2. Service Worker
+        if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
-        const savedRoles = localStorage.getItem(STORAGE_KEYS.roles);
-        if(savedRoles) roles = JSON.parse(savedRoles);
-        else roles = [{ id: Date.now(), name: "默认角色", pages: [{ id: Date.now(), name: "主日程", data: [], exportMode: "both" }] }];
-        activeRoleId = roles[0].id;
+        // 3. 数据恢复逻辑 (修复备份丢失问题)
+        try {
+          ensureDefaultPresets();
+          
+          // 恢复全局设置
+          const savedGlobal = localStorage.getItem(STORAGE_KEYS.global);
+          if(savedGlobal) globalSettings = {...globalSettings, ...JSON.parse(savedGlobal)};
+          
+          // 应用设置到UI
+          const safeVal = (id, val) => { const el=document.getElementById(id); if(el) el.value=val; };
+          safeVal('global-copy-template', DEFAULT_GLOBAL_TEMPLATE);
+          safeVal('flow-mode', globalSettings.flowMode);
+          safeVal('flow-range', globalSettings.flowRange);
+          safeVal('flow-width', globalSettings.flowWidth);
+          safeVal('flow-speed-scroll', globalSettings.flowSpeedScroll);
+          safeVal('flow-speed-blink', globalSettings.flowSpeedBlink);
+          safeVal('flow-icon-normal', globalSettings.iconNormal);
+          safeVal('flow-icon-active', globalSettings.iconActive);
+          safeVal('flow-icon-size', globalSettings.iconSize);
 
-        renderRoleUI();
-        updateFlowWindowVisibility();
-        setInterval(updateRealTimeStatus, 1000);
-        initFlowLoop();
-        initWidgetDrag();
+          const widget = document.getElementById('flow-widget');
+          if(widget) { widget.style.left = globalSettings.widgetX + 'px'; widget.style.top = globalSettings.widgetY + 'px'; }
+
+          // 恢复角色数据
+          const savedRoles = localStorage.getItem(STORAGE_KEYS.roles);
+          if(savedRoles) {
+            roles = JSON.parse(savedRoles);
+            // 修复：如果读取成功但数组为空，或者数据损坏，重置为默认
+            if(!Array.isArray(roles) || roles.length === 0) roles = [{ id: Date.now(), name: "默认角色", pages: [{ id: Date.now(), name: "主日程", data: [], exportMode: "both" }] }];
+          } else {
+            roles = [{ id: Date.now(), name: "默认角色", pages: [{ id: Date.now(), name: "主日程", data: [], exportMode: "both" }] }];
+          }
+          activeRoleId = roles[0].id;
+          
+          // 渲染UI
+          renderRoleUI();
+          ['api','char','user','prompt','copy'].forEach(refreshDropdown);
+          
+          updateFlowWindowVisibility();
+          setInterval(updateRealTimeStatus, 1000);
+          initFlowLoop();
+          initWidgetDrag();
+          
+          // 提示用户数据加载成功
+          if(savedRoles) showToast('✅ 备份已恢复');
+          
+        } catch(e) {
+          alert("数据初始化失败，请截图反馈：" + e.message);
+        }
       });
 
-      // [核心修复] 仅当本地没有数据时才写入默认值，绝对不覆盖用户数据
       function ensureDefaultPresets() {
           const defaults = {
               api: { "默认API": { "api-preset-name": "默认API", "api-host": "https://api.openai.com", "api-key": "", "model-name": "gpt-3.5-turbo" } },
@@ -1467,95 +631,50 @@
               prompt: { "默认日程": { "prompt-preset-name": "默认日程", "prompt-content": DEFAULT_PROMPT } },
               copy: { "系统默认": { "copy-preset-name": "系统默认", "global-copy-template": DEFAULT_GLOBAL_TEMPLATE, "status-tpl-past": "${min}分钟前，${char}原计划是${act}", "status-tpl-future": "${min}分钟后，${char}原计划是${act}" } }
           };
-          
           Object.keys(defaults).forEach(type => {
-              if(!localStorage.getItem(STORAGE_KEYS[type])) {
-                  localStorage.setItem(STORAGE_KEYS[type], JSON.stringify(defaults[type]));
-              }
+              if(!localStorage.getItem(STORAGE_KEYS[type])) localStorage.setItem(STORAGE_KEYS[type], JSON.stringify(defaults[type]));
           });
       }
 
-      function toggleFlowWindow() {
-        globalSettings.flowVisible = !globalSettings.flowVisible;
-        saveGlobalSettings();
-        updateFlowWindowVisibility();
-      }
+      // ===========================
+      // 4. 悬浮窗逻辑 (Flow Widget)
+      // ===========================
+      function toggleFlowWindow() { globalSettings.flowVisible = !globalSettings.flowVisible; saveGlobalSettings(); updateFlowWindowVisibility(); }
       function updateFlowWindowVisibility() {
         const widget = document.getElementById('flow-widget');
         if(!widget) return;
         if(globalSettings.flowVisible) {
-            widget.style.display = 'block';
-            setTimeout(()=>widget.classList.add('visible'), 10);
-            renderNextFlowItem();
+            widget.style.display = 'block'; setTimeout(()=>widget.classList.add('visible'), 10); renderNextFlowItem();
         } else {
-            widget.classList.remove('visible');
-            setTimeout(()=>widget.style.display = 'none', 500);
+            widget.classList.remove('visible'); setTimeout(()=>widget.style.display = 'none', 500);
         }
       }
       
-      let flowQueue = []; 
-      let currentFlowIndex = 0;
-      let flowLoopTimer = null;
-
-      function initFlowLoop() {
-          setInterval(() => { if(!globalSettings.flowVisible) return; }, 1000);
-          if(globalSettings.flowVisible) renderNextFlowItem();
-      }
+      let flowQueue = []; let currentFlowIndex = 0; let flowLoopTimer = null;
+      function initFlowLoop() { setInterval(() => { if(!globalSettings.flowVisible) return; }, 1000); if(globalSettings.flowVisible) renderNextFlowItem(); }
 
       function getFlowQueue() {
-          const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
-          let queue = [];
-          
+          const now = new Date(); const curM = now.getHours()*60 + now.getMinutes(); let queue = [];
           roles.forEach(role => {
               role.pages.forEach(page => {
                   if(!page.copyPreset) return;
                   const copyCfg = getPresets('copy')[page.copyPreset];
                   if(!copyCfg) return;
-                  
                   let charName = role.name;
-                  if(page.charPreset) {
-                      const charCfg = getPresets('char')[page.charPreset];
-                      if(charCfg && charCfg['char-name']) charName = charCfg['char-name'];
-                  }
-
+                  if(page.charPreset) { const charCfg = getPresets('char')[page.charPreset]; if(charCfg && charCfg['char-name']) charName = charCfg['char-name']; }
                   let candidates = [];
                   page.data.forEach(item => {
-                      const [h,m] = item.time.split(':').map(Number);
-                      const t = h*60+m;
-                      const diff = Math.abs(t - curM);
-                      if(diff <= globalSettings.flowRange) {
-                          candidates.push({ ...item, t: t, diff: diff });
-                      }
+                      const [h,m] = item.time.split(':').map(Number); const t = h*60+m; const diff = Math.abs(t - curM);
+                      if(diff <= globalSettings.flowRange) candidates.push({ ...item, t: t, diff: diff });
                   });
-
                   if(candidates.length === 0) return;
-
-                  const mode = page.exportMode || 'both';
-                  let itemsToAdd = [];
-
-                  if(mode === 'both' || mode === 'past') {
-                      const pastItems = candidates.filter(i => curM >= i.t).sort((a,b) => a.diff - b.diff);
-                      if(pastItems.length > 0) itemsToAdd.push(pastItems[0]); 
-                  }
-
-                  if(mode === 'both' || mode === 'future') {
-                      const futureItems = candidates.filter(i => curM < i.t).sort((a,b) => a.diff - b.diff);
-                      if(futureItems.length > 0) itemsToAdd.push(futureItems[0]); 
-                  }
-
+                  const mode = page.exportMode || 'both'; let itemsToAdd = [];
+                  if(mode === 'both' || mode === 'past') { const pastItems = candidates.filter(i => curM >= i.t).sort((a,b) => a.diff - b.diff); if(pastItems.length > 0) itemsToAdd.push(pastItems[0]); }
+                  if(mode === 'both' || mode === 'future') { const futureItems = candidates.filter(i => curM < i.t).sort((a,b) => a.diff - b.diff); if(futureItems.length > 0) itemsToAdd.push(futureItems[0]); }
                   itemsToAdd.forEach(item => {
-                      const isPast = curM >= item.t;
-                      const tpl = isPast ? copyCfg['status-tpl-past'] : copyCfg['status-tpl-future'];
-                      const text = tpl.replace(/\${min}/g, item.diff)
-                                      .replace(/\${char}/g, charName)
-                                      .replace(/\${act}/g, item.description)
-                                      .replace(/\${time}/g, item.time);
-                      queue.push({
-                          text: text,
-                          shortText: `${item.time} ${charName}`,
-                          copyText: text,
-                          icon: item.icon
-                      });
+                      const isPast = curM >= item.t; const tpl = isPast ? copyCfg['status-tpl-past'] : copyCfg['status-tpl-future'];
+                      const text = tpl.replace(/\${min}/g, item.diff).replace(/\${char}/g, charName).replace(/\${act}/g, item.description).replace(/\${time}/g, item.time);
+                      queue.push({ text: text, shortText: `${item.time} ${charName}`, copyText: text, icon: item.icon });
                   });
               });
           });
@@ -1569,14 +688,11 @@
           
           if(queue.length === 0) {
               if(globalSettings.flowMode === 'icon') {
-                  const size = globalSettings.iconSize;
-                  widget.innerHTML = `<img src="${globalSettings.iconNormal}" class="flow-icon-pure" style="width:${size}px;height:${size}px;">`;
+                  const size = globalSettings.iconSize; widget.innerHTML = `<img src="${globalSettings.iconNormal}" class="flow-icon-pure" style="width:${size}px;height:${size}px;">`;
               } else {
                   widget.innerHTML = `<div class="flow-card-glass" style="width:auto;"><div class="breathing-content">💤</div></div>`;
               }
-              clearTimeout(flowLoopTimer);
-              flowLoopTimer = setTimeout(renderNextFlowItem, 3000);
-              return;
+              clearTimeout(flowLoopTimer); flowLoopTimer = setTimeout(renderNextFlowItem, 3000); return;
           }
 
           if(currentFlowIndex >= queue.length) currentFlowIndex = 0;
@@ -1585,49 +701,24 @@
           if(globalSettings.flowMode === 'icon') {
               const size = globalSettings.iconSize;
               widget.innerHTML = `<img src="${globalSettings.iconActive}" class="flow-icon-pure" style="width:${size}px;height:${size}px;" onclick="copyCurrentFlowItem(${currentFlowIndex})">`;
-              clearTimeout(flowLoopTimer);
-              flowLoopTimer = setTimeout(() => { currentFlowIndex++; renderNextFlowItem(); }, globalSettings.flowSpeedBlink);
+              clearTimeout(flowLoopTimer); flowLoopTimer = setTimeout(() => { currentFlowIndex++; renderNextFlowItem(); }, globalSettings.flowSpeedBlink);
               
           } else if(globalSettings.flowMode === 'detail') {
               const width = globalSettings.flowWidth;
-              widget.innerHTML = `
-                 <div class="flow-card-glass" style="width:${width}px;" onclick="copyCurrentFlowItem(${currentFlowIndex})">
-                   <div class="marquee-container">
-                     <span class="marquee-text" id="mq-text">${item.text}</span>
-                   </div>
-                 </div>`;
-              
-              const container = widget.querySelector('.marquee-container');
-              const textEl = widget.querySelector('.marquee-text');
-              
+              widget.innerHTML = `<div class="flow-card-glass" style="width:${width}px;" onclick="copyCurrentFlowItem(${currentFlowIndex})"><div class="marquee-container"><span class="marquee-text" id="mq-text">${item.text}</span></div></div>`;
+              const container = widget.querySelector('.marquee-container'); const textEl = widget.querySelector('.marquee-text');
               requestAnimationFrame(() => {
-                  const realTextWidth = textEl.scrollWidth;
-                  const containerWidth = width - 32; 
-                  let duration = 3000;
-                  
+                  const realTextWidth = textEl.scrollWidth; const containerWidth = width - 32; let duration = 3000;
                   if(realTextWidth > containerWidth) {
-                      const distance = realTextWidth + containerWidth; 
-                      const speed = globalSettings.flowSpeedScroll || 30;
-                      duration = (distance / speed) * 1000;
-                      textEl.style.transition = `transform ${duration}ms linear`;
-                      textEl.style.left = `${containerWidth}px`; 
+                      const distance = realTextWidth + containerWidth; const speed = globalSettings.flowSpeedScroll || 30; duration = (distance / speed) * 1000;
+                      textEl.style.transition = `transform ${duration}ms linear`; textEl.style.left = `${containerWidth}px`; 
                       requestAnimationFrame(() => { textEl.style.transform = `translateX(-${distance}px)`; });
-                  } else {
-                      textEl.style.left = '0';
-                      textEl.style.position = 'relative';
-                  }
-                  
-                  clearTimeout(flowLoopTimer);
-                  flowLoopTimer = setTimeout(() => { currentFlowIndex++; renderNextFlowItem(); }, duration + 500); 
+                  } else { textEl.style.left = '0'; textEl.style.position = 'relative'; }
+                  clearTimeout(flowLoopTimer); flowLoopTimer = setTimeout(() => { currentFlowIndex++; renderNextFlowItem(); }, duration + 500); 
               });
-
           } else {
-              widget.innerHTML = `
-                 <div class="flow-card-glass" style="width:auto;" onclick="copyCurrentFlowItem(${currentFlowIndex})">
-                   <div class="breathing-content" style="animation-duration:${globalSettings.flowSpeedBlink}ms">${item.shortText}</div>
-                 </div>`;
-              clearTimeout(flowLoopTimer);
-              flowLoopTimer = setTimeout(() => { currentFlowIndex++; renderNextFlowItem(); }, globalSettings.flowSpeedBlink);
+              widget.innerHTML = `<div class="flow-card-glass" style="width:auto;" onclick="copyCurrentFlowItem(${currentFlowIndex})"><div class="breathing-content" style="animation-duration:${globalSettings.flowSpeedBlink}ms">${item.shortText}</div></div>`;
+              clearTimeout(flowLoopTimer); flowLoopTimer = setTimeout(() => { currentFlowIndex++; renderNextFlowItem(); }, globalSettings.flowSpeedBlink);
           }
       }
 
@@ -1636,12 +727,8 @@
           if(queue[idx]) {
               const item = queue[idx];
               let tpl = document.getElementById('global-copy-template')?.value;
-              if(!tpl) {
-                  const copyPreset = getPresets('copy')[roles.find(r=>r.id==activeRoleId).pages[activePageIndex].copyPreset];
-                  tpl = copyPreset ? copyPreset['global-copy-template'] : DEFAULT_GLOBAL_TEMPLATE;
-              }
-              const now = new Date();
-              const finalTxt = tpl.replace("${timercontent}", item.copyText).replace("${currTime}", now.toLocaleString());
+              if(!tpl) { const copyPreset = getPresets('copy')[roles.find(r=>r.id==activeRoleId).pages[activePageIndex].copyPreset]; tpl = copyPreset ? copyPreset['global-copy-template'] : DEFAULT_GLOBAL_TEMPLATE; }
+              const now = new Date(); const finalTxt = tpl.replace("${timercontent}", item.copyText).replace("${currTime}", now.toLocaleString());
               navigator.clipboard.writeText(finalTxt).then(()=>showToast("已复制: " + item.shortText)).catch(()=>showToast("复制失败"));
           }
       }
@@ -1656,98 +743,42 @@
       function initWidgetDrag() {
         const widget = document.getElementById('flow-widget');
         if(!widget) return;
-        let isDragging = false; let hasMoved = false;
-        let startX, startY, initialLeft, initialTop;
-
-        const onStart = (e) => {
-          isDragging = true; hasMoved = false;
-          const evt = e.touches ? e.touches[0] : e;
-          startX = evt.clientX; startY = evt.clientY;
-          initialLeft = widget.offsetLeft; initialTop = widget.offsetTop;
-        };
-
+        let isDragging = false, hasMoved = false, startX, startY, initialLeft, initialTop;
+        const onStart = (e) => { isDragging = true; hasMoved = false; const evt = e.touches ? e.touches[0] : e; startX = evt.clientX; startY = evt.clientY; initialLeft = widget.offsetLeft; initialTop = widget.offsetTop; };
         const onMove = (e) => {
           if (!isDragging) return;
-          const evt = e.touches ? e.touches[0] : e;
-          const deltaX = evt.clientX - startX; const deltaY = evt.clientY - startY;
-          if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
-             hasMoved = true;
-             widget.style.left = (initialLeft + deltaX) + 'px';
-             widget.style.top = (initialTop + deltaY) + 'px';
-             e.preventDefault(); 
-          }
+          const evt = e.touches ? e.touches[0] : e; const deltaX = evt.clientX - startX; const deltaY = evt.clientY - startY;
+          if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) { hasMoved = true; widget.style.left = (initialLeft + deltaX) + 'px'; widget.style.top = (initialTop + deltaY) + 'px'; e.preventDefault(); }
         };
-
-        const onEnd = () => {
-          if(!isDragging) return;
-          isDragging = false;
-          if(hasMoved) {
-            globalSettings.widgetX = parseInt(widget.style.left);
-            globalSettings.widgetY = parseInt(widget.style.top);
-            saveGlobalSettings();
-          }
-        };
-
-        widget.addEventListener('mousedown', onStart);
-        widget.addEventListener('touchstart', onStart, {passive: false});
-        window.addEventListener('mousemove', onMove);
-        window.addEventListener('touchmove', onMove, {passive: false});
-        window.addEventListener('mouseup', onEnd);
-        window.addEventListener('touchend', onEnd);
+        const onEnd = () => { if(!isDragging) return; isDragging = false; if(hasMoved) { globalSettings.widgetX = parseInt(widget.style.left); globalSettings.widgetY = parseInt(widget.style.top); saveGlobalSettings(); } };
+        widget.addEventListener('mousedown', onStart); widget.addEventListener('touchstart', onStart, {passive: false});
+        window.addEventListener('mousemove', onMove); window.addEventListener('touchmove', onMove, {passive: false});
+        window.addEventListener('mouseup', onEnd); window.addEventListener('touchend', onEnd);
       }
 
+      // ===========================
+      // 5. 辅助功能 (CRUD, API)
+      // ===========================
       function getPresets(type) { return JSON.parse(localStorage.getItem(STORAGE_KEYS[type])) || {}; }
-      
       function refreshDropdown(type) {
-        const select = document.getElementById(`${type}-preset-select`);
-        const presets = getPresets(type); 
-        if(select) {
-            const cur = select.value; 
-            select.innerHTML = '<option value="">-- 新建/选择 --</option>';
-            Object.keys(presets).forEach(n => { const opt = document.createElement('option'); opt.value=n; opt.innerText=n; select.appendChild(opt); });
-            if(presets[cur]) select.value = cur;
-        }
+        const select = document.getElementById(`${type}-preset-select`); const presets = getPresets(type); 
+        if(select) { const cur = select.value; select.innerHTML = '<option value="">-- 新建/选择 --</option>'; Object.keys(presets).forEach(n => { const opt = document.createElement('option'); opt.value=n; opt.innerText=n; select.appendChild(opt); }); if(presets[cur]) select.value = cur; }
         const bindSelect = document.getElementById(`bind-${type}`);
-        if(bindSelect && getActivePage()) {
-            bindSelect.innerHTML = '<option value="">-- 未绑定 --</option>';
-            Object.keys(presets).forEach(n => { const opt = document.createElement('option'); opt.value=n; opt.innerText=n; bindSelect.appendChild(opt); });
-            const pageKey = type + 'Preset'; 
-            bindSelect.value = getActivePage()[pageKey] || "";
-        }
-        const modeSelect = document.getElementById('bind-mode');
-        if(modeSelect && getActivePage()) {
-            modeSelect.value = getActivePage().exportMode || 'both';
-        }
+        if(bindSelect && getActivePage()) { bindSelect.innerHTML = '<option value="">-- 未绑定 --</option>'; Object.keys(presets).forEach(n => { const opt = document.createElement('option'); opt.value=n; opt.innerText=n; bindSelect.appendChild(opt); }); const pageKey = type + 'Preset'; bindSelect.value = getActivePage()[pageKey] || ""; }
+        const modeSelect = document.getElementById('bind-mode'); if(modeSelect && getActivePage()) modeSelect.value = getActivePage().exportMode || 'both';
       }
-      
       function loadPreset(type, name) { const f=FIELD_MAP[type]; if(!name){f.forEach(i=>{const e=document.getElementById(i);if(e)e.value=''});return;} const d=getPresets(type)[name]; if(d)f.forEach(i=>{const e=document.getElementById(i);if(e)e.value=d[i]||''}); }
       function savePreset(type) { const n=document.getElementById(`${type}-preset-name`).value.trim(); if(!n)return showToast('无名称'); const p=getPresets(type), d={}; FIELD_MAP[type].forEach(i=>d[i]=document.getElementById(i).value); p[n]=d; localStorage.setItem(STORAGE_KEYS[type],JSON.stringify(p)); refreshDropdown(type); document.getElementById(`${type}-preset-select`).value=n; showToast('已保存'); }
       function deletePreset(type) { const n=document.getElementById(`${type}-preset-select`).value; if(n&&confirm('删除?')){const p=getPresets(type);delete p[n];localStorage.setItem(STORAGE_KEYS[type],JSON.stringify(p));loadPreset(type,'');refreshDropdown(type);showToast('已删除');} }
       
       function saveGlobalSettings() {
         const val = id => document.getElementById(id).value;
-        globalSettings.flowMode = val('flow-mode');
-        globalSettings.flowRange = parseInt(val('flow-range'));
-        globalSettings.flowWidth = parseInt(val('flow-width'));
-        globalSettings.flowSpeedScroll = parseInt(val('flow-speed-scroll'));
-        globalSettings.flowSpeedBlink = parseInt(val('flow-speed-blink'));
-        globalSettings.iconNormal = val('flow-icon-normal');
-        globalSettings.iconActive = val('flow-icon-active');
-        globalSettings.iconSize = parseInt(val('flow-icon-size'));
-        localStorage.setItem(STORAGE_KEYS.global, JSON.stringify(globalSettings));
-        showToast("设置已应用"); updateFlowWindowVisibility();
+        globalSettings.flowMode = val('flow-mode'); globalSettings.flowRange = parseInt(val('flow-range')); globalSettings.flowWidth = parseInt(val('flow-width')); globalSettings.flowSpeedScroll = parseInt(val('flow-speed-scroll')); globalSettings.flowSpeedBlink = parseInt(val('flow-speed-blink')); globalSettings.iconNormal = val('flow-icon-normal'); globalSettings.iconActive = val('flow-icon-active'); globalSettings.iconSize = parseInt(val('flow-icon-size'));
+        localStorage.setItem(STORAGE_KEYS.global, JSON.stringify(globalSettings)); showToast("设置已应用"); updateFlowWindowVisibility();
       }
-      function insertVarToId(id, val) {
-         const el = document.getElementById(id);
-         if(el) { const start = el.selectionStart; el.value = el.value.substring(0, start) + val + el.value.substring(el.selectionEnd); el.focus(); }
-      }
+      function insertVarToId(id, val) { const el = document.getElementById(id); if(el) { const start = el.selectionStart; el.value = el.value.substring(0, start) + val + el.value.substring(el.selectionEnd); el.focus(); } }
 
-      function renderRoleUI() {
-        const s = document.getElementById('role-select'); 
-        if(!s) return;
-        s.innerHTML='';
-        roles.forEach(r=>{const o=document.createElement('option');o.value=r.id;o.innerText=r.name;s.appendChild(o)}); s.value=activeRoleId; renderTabs();
-      }
+      function renderRoleUI() { const s = document.getElementById('role-select'); if(!s) return; s.innerHTML=''; roles.forEach(r=>{const o=document.createElement('option');o.value=r.id;o.innerText=r.name;s.appendChild(o)}); s.value=activeRoleId; renderTabs(); }
       function getActiveRole() { return roles.find(r=>r.id==activeRoleId); }
       function getActivePage() { const r=getActiveRole(); return r ? r.pages[activePageIndex] : null; }
       function switchRole(id) { activeRoleId=parseInt(id); activePageIndex=0; renderTabs(); }
@@ -1757,124 +788,48 @@
       function saveRoles() { localStorage.setItem(STORAGE_KEYS.roles, JSON.stringify(roles)); }
 
       function renderTabs() {
-        const c=document.getElementById('timer-tabs'); if(!c) return;
-        c.innerHTML=''; const role = getActiveRole(); if(!role) return;
+        const c=document.getElementById('timer-tabs'); if(!c) return; c.innerHTML=''; const role = getActiveRole(); if(!role) return;
         role.pages.forEach((p,i)=>{const t=document.createElement('div');t.className=`tab-item ${i===activePageIndex?'active':''}`;t.innerText=p.name;t.onclick=()=>{activePageIndex=i;renderTabs()};c.appendChild(t)});
         const b=document.createElement('div');b.className='tab-add-btn';b.innerText='+';b.onclick=addNewPage;c.appendChild(b);
         const cp=getActivePage(); 
-        if(cp){ 
-            ['api','char','user','prompt','copy'].forEach(type => {
-                const sel = document.getElementById(`bind-${type}`);
-                if(sel) {
-                    refreshDropdown(type);
-                    sel.value = cp[type+'Preset'] || "";
-                }
-            });
-            const ms = document.getElementById('bind-mode');
-            if(ms) ms.value = cp.exportMode || 'both';
-            renderTimeline(); 
-        }
+        if(cp){ ['api','char','user','prompt','copy'].forEach(type => { const sel = document.getElementById(`bind-${type}`); if(sel) { refreshDropdown(type); sel.value = cp[type+'Preset'] || ""; } }); const ms = document.getElementById('bind-mode'); if(ms) ms.value = cp.exportMode || 'both'; renderTimeline(); }
       }
       function addNewPage() { const n=prompt("页签名称:"); if(n){getActiveRole().pages.push({id:Date.now(),name:n,data:[], exportMode:"both"});activePageIndex=getActiveRole().pages.length-1;saveRoles();renderTabs();} }
       function deleteCurrentPage() { if(getActiveRole().pages.length<=1)return; if(confirm("删除页签?")){getActiveRole().pages.splice(activePageIndex,1);activePageIndex=0;saveRoles();renderTabs();} }
       function clearCurrentPage() { if(confirm("清空数据?")){getActivePage().data=[];saveRoles();renderTimeline();} }
-      
-      function updatePageBinding(key, value) {
-          const page = getActivePage();
-          if(page) { page[key] = value; saveRoles(); showToast("绑定已更新"); }
-      }
+      function updatePageBinding(key, value) { const page = getActivePage(); if(page) { page[key] = value; saveRoles(); showToast("绑定已更新"); } }
 
-      async function fetchModels() {
-        const h=document.getElementById('api-host').value.replace(/\/$/,''), k=document.getElementById('api-key').value;
-        if(!h||!k) return showToast('缺Host/Key');
-        try { const r=await fetch(`${h}/v1/models`,{headers:{'Authorization':`Bearer ${k}`}}); const d=await r.json(); const l=document.getElementById('model-list-dropdown'); l.innerHTML='<option>--选模型--</option>'; d.data.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.innerText=m.id;l.appendChild(o)}); l.style.display='block'; showToast(`OK: ${d.data.length}`); } catch(e){alert(e.message);}
-      }
-      
       async function generateSchedule(append) {
-        const page = getActivePage();
-        const apiCfg = getPresets('api')[page.apiPreset];
-        const promptCfg = getPresets('prompt')[page.promptPreset];
-        const charCfg = getPresets('char')[page.charPreset];
-        const userCfg = getPresets('user')[page.userPreset];
-        
+        const page = getActivePage(); const apiCfg = getPresets('api')[page.apiPreset]; const promptCfg = getPresets('prompt')[page.promptPreset]; const charCfg = getPresets('char')[page.charPreset]; const userCfg = getPresets('user')[page.userPreset];
         if(!apiCfg || !promptCfg) return showToast("请先绑定API和提示词预设！");
-        
-        const h = apiCfg['api-host'].replace(/\/$/,''); const k = apiCfg['api-key']; const m = apiCfg['model-name'];
-        let pr = promptCfg['prompt-content'];
+        const h = apiCfg['api-host'].replace(/\/$/,''); const k = apiCfg['api-key']; const m = apiCfg['model-name']; let pr = promptCfg['prompt-content'];
         const val = (cfg, key) => cfg ? (cfg[key] || "") : "";
         pr = pr.replace(/\${chat.name}/g, val(charCfg, 'char-name')).replace(/\${chat.settings.aiPersona}/g, val(charCfg, 'char-persona')).replace(/\${chat.settings.worldinfo}/g, val(charCfg, 'world-info')).replace(/\${chat.settings.history}/g, val(charCfg, 'chat-history')).replace(/\${user.name}/g, val(userCfg, 'user-name')).replace(/\${user.settings.aiPersona}/g, val(userCfg, 'user-persona'));
-        
-        const l=document.getElementById('schedule-loading'), b1=document.getElementById('btn-gen-schedule'), b2=document.getElementById('btn-append-schedule');
-        l.style.display='block'; b1.disabled=b2.disabled=true;
-        try {
-          const r=await fetch(`${h}/v1/chat/completions`,{method:'POST',headers:{'Authorization':`Bearer ${k}`,'Content-Type':'application/json'},body:JSON.stringify({model:m,messages:[{role:"system",content:"JSON Array Only"},{role:"user",content:pr}],temperature:0.7})});
-          const d=await r.json(), txt=d.choices[0].message.content.replace(/```json|```/g,'').trim(), nd=JSON.parse(txt);
-          page.data = append ? [...page.data,...nd] : nd; 
-          page.data.sort((a,b)=>a.time.localeCompare(b.time));
-          saveRoles(); renderTimeline(); showToast('完成');
-        } catch(e) { alert("生成失败: " + e.message); } finally { l.style.display='none'; b1.disabled=b2.disabled=false; }
+        const l=document.getElementById('schedule-loading'), b1=document.getElementById('btn-gen-schedule'), b2=document.getElementById('btn-append-schedule'); l.style.display='block'; b1.disabled=b2.disabled=true;
+        try { const r=await fetch(`${h}/v1/chat/completions`,{method:'POST',headers:{'Authorization':`Bearer ${k}`,'Content-Type':'application/json'},body:JSON.stringify({model:m,messages:[{role:"system",content:"JSON Array Only"},{role:"user",content:pr}],temperature:0.7})}); const d=await r.json(), txt=d.choices[0].message.content.replace(/```json|```/g,'').trim(), nd=JSON.parse(txt); page.data = append ? [...page.data,...nd] : nd; page.data.sort((a,b)=>a.time.localeCompare(b.time)); saveRoles(); renderTimeline(); showToast('完成'); } catch(e) { alert("生成失败: " + e.message); } finally { l.style.display='none'; b1.disabled=b2.disabled=false; }
       }
 
       function renderTimeline() {
-        const b=document.getElementById('schedule-result-area'); if(!b) return;
-        const d=getActivePage()?.data||[];
-        b.innerHTML = d.length ? '' : '<div style="text-align:center;color:#aaa;padding:20px">暂无数据</div>';
-        d.forEach((item,i)=>{
-          const c=document.createElement('div'); c.className='timeline-card'; c.id=`card-${i}`;
-          c.innerHTML=`<div class="t-header"><div class="t-time">${item.time}</div><div style="font-size:20px">${item.icon||'📱'}</div></div><div class="t-desc">${item.description}</div>${item.html_snippet||''}<div class="card-actions"><button class="card-btn copy" onclick="copySingleItem(${i})">📑 复制</button><button class="card-btn edit" onclick="editItem(${i})">✏️</button><button class="card-btn del" onclick="delItem(${i})">🗑️</button></div>`;
-          b.appendChild(c);
-        });
-        updateRealTimeStatus();
+        const b=document.getElementById('schedule-result-area'); if(!b) return; const d=getActivePage()?.data||[]; b.innerHTML = d.length ? '' : '<div style="text-align:center;color:#aaa;padding:20px">暂无数据</div>';
+        d.forEach((item,i)=>{ const c=document.createElement('div'); c.className='timeline-card'; c.id=`card-${i}`; c.innerHTML=`<div class="t-header"><div class="t-time">${item.time}</div><div style="font-size:20px">${item.icon||'📱'}</div></div><div class="t-desc">${item.description}</div>${item.html_snippet||''}<div class="card-actions"><button class="card-btn copy" onclick="copySingleItem(${i})">📑 复制</button><button class="card-btn edit" onclick="editItem(${i})">✏️</button><button class="card-btn del" onclick="delItem(${i})">🗑️</button></div>`; b.appendChild(c); }); updateRealTimeStatus();
       }
       function editItem(i) { const d=getActivePage().data, v=prompt("修改:",d[i].description); if(v){d[i].description=v;saveRoles();renderTimeline();} }
       function delItem(i) { if(confirm("删除?")){getActivePage().data.splice(i,1);saveRoles();renderTimeline();} }
-      
       function copySingleItem(i) {
-        const page = getActivePage(); const item = page.data[i];
-        let charName = "TA";
-        if(page.charPreset) {
-            const charCfg = getPresets('char')[page.charPreset];
-            if(charCfg && charCfg['char-name']) charName = charCfg['char-name'];
-        } else {
-            const role = roles.find(r=>r.id==activeRoleId);
-            if(role) charName = role.name;
-        }
-        const txt = `${charName}在${item.time}${item.description}`;
-        navigator.clipboard.writeText(txt).then(()=>showToast("已复制: " + txt)).catch(()=>showToast("复制失败"));
+        const page = getActivePage(); const item = page.data[i]; let charName = "TA";
+        if(page.charPreset) { const charCfg = getPresets('char')[page.charPreset]; if(charCfg && charCfg['char-name']) charName = charCfg['char-name']; } else { const role = roles.find(r=>r.id==activeRoleId); if(role) charName = role.name; }
+        const txt = `${charName}在${item.time}${item.description}`; navigator.clipboard.writeText(txt).then(()=>showToast("已复制: " + txt)).catch(()=>showToast("复制失败"));
       }
 
       function updateRealTimeStatus() {
-        const d = getActivePage()?.data || []; if(!d.length) return;
-        const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
-        let aidx = -1;
-        document.querySelectorAll('.timeline-card').forEach(c=>c.classList.remove('active-now'));
-        for(let i=0;i<d.length;i++){const[h,m]=d[i].time.split(':').map(Number);if(curM>=h*60+m)aidx=i;else break;}
-        if(aidx!==-1) document.getElementById(`card-${aidx}`)?.classList.add('active-now');
-        const rtPast = document.getElementById('rt-past'); const rtFuture = document.getElementById('rt-future');
-        if(!rtPast || !rtFuture) return;
+        const d = getActivePage()?.data || []; if(!d.length) return; const now = new Date(); const curM = now.getHours()*60 + now.getMinutes(); let aidx = -1; document.querySelectorAll('.timeline-card').forEach(c=>c.classList.remove('active-now')); for(let i=0;i<d.length;i++){const[h,m]=d[i].time.split(':').map(Number);if(curM>=h*60+m)aidx=i;else break;} if(aidx!==-1) document.getElementById(`card-${aidx}`)?.classList.add('active-now');
+        const rtPast = document.getElementById('rt-past'); const rtFuture = document.getElementById('rt-future'); if(!rtPast || !rtFuture) return;
         if(aidx!==-1) { const it=d[aidx], [h,m]=it.time.split(':').map(Number); const diff = curM-(h*60+m); rtPast.innerText = `正在进行(${diff}m前): ${it.description}`; } else { rtPast.innerText = "无正在进行事件"; }
-        let nidx = aidx===-1 ? 0 : aidx+1;
-        if(nidx < d.length) { const it=d[nidx], [h,m]=it.time.split(':').map(Number); const diff = (h*60+m)-curM; rtFuture.innerText = `即将开始(${diff}m后): ${it.description}`; } else { rtFuture.innerText = "无后续事件"; }
+        let nidx = aidx===-1 ? 0 : aidx+1; if(nidx < d.length) { const it=d[nidx], [h,m]=it.time.split(':').map(Number); const diff = (h*60+m)-curM; rtFuture.innerText = `即将开始(${diff}m后): ${it.description}`; } else { rtFuture.innerText = "无后续事件"; }
       }
       
-      function exportData() { 
-          try { const el = id => document.getElementById(id).value; globalSettings.flowWidth = parseInt(el('flow-width')); localStorage.setItem(STORAGE_KEYS.global, JSON.stringify(globalSettings)); } catch(e){}
-          
-          const d={}; 
-          Object.keys(STORAGE_KEYS).forEach(k=>d[k]=localStorage.getItem(STORAGE_KEYS[k])); 
-          
-          const b=new Blob([JSON.stringify(d)],{type:'application/json'}); 
-          const a=document.createElement('a'); 
-          a.href=URL.createObjectURL(b); 
-          const dateStr = new Date().toISOString().slice(0,10);
-          a.download=`计时器备份-${dateStr}.json`; 
-          a.click(); 
-      }
-      
-      function importData(i) { 
-          const f=i.files[0]; if(!f)return; const r=new FileReader(); 
-          r.onload=e=>{ try{ const d=JSON.parse(e.target.result); Object.keys(d).forEach(k=>localStorage.setItem(k,d[k])); alert("导入成功！"); location.reload(); }catch(x){alert("格式错误")} }; r.readAsText(f); 
-      }
+      function exportData() { try { const el = id => document.getElementById(id).value; globalSettings.flowWidth = parseInt(el('flow-width')); localStorage.setItem(STORAGE_KEYS.global, JSON.stringify(globalSettings)); } catch(e){} const d={}; Object.keys(STORAGE_KEYS).forEach(k=>d[k]=localStorage.getItem(STORAGE_KEYS[k])); const b=new Blob([JSON.stringify(d)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); const dateStr = new Date().toISOString().slice(0,10); a.download=`计时器备份-${dateStr}.json`; a.click(); }
+      function importData(i) { const f=i.files[0]; if(!f)return; const r=new FileReader(); r.onload=e=>{ try{ const d=JSON.parse(e.target.result); Object.keys(d).forEach(k=>localStorage.setItem(k,d[k])); alert("导入成功！"); location.reload(); }catch(x){alert("格式错误")} }; r.readAsText(f); }
     </script>
   </body>
 </html>
