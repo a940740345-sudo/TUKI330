@@ -1401,15 +1401,16 @@
           navigator.serviceWorker.register('sw.js');
         });
       }
-      /* ===========================
-         V10.0 逻辑核心 (最终修正版)
-         特性：精准抓取 / 独立复制逻辑 / 新UI支持
+/* ===========================
+         V11.0 逻辑核心 (最终完整版)
+         特性：全量备份修复 / 精准抓取 / 独立复制 / 新UI支持
          =========================== */
       let timerPages = [];
       let activeRoleId = 0; 
       let activePageIndex = 0;
       let roles = [];
       
+      // 默认设置值
       let globalSettings = {
         flowMode: 'simple', 
         flowRange: 15,
@@ -1425,7 +1426,17 @@
 
       const DEFAULT_GLOBAL_TEMPLATE = "此条内容是ai写作指导，角色不可见。以下是角色原本的日程计划，注意角色可能之前之后都不按照原计划进行，请你根据上下文语境进行判断剧情发展：\n${timercontent}\n必须根据上下文判断角色是否之前或之后进行原计划，以及根据当前对话场景角色是否会提及此事，角色也可能已经忘记此事或直接根本不提。你作为ai必须自行判断做出有活人感的反应与结果。";
 
-      const STORAGE_KEYS = { api:'tuki_presets_api', char:'tuki_presets_char', user:'tuki_presets_user', prompt:'tuki_presets_prompt', copy:'tuki_presets_copy', roles:'tuki_roles_v1', global:'tuki_global_settings' };
+      // 定义所有需要备份的存储键值 (只处理这些，不影响其他App)
+      const STORAGE_KEYS = { 
+          api: 'tuki_presets_api', 
+          char: 'tuki_presets_char', 
+          user: 'tuki_presets_user', 
+          prompt: 'tuki_presets_prompt', 
+          copy: 'tuki_presets_copy', 
+          roles: 'tuki_roles_v1', // 包含所有计时器设置和内容
+          global: 'tuki_global_settings' // 包含悬浮窗设置
+      };
+
       const FIELD_MAP = { 
         api:['api-preset-name','api-host','api-key','model-name'], 
         char:['char-preset-name','char-name','char-persona','world-info','chat-history'], 
@@ -1433,6 +1444,7 @@
         prompt:['prompt-preset-name','prompt-content'],
         copy:['copy-preset-name','global-copy-template','status-tpl-past','status-tpl-future'] 
       };
+      
       const DEFAULT_PROMPT = `# 角色扮演任务\n请根据"\${chat.name}"的人设，推演接下来24小时的行为轨迹。\n# 参数\n角色：\${chat.name}\n人设：\${chat.settings.aiPersona}\n# 输出规则\n1. 返回JSON数组。2. 时间格式 "HH:mm"。3. 包含 'html_snippet' (可选)。\n[{"time":"08:00","description":"...","icon":"⏰"}]`;
 
       window.addEventListener('load', () => {
@@ -1441,6 +1453,7 @@
         const savedGlobal = localStorage.getItem(STORAGE_KEYS.global);
         if(savedGlobal) globalSettings = {...globalSettings, ...JSON.parse(savedGlobal)};
         
+        // 恢复设置页UI
         const safeVal = (id, val) => { const el=document.getElementById(id); if(el) el.value=val; };
         safeVal('global-copy-template', DEFAULT_GLOBAL_TEMPLATE);
         safeVal('flow-mode', globalSettings.flowMode);
@@ -1455,11 +1468,13 @@
         const widget = document.getElementById('flow-widget');
         if(widget) { widget.style.left = globalSettings.widgetX + 'px'; widget.style.top = globalSettings.widgetY + 'px'; }
 
+        // 加载角色数据
         const savedRoles = localStorage.getItem(STORAGE_KEYS.roles);
         if(savedRoles) roles = JSON.parse(savedRoles);
         else roles = [{ id: Date.now(), name: "默认角色", pages: [{ id: Date.now(), name: "主日程", data: [], exportMode: "both" }] }];
         activeRoleId = roles[0].id;
 
+        // 初始化默认预设
         const prompts = getPresets('prompt');
         if(Object.keys(prompts).length===0) {
           prompts["默认日程"] = { "prompt-preset-name": "默认日程", "prompt-content": DEFAULT_PROMPT };
@@ -1837,12 +1852,10 @@
       function editItem(i) { const d=getActivePage().data, v=prompt("修改:",d[i].description); if(v){d[i].description=v;saveRoles();renderTimeline();} }
       function delItem(i) { if(confirm("删除?")){getActivePage().data.splice(i,1);saveRoles();renderTimeline();} }
       
-      // --- [核心修正] 独立的手动复制逻辑 ---
+      // 独立的手动复制逻辑
       function copySingleItem(i) {
         const page = getActivePage(); 
         const item = page.data[i];
-        
-        // 1. 获取角色名 (尝试从绑定配置拿，拿不到就用默认名)
         let charName = "TA";
         if(page.charPreset) {
             const charCfg = getPresets('char')[page.charPreset];
@@ -1851,10 +1864,7 @@
             const role = roles.find(r=>r.id==activeRoleId);
             if(role) charName = role.name;
         }
-
-        // 2. 直接构造: ${char}在${time}${act}
         const txt = `${charName}在${item.time}${item.description}`;
-        
         navigator.clipboard.writeText(txt).then(()=>showToast("已复制: " + txt)).catch(()=>showToast("复制失败"));
       }
 
@@ -1872,15 +1882,52 @@
         if(nidx < d.length) { const it=d[nidx], [h,m]=it.time.split(':').map(Number); const diff = (h*60+m)-curM; rtFuture.innerText = `即将开始(${diff}m后): ${it.description}`; } else { rtFuture.innerText = "无后续事件"; }
       }
       
+      /* --- [备份与恢复] (核心逻辑) --- */
       function exportData() { 
-          try { const el = id => document.getElementById(id).value; globalSettings.flowWidth = parseInt(el('flow-width')); localStorage.setItem(STORAGE_KEYS.global, JSON.stringify(globalSettings)); } catch(e){}
-          const d={}; Object.keys(STORAGE_KEYS).forEach(k=>d[k]=localStorage.getItem(STORAGE_KEYS[k])); 
-          const b=new Blob([JSON.stringify(d)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`EPhone_FullBackup_${new Date().toISOString().slice(0,10)}.json`; a.click(); 
+          // 1. 强制保存内存状态到 LocalStorage，确保最新数据被导出
+          try { 
+             const el = id => document.getElementById(id).value; 
+             if(document.getElementById('flow-width')) globalSettings.flowWidth = parseInt(el('flow-width')); 
+             
+             localStorage.setItem(STORAGE_KEYS.global, JSON.stringify(globalSettings)); 
+             localStorage.setItem(STORAGE_KEYS.roles, JSON.stringify(roles)); // 确保最新的角色/计时器内容被保存
+          } catch(e) { console.error("Auto-save before export failed", e); }
+
+          // 2. 收集所有数据 (只收集本应用定义的 Keys)
+          const d={}; 
+          Object.keys(STORAGE_KEYS).forEach(k => {
+              const storageKey = STORAGE_KEYS[k];
+              const value = localStorage.getItem(storageKey);
+              if(value) d[storageKey] = value;
+          }); 
+          
+          // 3. 生成并下载文件
+          const b = new Blob([JSON.stringify(d)], {type:'application/json'}); 
+          const a = document.createElement('a'); 
+          a.href = URL.createObjectURL(b); 
+          a.download = `计时器备份-${new Date().toISOString().slice(0,10)}.json`; // 文件名格式
+          a.click(); 
       }
       
       function importData(i) { 
-          const f=i.files[0]; if(!f)return; const r=new FileReader(); 
-          r.onload=e=>{ try{ const d=JSON.parse(e.target.result); Object.keys(d).forEach(k=>localStorage.setItem(k,d[k])); alert("导入成功！"); location.reload(); }catch(x){alert("格式错误")} }; r.readAsText(f); 
+          const f=i.files[0]; if(!f)return; 
+          const r=new FileReader(); 
+          r.onload=e=>{ 
+              try { 
+                  const d=JSON.parse(e.target.result); 
+                  // 4. 恢复数据 (只恢复本应用的前缀 key)
+                  Object.keys(d).forEach(k => {
+                      if(Object.values(STORAGE_KEYS).includes(k)) {
+                          localStorage.setItem(k, d[k]);
+                      }
+                  }); 
+                  alert("备份导入成功！页面将刷新..."); 
+                  location.reload(); 
+              } catch(x) { 
+                  alert("导入失败：文件格式不正确"); 
+              } 
+          }; 
+          r.readAsText(f); 
       }
     </script>
   </body>
