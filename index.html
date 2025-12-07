@@ -570,147 +570,252 @@
       .edge-sensor.right { top: 30px; bottom: 30px; right: 0; width: 15px; }
       /* ★★★★★ 这里是你要复制进去的代码 结束 ★★★★★ */
 /* ===========================
-         AI终端 V10.0 最终形态样式
-         (修复UI对齐 / 增强显示逻辑 / 新图标适配)
+         AI终端 V13.0 界面美化：高级灰半透明 (Dark Glass)
          =========================== */
       
-      /* 1. 基础容器优化 */
-      .schedule-container { padding: 60px 20px 120px 20px; height: 100%; overflow-y: auto; box-sizing: border-box; }
-      .schedule-header { font-size: 20px; color: #5d4037; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px dashed #e6ceac; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+      /* 1. 全局容器与字体优化 */
+      .schedule-container { 
+          padding: 60px 20px 120px 20px; 
+          height: 100%; 
+          overflow-y: auto; 
+          box-sizing: border-box; 
+          /* 隐藏滚动条但保留功能 */
+          scrollbar-width: none; 
+      }
+      .schedule-container::-webkit-scrollbar { display: none; }
 
-      /* 2. 桌面图标 */
+      .schedule-header { 
+          font-size: 20px; color: #eceff1; margin-bottom: 20px; padding-bottom: 15px; 
+          border-bottom: 1px solid rgba(255,255,255,0.1); 
+          font-weight: bold; display: flex; justify-content: space-between; align-items: center; 
+          letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      }
+
+      /* 2. 桌面图标适配 (保持不变) */
       .icon-bg-desktop svg { width: 50%; height: 50%; fill: #eceff1; }
       .icon-bg-desktop span { font-size: 28px; }
 
       /* 3. 智能悬浮窗 (Flow Widget) */
       #flow-widget {
-        position: fixed; 
-        z-index: 9999;
-        display: none; 
-        top: 100px; left: 20px;
-        touch-action: none; 
-        user-select: none;
-        -webkit-user-select: none;
-        cursor: move;
-        opacity: 0;
-        transition: opacity 0.5s;
+        position: fixed; z-index: 9999; display: none; top: 100px; left: 20px;
+        touch-action: none; user-select: none; -webkit-user-select: none; cursor: move;
+        opacity: 0; transition: opacity 0.5s;
       }
       #flow-widget.visible { opacity: 1; }
       
       .flow-card-glass {
-        background: rgba(60, 60, 60, 0.85);
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        border-radius: 20px;
-        padding: 0 16px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        color: #fff;
-        font-size: 13px;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        overflow: hidden;
-        white-space: nowrap;
-        transition: width 0.3s;
+        background: rgba(30, 30, 30, 0.85); /* 深灰底色 */
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); /* 强毛玻璃 */
+        border: 1px solid rgba(255, 255, 255, 0.15); /* 细微白边 */
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4); /* 深度投影 */
+        border-radius: 24px;
+        padding: 0 18px;
+        height: 44px;
+        display: flex; align-items: center;
+        color: #f5f5f5; font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
+        overflow: hidden; white-space: nowrap; transition: width 0.3s;
       }
-      .flow-card-glass:active { transform: scale(0.96); background: rgba(40, 40, 40, 0.95); }
+      .flow-card-glass:active { transform: scale(0.96); background: rgba(50, 50, 50, 0.95); }
 
-      /* 跑马灯 & 呼吸灯 */
-      .marquee-container {
-        position: relative; overflow: hidden; white-space: nowrap; width: 100%; height: 100%; display: flex; align-items: center; pointer-events: none;
-      }
+      /* 动画组件 */
+      .marquee-container { position: relative; overflow: hidden; white-space: nowrap; width: 100%; height: 100%; display: flex; align-items: center; pointer-events: none; }
       .marquee-text { position: absolute; white-space: nowrap; will-change: transform; }
       .breathing-content { width: 100%; text-align: center; pointer-events: none; }
-      .flow-icon-pure { display: block; cursor: move; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); transition: transform 0.2s; }
+      .flow-icon-pure { display: block; cursor: move; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); transition: transform 0.2s; border-radius: 12px; }
       .flow-icon-pure:active { transform: scale(0.9); }
 
-      /* 4. 设置与绑定面板 */
-      .settings-group { margin-bottom: 20px; background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 12px; border: 1px solid #efe6d5; }
-      .settings-title { font-size: 14px; color: #8d6e63; margin-bottom: 10px; font-weight: bold; border-left: 3px solid #e6ceac; padding-left: 8px; display: flex; justify-content: space-between; align-items: center;}
-      .input-row { margin-bottom: 10px; }
-      .input-label { font-size: 12px; color: #5d4037; margin-bottom: 4px; display: block; }
-      .custom-input, .custom-textarea { width: 100%; padding: 8px; border: 1px solid #e0d0b8; border-radius: 6px; background: #fffdf5; font-size: 13px; color: #3e2723; box-sizing: border-box; outline: none; transition: 0.3s;}
-      .custom-input:focus, .custom-textarea:focus { background: #fff; border-color: #8d6e63; }
-      .custom-textarea { resize: vertical; min-height: 60px; font-family: monospace; }
+      /* 4. [核心美化] App窗口：高级灰半透明风格 */
       
-      .btn-row { display: flex; gap: 10px; margin-top: 10px; }
-      .btn-primary { flex: 1; background: #eecfa1; color: #5d4037; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-      .btn-secondary { flex: 1; background: #fff; border: 1px solid #d7ccc8; color: #8d6e63; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-      .icon-btn { width: 30px; height: 30px; border: 1px solid #d7ccc8; background: #fff; border-radius: 4px; cursor: pointer; display: flex; justify-content: center; align-items: center; color: #8d6e63; font-size: 14px; padding:0; }
-      .preset-bar { display: flex; gap: 8px; margin-bottom: 10px; background: #fffdf5; padding: 8px; border-radius: 8px; border: 1px dashed #d7ccc8; align-items: center; }
-      .preset-select { flex: 1; padding: 6px; border: 1px solid #e0d0b8; border-radius: 4px; background: #fff; font-size: 12px; color: #5d4037; }
+      /* 强制覆盖 App 窗口背景为深空灰渐变 */
+      #app-settings, #app-schedule {
+          background: linear-gradient(135deg, #263238 0%, #102027 100%) !important;
+          color: #b0bec5;
+      }
+
+      /* 设置分组卡片：深色磨砂玻璃 */
+      .settings-group { 
+          margin-bottom: 20px; 
+          background: rgba(255, 255, 255, 0.04); 
+          padding: 20px; 
+          border-radius: 16px; 
+          border: 1px solid rgba(255, 255, 255, 0.08); 
+          box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      }
+      .settings-title { 
+          font-size: 14px; color: #80cbc4; margin-bottom: 15px; font-weight: bold; 
+          border-left: 3px solid #009688; padding-left: 10px; 
+          display: flex; justify-content: space-between; align-items: center;
+          text-transform: uppercase; letter-spacing: 1px;
+      }
+
+      /* 输入控件：深邃质感 */
+      .input-row { margin-bottom: 15px; }
+      .input-label { font-size: 12px; color: #78909c; margin-bottom: 6px; display: block; font-weight: 600; }
       
-      /* --- 绑定面板 --- */
-      .page-config-panel { background: #fff8e1; border: 1px dashed #d7ccc8; border-radius: 12px; padding: 12px; margin-bottom: 20px; }
-      .page-config-title { font-size: 12px; font-weight: bold; color: #e65100; margin-bottom: 8px; text-align: center; border-bottom: 1px solid #ffe0b2; padding-bottom: 5px; }
-      .page-config-row { display: flex; align-items: center; margin-bottom: 6px; font-size: 12px; }
-      .page-config-label { width: 70px; color: #5d4037; font-weight: bold; flex-shrink: 0; }
-      .page-config-select { flex: 1; padding: 4px; border: 1px solid #ffe0b2; border-radius: 4px; background: #fff; color: #333; font-size: 11px; }
+      .custom-input, .custom-textarea, .preset-select, .page-config-select { 
+          width: 100%; padding: 12px; 
+          border: 1px solid rgba(255, 255, 255, 0.1); 
+          border-radius: 10px; 
+          background: rgba(0, 0, 0, 0.4); 
+          font-size: 13px; color: #eceff1; 
+          box-sizing: border-box; outline: none; transition: 0.3s;
+          font-family: sans-serif;
+      }
+      .custom-input:focus, .custom-textarea:focus, .preset-select:focus, .page-config-select:focus { 
+          background: rgba(0, 0, 0, 0.6); 
+          border-color: #80cbc4; 
+          box-shadow: 0 0 0 2px rgba(128, 203, 196, 0.2);
+      }
+      .custom-textarea { resize: vertical; min-height: 80px; font-family: monospace; line-height: 1.5; color: #cfd8dc; }
 
-      /* 其他组件 */
-      .role-bar { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; background: #efe6d5; padding: 8px; border-radius: 8px; }
-      .mini-btn { width: 24px; height: 24px; border: 1px solid #d7ccc8; background: #fff; border-radius: 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #8d6e63; font-size: 12px; }
-      .tabs-header { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 10px; border-bottom: 1px solid #efe6d5; }
-      .tab-item { padding: 6px 12px; background: #fff; border: 1px solid #e0d0b8; border-radius: 6px 6px 0 0; font-size: 12px; color: #8d6e63; cursor: pointer; white-space: nowrap; }
-      .tab-item.active { background: #eecfa1; color: #5d4037; font-weight: bold; border-bottom: 1px solid #eecfa1; }
-      .tab-add-btn { padding: 6px 10px; background: #efe6d5; border: 1px dashed #bbb; border-radius: 6px; cursor: pointer; color: #5d4037; }
-      .prompt-toolbar { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; padding: 5px; background: #efe6d5; border-radius: 6px; }
-      .var-btn { background: #fff; border: 1px solid #d7ccc8; border-radius: 4px; padding: 2px 6px; font-size: 10px; color: #5d4037; cursor: pointer; font-family: monospace; }
-      #realtime-status-panel { background: #3e2723; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(62,39,35,0.4); border: 1px solid #5d4037; display: none; }
-      .rt-content { font-size: 15px; font-weight: bold; color: #fff8e1; margin: 5px 0; line-height: 1.4; }
-      .rt-divider { border: 0; border-top: 1px dashed #8d6e63; margin: 10px 0; }
-      .timeline-card { background: #fff; border: 1px solid #efe6d5; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.03); transition: 0.3s; }
-      .timeline-card.active-now { border: 2px solid #ffb74d; background: #fff3e0; transform: scale(1.02); z-index: 2; box-shadow: 0 8px 20px rgba(255, 183, 77, 0.3); }
-      .t-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
-      .t-time { font-family: monospace; font-weight: 900; font-size: 16px; color: #5d4037; background: #eecfa1; padding: 2px 8px; border-radius: 4px; }
-      .t-desc { font-size: 14px; color: #4e342e; line-height: 1.5; white-space: pre-wrap; }
-      .card-actions { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #eee; display: flex; justify-content: flex-end; gap: 10px; }
-      .card-btn { font-size: 11px; padding: 4px 8px; border-radius: 4px; cursor: pointer; border: 1px solid transparent; background: transparent; }
-      .card-btn.edit { color: #8d6e63; border-color: #d7ccc8; }
-      .card-btn.copy { color: #fff; background: #8d6e63; border-color: #5d4037; }
-      .card-btn.del { color: #e57373; border-color: #ffcdd2; }
+      /* 按钮系统 */
+      .btn-row { display: flex; gap: 12px; margin-top: 15px; }
+      .btn-primary { 
+          flex: 1; 
+          background: linear-gradient(135deg, #009688 0%, #00796b 100%); 
+          color: #fff; border: none; padding: 12px; border-radius: 10px; 
+          font-weight: bold; cursor: pointer; 
+          box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+          transition: transform 0.1s, box-shadow 0.1s;
+      }
+      .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+      
+      .btn-secondary { 
+          flex: 1; 
+          background: rgba(255,255,255,0.05); 
+          border: 1px solid rgba(255,255,255,0.1); 
+          color: #b0bec5; padding: 12px; border-radius: 10px; 
+          font-weight: bold; cursor: pointer; transition: 0.2s;
+      }
+      .btn-secondary:active { background: rgba(255,255,255,0.1); }
 
-      /* --- [悬浮菜单统一美化] --- */
+      .icon-btn { 
+          width: 36px; height: 36px; 
+          border: 1px solid rgba(255,255,255,0.1); 
+          background: rgba(255,255,255,0.05); 
+          border-radius: 10px; cursor: pointer; 
+          display: flex; justify-content: center; align-items: center; 
+          color: #cfd8dc; font-size: 16px; padding:0; transition: 0.2s;
+      }
+      .icon-btn:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.3); }
+      
+      /* 预设栏 & 角色栏 */
+      .preset-bar, .role-bar { 
+          display: flex; gap: 10px; margin-bottom: 15px; 
+          background: rgba(0,0,0,0.3); 
+          padding: 10px; border-radius: 12px; 
+          border: 1px dashed rgba(255,255,255,0.15); align-items: center; 
+      }
+      .mini-btn { 
+          width: 30px; height: 30px; 
+          border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); 
+          border-radius: 8px; display: flex; justify-content: center; align-items: center; 
+          cursor: pointer; color: #b0bec5; font-size: 12px; transition: 0.2s;
+      }
+      .mini-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+      /* [新增] 计时器页面的绑定面板 (高亮显示) */
+      .page-config-panel {
+        background: linear-gradient(to bottom, rgba(38, 50, 56, 0.9), rgba(33, 33, 33, 0.9));
+        border: 1px solid rgba(128, 203, 196, 0.3);
+        border-radius: 16px;
+        padding: 15px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      }
+      .page-config-title {
+        font-size: 12px; font-weight: bold; color: #80cbc4; margin-bottom: 12px; text-align: center;
+        border-bottom: 1px solid rgba(128, 203, 196, 0.2); padding-bottom: 8px; letter-spacing: 1px;
+      }
+      .page-config-row { display: flex; align-items: center; margin-bottom: 10px; font-size: 13px; }
+      .page-config-label { width: 80px; color: #b0bec5; font-weight: 600; flex-shrink: 0; }
+      
+      /* 标签页 */
+      .tabs-header { 
+          display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; 
+          border-bottom: 1px solid rgba(255,255,255,0.1); 
+      }
+      .tab-item { 
+          padding: 8px 18px; 
+          background: rgba(255,255,255,0.03); 
+          border: 1px solid rgba(255,255,255,0.05); 
+          border-radius: 10px 10px 0 0; 
+          font-size: 12px; color: #78909c; cursor: pointer; white-space: nowrap; transition: 0.3s;
+      }
+      .tab-item.active { 
+          background: rgba(255,255,255,0.1); 
+          color: #fff; font-weight: bold; 
+          border-top: 2px solid #80cbc4;
+          box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
+      }
+      .tab-add-btn { padding: 8px 14px; background: rgba(255,255,255,0.05); border-radius: 10px; cursor: pointer; color: #80cbc4; font-weight:bold;}
+
+      /* 提示词工具条 */
+      .prompt-toolbar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 10px; }
+      .var-btn { 
+          background: rgba(33, 150, 243, 0.1); border: 1px solid rgba(33, 150, 243, 0.3); 
+          border-radius: 6px; padding: 5px 10px; font-size: 11px; 
+          color: #90caf9; cursor: pointer; font-family: monospace; transition: 0.2s;
+      }
+      .var-btn:hover { background: rgba(33, 150, 243, 0.2); color: #fff; }
+
+      /* 实时面板 */
+      #realtime-status-panel { 
+          background: linear-gradient(to right, #37474f, #263238); 
+          color: #fff; padding: 20px; border-radius: 16px; margin-bottom: 25px; 
+          box-shadow: 0 8px 25px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); 
+      }
+      .rt-content { font-size: 14px; font-weight: 500; color: #eceff1; margin: 6px 0; line-height: 1.6; font-family: monospace; text-shadow: 0 1px 2px rgba(0,0,0,0.5);}
+      .rt-divider { border: 0; border-top: 1px dashed rgba(255,255,255,0.2); margin: 15px 0; }
+      
+      /* 时间轴卡片 */
+      .timeline-card { 
+          background: rgba(255, 255, 255, 0.05); 
+          border: 1px solid rgba(255, 255, 255, 0.05); 
+          border-radius: 14px; padding: 18px; margin-bottom: 18px; 
+          position: relative; transition: 0.3s; 
+          backdrop-filter: blur(5px);
+      }
+      .timeline-card.active-now { 
+          border: 1px solid #80cbc4; 
+          background: rgba(0, 150, 136, 0.15); 
+          box-shadow: 0 0 25px rgba(0, 150, 136, 0.2); 
+          transform: scale(1.02); z-index: 2; 
+      }
+      .t-header { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
+      .t-time { 
+          font-family: monospace; font-weight: bold; font-size: 15px; 
+          color: #e0f2f1; background: rgba(0, 150, 136, 0.6); 
+          padding: 4px 12px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      }
+      .t-desc { font-size: 14px; color: #cfd8dc; line-height: 1.6; white-space: pre-wrap; }
+      
+      .card-actions { margin-top: 15px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: flex-end; gap: 10px; }
+      .card-btn { font-size: 11px; padding: 6px 14px; border-radius: 6px; cursor: pointer; border: 1px solid transparent; background: transparent; transition: 0.2s;}
+      .card-btn.edit { color: #90a4ae; border-color: rgba(255,255,255,0.1); }
+      .card-btn.edit:hover { background: rgba(255,255,255,0.1); color: #fff; }
+      .card-btn.copy { color: #fff; background: rgba(255,255,255,0.15); }
+      .card-btn.copy:hover { background: rgba(255,255,255,0.25); }
+      .card-btn.del { color: #ef9a9a; border-color: rgba(239, 83, 80, 0.3); }
+      .card-btn.del:hover { background: rgba(239, 83, 80, 0.1); }
+
+      /* [悬浮菜单统一美化] */
       .fab-action-item {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end; /* 让文字在左，图标在右 */
-        gap: 12px;
-        cursor: pointer;
-        width: 100%;
-        margin-bottom: 10px;
-        -webkit-tap-highlight-color: transparent;
+        display: flex; align-items: center; justify-content: flex-end; 
+        gap: 15px; cursor: pointer; width: 100%; margin-bottom: 12px; -webkit-tap-highlight-color: transparent;
       }
-      .fab-action-item:active { transform: scale(0.95); }
-      
+      .fab-action-item:active { transform: scale(0.96); }
       .fab-item-label {
-        background: #fff;
-        color: #5d4037;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: bold;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        white-space: nowrap;
+        background: rgba(255,255,255,0.95); color: #37474f; padding: 6px 14px; border-radius: 8px;
+        font-size: 13px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.1); white-space: nowrap;
       }
-      
       .fab-item-icon {
-        width: 48px; 
-        height: 48px;
-        border-radius: 50%;
-        background: #fff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        border: 2px solid #fff;
-        overflow: hidden;
+        width: 50px; height: 50px; border-radius: 50%; background: #fff;
+        display: flex; justify-content: center; align-items: center;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.2); border: 2px solid #fff; overflow: hidden;
       }
-      /* 图片填满，不留白边，像应用图标 */
       .fab-item-icon img { width: 100%; height: 100%; object-fit: cover; }
-      .fab-item-icon svg { width: 24px; height: 24px; fill: #5d4037; }
+      .fab-item-icon svg { width: 26px; height: 26px; fill: #455a64; }
 
     </style>
   </head>
@@ -784,17 +889,17 @@
             <span>⚙️ 终端预设库</span>
             <div>
               <button class="icon-btn" onclick="exportData()" title="全部备份">📤</button>
-              <button class="icon-btn" onclick="document.getElementById('import-file').click()" title="恢复备份" style="margin-left:5px;">📥</button>
+              <button class="icon-btn" onclick="document.getElementById('import-file').click()" title="恢复备份" style="margin-left:10px;">📥</button>
               <input type="file" id="import-file" style="display:none" onchange="importData(this)">
             </div>
           </div>
           
-          <div style="padding:10px; background:#e1f5fe; color:#0277bd; font-size:12px; border-radius:8px; margin-bottom:15px;">
-            ℹ️ 说明：这里只负责<b>编辑和保存预设</b>。要让计时器生效，请去“计时”界面，为每个计时器页签<b>绑定</b>对应的预设。
+          <div style="padding:15px; background:rgba(0, 150, 136, 0.15); border:1px solid rgba(0, 150, 136, 0.3); color:#80cbc4; font-size:12px; border-radius:12px; margin-bottom:25px; line-height:1.5;">
+            ℹ️ <b>系统说明</b>：此处仅用于编辑和保存【预设模版】。要让功能生效，请前往<b>计时界面</b>，为每个计时器页签<b>绑定</b>对应的预设。
           </div>
 
           <div class="settings-group">
-            <div class="settings-title" style="color:#d84315;">🎈 悬浮窗全局设置</div>
+            <div class="settings-title" style="color:#b39ddb;">🎈 悬浮窗全局参数</div>
             <div class="input-row"><label class="input-label">显示模式</label>
               <select id="flow-mode" class="custom-input" onchange="saveGlobalSettings()">
                 <option value="detail">详细展示 (循环滚动)</option>
@@ -810,14 +915,14 @@
             <div class="input-row"><label class="input-label">默认图标 (未绑定时用)</label><input type="text" id="flow-icon-normal" class="custom-input" value="https://i.postimg.cc/B6FkXGCL/15.png" onchange="saveGlobalSettings()"></div>
             <div class="input-row"><label class="input-label">活跃图标 (未绑定时用)</label><input type="text" id="flow-icon-active" class="custom-input" value="https://i.postimg.cc/1tF2fZKF/16.png" onchange="saveGlobalSettings()"></div>
             <div class="input-row"><label class="input-label">图标尺寸(px)</label><input type="number" id="flow-icon-size" class="custom-input" value="50" onchange="saveGlobalSettings()"></div>
-            <div class="input-row"><button class="btn-secondary" onclick="resetWidgetPosition()">重置悬浮窗位置</button></div>
+            <div class="input-row"><button class="btn-secondary" onclick="resetWidgetPosition()">↺ 重置悬浮窗位置</button></div>
           </div>
 
           <div class="settings-group">
-            <div class="settings-title" style="color:#d84315;">📋 文案/复制预设</div>
+            <div class="settings-title" style="color:#80cbc4;">📋 文案/复制预设</div>
             <div class="preset-bar">
               <select id="copy-preset-select" class="preset-select" onchange="loadPreset('copy', this.value)"><option value="">-- 新建/选择 --</option></select>
-              <button class="icon-btn" onclick="savePreset('copy')">💾</button> <button class="icon-btn delete" onclick="deletePreset('copy')">🗑️</button>
+              <button class="icon-btn" onclick="savePreset('copy')">💾</button> <button class="icon-btn" onclick="deletePreset('copy')">🗑️</button>
             </div>
             <div class="input-row"><label class="input-label">配置名称 (保存用)</label><input type="text" id="copy-preset-name" class="custom-input"></div>
             
@@ -833,10 +938,10 @@
           </div>
 
           <div class="settings-group">
-            <div class="settings-title">📡 API 预设</div>
+            <div class="settings-title" style="color:#90caf9;">📡 API 预设</div>
             <div class="preset-bar">
               <select id="api-preset-select" class="preset-select" onchange="loadPreset('api', this.value)"><option value="">-- 新建/选择 --</option></select>
-              <button class="icon-btn" onclick="savePreset('api')">💾</button> <button class="icon-btn delete" onclick="deletePreset('api')">🗑️</button>
+              <button class="icon-btn" onclick="savePreset('api')">💾</button> <button class="icon-btn" onclick="deletePreset('api')">🗑️</button>
             </div>
             <div class="input-row"><label class="input-label">配置名称</label><input type="text" id="api-preset-name" class="custom-input"></div>
             <div class="input-row"><label class="input-label">API Host</label><input type="text" id="api-host" class="custom-input" placeholder="https://api.openai.com"></div>
@@ -849,10 +954,10 @@
           </div>
 
           <div class="settings-group">
-            <div class="settings-title">📝 提示词预设</div>
+            <div class="settings-title" style="color:#ef9a9a;">📝 提示词预设</div>
             <div class="preset-bar">
               <select id="prompt-preset-select" class="preset-select" onchange="loadPreset('prompt', this.value)"><option value="">-- 新建/选择 --</option></select>
-              <button class="icon-btn" onclick="savePreset('prompt')">💾</button> <button class="icon-btn delete" onclick="deletePreset('prompt')">🗑️</button>
+              <button class="icon-btn" onclick="savePreset('prompt')">💾</button> <button class="icon-btn" onclick="deletePreset('prompt')">🗑️</button>
             </div>
             <div class="input-row"><label class="input-label">预设名称</label><input type="text" id="prompt-preset-name" class="custom-input"></div>
             <div class="input-row">
@@ -866,10 +971,10 @@
           </div>
 
           <div class="settings-group">
-            <div class="settings-title">🎭 角色预设</div>
+            <div class="settings-title" style="color:#ffcc80;">🎭 角色预设</div>
             <div class="preset-bar">
               <select id="char-preset-select" class="preset-select" onchange="loadPreset('char', this.value)"><option value="">-- 新建/选择 --</option></select>
-              <button class="icon-btn" onclick="savePreset('char')">💾</button> <button class="icon-btn delete" onclick="deletePreset('char')">🗑️</button>
+              <button class="icon-btn" onclick="savePreset('char')">💾</button> <button class="icon-btn" onclick="deletePreset('char')">🗑️</button>
             </div>
             <div class="input-row"><label class="input-label">配置名称</label><input type="text" id="char-preset-name" class="custom-input"></div>
             <div class="input-row"><label class="input-label">角色名字</label><input type="text" id="char-name" class="custom-input"></div>
@@ -878,10 +983,10 @@
             <div class="input-row"><label class="input-label">聊天历史</label><textarea id="chat-history" class="custom-textarea"></textarea></div>
           </div>
           <div class="settings-group">
-            <div class="settings-title">👤 用户预设</div>
+            <div class="settings-title" style="color:#ce93d8;">👤 用户预设</div>
             <div class="preset-bar">
               <select id="user-preset-select" class="preset-select" onchange="loadPreset('user', this.value)"><option value="">-- 新建/选择 --</option></select>
-              <button class="icon-btn" onclick="savePreset('user')">💾</button> <button class="icon-btn delete" onclick="deletePreset('user')">🗑️</button>
+              <button class="icon-btn" onclick="savePreset('user')">💾</button> <button class="icon-btn" onclick="deletePreset('user')">🗑️</button>
             </div>
             <div class="input-row"><label class="input-label">配置名称</label><input type="text" id="user-preset-name" class="custom-input"></div>
             <div class="input-row"><label class="input-label">你的名字</label><input type="text" id="user-name" class="custom-input"></div>
@@ -895,14 +1000,14 @@
         <div class="schedule-container">
           <div class="role-bar">
             <span>🎭</span>
-            <select id="role-select" class="custom-input" style="padding:4px; font-weight:bold;" onchange="switchRole(this.value)"></select>
+            <select id="role-select" class="custom-input" style="padding:6px; font-weight:bold; background:rgba(0,0,0,0.2);" onchange="switchRole(this.value)"></select>
             <button class="mini-btn" onclick="addNewRole()">+</button>
             <button class="mini-btn" onclick="renameRole()">✎</button>
-            <button class="mini-btn" onclick="deleteRole()" style="color:#e57373;">🗑️</button>
+            <button class="mini-btn" onclick="deleteRole()" style="color:#ef9a9a;">🗑️</button>
           </div>
           
           <div class="tabs-header" id="timer-tabs"></div>
-          <div style="text-align:right; margin-bottom:10px;">
+          <div style="text-align:right; margin-bottom:15px;">
              <button class="card-btn del" onclick="deleteCurrentPage()">🗑️ 删除页签</button>
              <button class="card-btn del" onclick="clearCurrentPage()">🧹 清空内容</button>
           </div>
@@ -931,7 +1036,7 @@
              </div>
              <div class="page-config-row">
                <div class="page-config-label">👀 显示范围:</div>
-               <select id="bind-mode" class="page-config-select" style="border-color:#ffb74d; color:#e65100; font-weight:bold;" onchange="updatePageBinding('exportMode', this.value)">
+               <select id="bind-mode" class="page-config-select" style="border:1px solid #ffcc80; color:#ffcc80;" onchange="updatePageBinding('exportMode', this.value)">
                  <option value="both">未来 + 过去 (双向)</option>
                  <option value="future">只显示未来</option>
                  <option value="past">只显示过去</option>
@@ -940,9 +1045,9 @@
           </div>
 
           <div id="realtime-status-panel">
-            <div class="rt-content" id="rt-past">--</div>
+            <div class="rt-content" id="rt-past" style="color:#b0bec5;">--</div>
             <div class="rt-divider"></div>
-            <div class="rt-content" id="rt-future">--</div>
+            <div class="rt-content" id="rt-future" style="color:#80cbc4;">--</div>
           </div>
 
           <div style="margin-bottom:20px;">
@@ -950,7 +1055,7 @@
                <button class="btn-primary" id="btn-gen-schedule" onclick="generateSchedule(false)">🔄 重新生成</button>
                <button class="btn-secondary" id="btn-append-schedule" onclick="generateSchedule(true)">➕ 追加生成</button>
              </div>
-             <div id="schedule-loading" style="display:none; padding:10px; text-align:center; font-size:12px; color:#8d6e63;">🧠 正在根据绑定配置构思...</div>
+             <div id="schedule-loading" style="display:none; padding:15px; text-align:center; font-size:12px; color:#b0bec5;">🧠 正在根据绑定配置构思...</div>
           </div>
           <div id="schedule-result-area"></div>
           <div style="height:100px;"></div>
@@ -1286,8 +1391,7 @@
         });
       }
       /* ===========================
-         V10.0 逻辑核心 (最终修正版)
-         特性：精准抓取 / 独立复制逻辑 / 新UI支持
+         V13.0 逻辑核心 (防数据丢失 + 自动初始化)
          =========================== */
       let timerPages = [];
       let activeRoleId = 0; 
@@ -1320,6 +1424,9 @@
       const DEFAULT_PROMPT = `# 角色扮演任务\n请根据"\${chat.name}"的人设，推演接下来24小时的行为轨迹。\n# 参数\n角色：\${chat.name}\n人设：\${chat.settings.aiPersona}\n# 输出规则\n1. 返回JSON数组。2. 时间格式 "HH:mm"。3. 包含 'html_snippet' (可选)。\n[{"time":"08:00","description":"...","icon":"⏰"}]`;
 
       window.addEventListener('load', () => {
+        // [核心修复] 自动创建默认预设，防止数据丢失或空列表
+        ensureDefaultPresets();
+
         ['api','char','user','prompt','copy'].forEach(refreshDropdown);
         
         const savedGlobal = localStorage.getItem(STORAGE_KEYS.global);
@@ -1344,30 +1451,29 @@
         else roles = [{ id: Date.now(), name: "默认角色", pages: [{ id: Date.now(), name: "主日程", data: [], exportMode: "both" }] }];
         activeRoleId = roles[0].id;
 
-        const prompts = getPresets('prompt');
-        if(Object.keys(prompts).length===0) {
-          prompts["默认日程"] = { "prompt-preset-name": "默认日程", "prompt-content": DEFAULT_PROMPT };
-          localStorage.setItem(STORAGE_KEYS.prompt, JSON.stringify(prompts));
-          refreshDropdown('prompt');
-        }
-        const copies = getPresets('copy');
-        if(Object.keys(copies).length===0) {
-           copies["系统默认"] = {
-              "copy-preset-name": "系统默认",
-              "global-copy-template": DEFAULT_GLOBAL_TEMPLATE,
-              "status-tpl-past": "${min}分钟前，${char}原计划是${act}",
-              "status-tpl-future": "${min}分钟后，${char}原计划是${act}"
-           };
-           localStorage.setItem(STORAGE_KEYS.copy, JSON.stringify(copies));
-           refreshDropdown('copy');
-        }
-
         renderRoleUI();
         updateFlowWindowVisibility();
         setInterval(updateRealTimeStatus, 1000);
         initFlowLoop();
         initWidgetDrag();
       });
+
+      // [核心修复] 仅当本地没有数据时才写入默认值，绝对不覆盖用户数据
+      function ensureDefaultPresets() {
+          const defaults = {
+              api: { "默认API": { "api-preset-name": "默认API", "api-host": "https://api.openai.com", "api-key": "", "model-name": "gpt-3.5-turbo" } },
+              char: { "默认角色": { "char-preset-name": "默认角色", "char-name": "助手", "char-persona": "你是一个助手", "world-info": "", "chat-history": "" } },
+              user: { "默认用户": { "user-preset-name": "默认用户", "user-name": "用户", "user-persona": "" } },
+              prompt: { "默认日程": { "prompt-preset-name": "默认日程", "prompt-content": DEFAULT_PROMPT } },
+              copy: { "系统默认": { "copy-preset-name": "系统默认", "global-copy-template": DEFAULT_GLOBAL_TEMPLATE, "status-tpl-past": "${min}分钟前，${char}原计划是${act}", "status-tpl-future": "${min}分钟后，${char}原计划是${act}" } }
+          };
+          
+          Object.keys(defaults).forEach(type => {
+              if(!localStorage.getItem(STORAGE_KEYS[type])) {
+                  localStorage.setItem(STORAGE_KEYS[type], JSON.stringify(defaults[type]));
+              }
+          });
+      }
 
       function toggleFlowWindow() {
         globalSettings.flowVisible = !globalSettings.flowVisible;
@@ -1396,7 +1502,6 @@
           if(globalSettings.flowVisible) renderNextFlowItem();
       }
 
-      // --- 精准抓取逻辑 ---
       function getFlowQueue() {
           const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
           let queue = [];
@@ -1609,7 +1714,6 @@
             const pageKey = type + 'Preset'; 
             bindSelect.value = getActivePage()[pageKey] || "";
         }
-        // 特殊处理：exportMode
         const modeSelect = document.getElementById('bind-mode');
         if(modeSelect && getActivePage()) {
             modeSelect.value = getActivePage().exportMode || 'both';
@@ -1661,7 +1765,10 @@
         if(cp){ 
             ['api','char','user','prompt','copy'].forEach(type => {
                 const sel = document.getElementById(`bind-${type}`);
-                if(sel) sel.value = cp[type+'Preset'] || "";
+                if(sel) {
+                    refreshDropdown(type);
+                    sel.value = cp[type+'Preset'] || "";
+                }
             });
             const ms = document.getElementById('bind-mode');
             if(ms) ms.value = cp.exportMode || 'both';
@@ -1722,25 +1829,17 @@
       function editItem(i) { const d=getActivePage().data, v=prompt("修改:",d[i].description); if(v){d[i].description=v;saveRoles();renderTimeline();} }
       function delItem(i) { if(confirm("删除?")){getActivePage().data.splice(i,1);saveRoles();renderTimeline();} }
       
-      // --- [核心修正] 独立的手动复制逻辑 ---
       function copySingleItem(i) {
-        const page = getActivePage(); 
-        const item = page.data[i];
-        
-        // 1. 获取角色名 (尝试从绑定配置拿，拿不到就用默认名)
+        const page = getActivePage(); const item = page.data[i];
         let charName = "TA";
         if(page.charPreset) {
             const charCfg = getPresets('char')[page.charPreset];
             if(charCfg && charCfg['char-name']) charName = charCfg['char-name'];
         } else {
-            // 如果没绑定预设，尝试直接读取当前角色名
             const role = roles.find(r=>r.id==activeRoleId);
             if(role) charName = role.name;
         }
-
-        // 2. 直接构造: ${char}在${time}${act}
         const txt = `${charName}在${item.time}${item.description}`;
-        
         navigator.clipboard.writeText(txt).then(()=>showToast("已复制: " + txt)).catch(()=>showToast("复制失败"));
       }
 
@@ -1760,8 +1859,16 @@
       
       function exportData() { 
           try { const el = id => document.getElementById(id).value; globalSettings.flowWidth = parseInt(el('flow-width')); localStorage.setItem(STORAGE_KEYS.global, JSON.stringify(globalSettings)); } catch(e){}
-          const d={}; Object.keys(STORAGE_KEYS).forEach(k=>d[k]=localStorage.getItem(STORAGE_KEYS[k])); 
-          const b=new Blob([JSON.stringify(d)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`EPhone_FullBackup_${new Date().toISOString().slice(0,10)}.json`; a.click(); 
+          
+          const d={}; 
+          Object.keys(STORAGE_KEYS).forEach(k=>d[k]=localStorage.getItem(STORAGE_KEYS[k])); 
+          
+          const b=new Blob([JSON.stringify(d)],{type:'application/json'}); 
+          const a=document.createElement('a'); 
+          a.href=URL.createObjectURL(b); 
+          const dateStr = new Date().toISOString().slice(0,10);
+          a.download=`计时器备份-${dateStr}.json`; 
+          a.click(); 
       }
       
       function importData(i) { 
