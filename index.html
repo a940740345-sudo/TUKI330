@@ -1861,7 +1861,7 @@
           try { const el = id => document.getElementById(id).value; globalSettings.flowWidth = parseInt(el('flow-width')); localStorage.setItem(STORAGE_KEYS.global, JSON.stringify(globalSettings)); } catch(e){}
           
           const d={}; 
-          Object.keys(STORAGE_KEYS).forEach(k=>d[k]=localStorage.getItem(STORAGE_KEYS[k])); 
+          Object.keys(STORAGE_KEYS).forEach(k=>d[STORAGE_KEYS[k]]=localStorage.getItem(STORAGE_KEYS[k])); 
           
           const b=new Blob([JSON.stringify(d)],{type:'application/json'}); 
           const a=document.createElement('a'); 
