@@ -8,6 +8,7 @@
     />
     <title>EPhone PWA</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.min.js"></script>
     <link
       rel="apple-touch-icon"
       href="https://i.postimg.cc/Fz25WLbr/7D99384EE38C42D2BA98F53E4582FEA8.jpg"
@@ -882,7 +883,10 @@
         <iframe data-src="https://LAWLEITLIGHT.github.io/-k-/" src="" class="app-iframe"></iframe>
       </div>
 <div id="flow-widget"></div>
-
+<div style="text-align: center; margin: 10px 0; font-size: 14px;">
+        <label>注入历史条数: </label>
+        <input id="history-limit" type="number" value="20" style="width: 50px; padding: 4px; border: 1px solid #ccc; border-radius: 4px;">
+    </div>
       <div id="app-settings" class="app-window app-frame">
         <div class="schedule-container">
           <div class="schedule-header">
@@ -1876,5 +1880,158 @@
           r.onload=e=>{ try{ const d=JSON.parse(e.target.result); Object.keys(d).forEach(k=>localStorage.setItem(k,d[k])); alert("导入成功！"); location.reload(); }catch(x){alert("格式错误")} }; r.readAsText(f); 
       }
     </script>
+    <script>
+// ==========================================
+// 自动同步脚本 (EPhone 数据库 -> 本地变量)
+// ==========================================
+(function() {
+    console.log("启动自动同步...");
+
+    // 1. 定义数据库连接 (连接隔壁库)
+    var db = new Dexie("EPhone");
+    db.version(1).stores({
+        chats: '&id, isGroup',
+        apiPresets: '++id',
+        personaPresets: '++id'
+    });
+
+    // 2. 全局变量缓存
+    window.SYNC_DATA = { apis: [], chars: [], users: [] };
+
+    // 3. 核心同步函数
+    async function syncData() {
+        try {
+            await db.open();
+            // 拉取数据
+            var apis = await db.table('apiPresets').toArray();
+            var chats = await db.table('chats').toArray();
+            var users = await db.table('personaPresets').toArray();
+
+            // 过滤并存储
+            window.SYNC_DATA.apis = apis;
+            window.SYNC_DATA.chars = chats.filter(function(c) { return !c.isGroup; });
+            window.SYNC_DATA.users = users;
+
+            // 触发菜单刷新
+            refreshAllDropdowns();
+        } catch (e) {
+            // 数据库可能还没准备好，忽略错误
+        }
+    }
+
+    // 4. 刷新下拉菜单 (绑定到您的HTML元素)
+    function refreshAllDropdowns() {
+        // 辅助函数：填充 Select 元素
+        function fillSelect(elementId, dataList) {
+            var el = document.getElementById(elementId);
+            if (!el) return;
+            
+            var currentVal = el.value;
+            var html = '<option value="">-- 已自动同步 --</option>';
+            
+            dataList.forEach(function(item) {
+                var name = item.name || item.originalName || "未命名";
+                html += '<option value="' + item.id + '">' + name + '</option>';
+            });
+            
+            el.innerHTML = html;
+            // 尝试保持之前的选择
+            if (currentVal) el.value = currentVal;
+        }
+
+        // 填充 API、角色、用户预设
+        fillSelect('bind-api', window.SYNC_DATA.apis);
+        fillSelect('bind-char', window.SYNC_DATA.chars);
+        fillSelect('bind-user', window.SYNC_DATA.users);
+    }
+
+    // 5. 【关键】变量自动转换函数
+    // 当你需要获取角色信息时，调用此函数
+    window.getCharacterContext = async function(charId) {
+        if (!charId) return {};
+
+        try {
+            // 读取数据库中该角色的最新数据
+            var charData = await db.table('chats').get(charId);
+            if (!charData) return {};
+
+            // 获取您输入的历史条数
+            var limitInput = document.getElementById('history-limit');
+            var limit = limitInput ? parseInt(limitInput.value) : 20;
+
+            // --- 变量处理开始 ---
+
+            // 变量 1: ${name} (角色名字)
+            var name = charData.name || "未命名";
+
+            // 变量 2: ${persona} (人设)
+            var persona = (charData.settings && charData.settings.aiPersona) ? charData.settings.aiPersona : "";
+
+            // 变量 3: ${worldbook} (世界书/详细设定)
+            var worldbook = "";
+            if (charData.settings && charData.settings.worldInfo) {
+                worldbook = charData.settings.worldInfo;
+            } else if (charData.description) {
+                worldbook = charData.description;
+            }
+
+            // 变量 4: ${history} (聊天记录)
+            var history = "";
+            if (charData.history && charData.history.length > 0) {
+                // 截取最后 N 条
+                history = charData.history.slice(-limit).map(function(msg) {
+                    var sender = msg.role === 'user' ? '我' : name;
+                    return sender + ": " + msg.content;
+                }).join('\n');
+            }
+
+            // 变量 5: ${memory} (记忆)
+            var memory = "";
+            if (charData.longTermMemory) {
+                memory = charData.longTermMemory.map(function(m) { return m.content; }).join('\n');
+            }
+
+            // 返回所有变量
+            return {
+                name: name,
+                persona: persona,
+                worldbook: worldbook,
+                history: history,
+                memory: memory
+            };
+
+        } catch (e) {
+            console.error("读取角色数据出错:", e);
+            return {};
+        }
+    };
+
+    // 6. 拦截 API 配置 (让系统使用同步过来的 API key)
+    var originalGetApi = window.getApiConfig;
+    window.getApiConfig = function(id) {
+        var found = window.SYNC_DATA.apis.find(function(a) { return a.id == id; });
+        if (found) {
+            return {
+                host: found.proxyUrl,
+                key: found.apiKey,
+                model: found.model
+            };
+        }
+        return originalGetApi ? originalGetApi(id) : null;
+    };
+
+    // 7. 覆盖菜单刷新逻辑
+    window.refreshDropdown = function(type) {
+        if (type === 'api' || type === 'char' || type === 'user') {
+            refreshAllDropdowns();
+        }
+    };
+
+    // 启动循环：每 3 秒同步一次
+    syncData();
+    setInterval(syncData, 3000);
+
+})();
+</script>
   </body>
 </html>
