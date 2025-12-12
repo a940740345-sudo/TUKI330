@@ -1710,89 +1710,19 @@ async function syncFromEPhone() {
       }
 
       function getFlowQueue() {
-         /* ===========================
-   核心数据源 (改造版)
-   支持 targetRoleName 参数，用于注入系统单独获取某角色的数据
-   =========================== */
-function getFlowQueue(targetRoleName = null) {
-    const now = new Date(); 
-    const curM = now.getHours()*60 + now.getMinutes();
-    let queue = [];
-    
-    // 遍历所有角色
-    roles.forEach(role => {
-        // [新增] 筛选逻辑：如果指定了角色名，且当前角色不匹配，则跳过
-        if (targetRoleName && role.name !== targetRoleName) return;
-
-        role.pages.forEach(page => {
-            if(!page.copyPreset) return;
-            const copyCfg = getPresets('copy')[page.copyPreset];
-            if(!copyCfg) return;
-            
-            let charName = role.name;
-            if(page.charPreset) {
-                const charCfg = getPresets('char')[page.charPreset];
-                if(charCfg && charCfg['char-name']) charName = charCfg['char-name'];
-            }
-
-            // [新增] 再次筛选：确保预设里的名字和目标名字一致 (双重保险)
-            if (targetRoleName && charName !== targetRoleName && role.name !== targetRoleName) return;
-
-            let candidates = [];
-            page.data.forEach(item => {
-                const [h,m] = item.time.split(':').map(Number);
-                const t = h*60+m;
-                const diff = Math.abs(t - curM);
-                
-                // 使用全局设置的范围
-                if(diff <= globalSettings.flowRange) {
-                    candidates.push({ ...item, t: t, diff: diff });
-                }
-            });
-
-            if(candidates.length === 0) return;
-
-            const mode = page.exportMode || 'both';
-            let itemsToAdd = [];
-
-            // 严格遵循悬浮窗的显示逻辑 (Past/Future/Both)
-            if(mode === 'both' || mode === 'past') {
-                const pastItems = candidates.filter(i => curM >= i.t).sort((a,b) => a.diff - b.diff);
-                if(pastItems.length > 0) itemsToAdd.push(pastItems[0]); 
-            }
-
-            if(mode === 'both' || mode === 'future') {
-                const futureItems = candidates.filter(i => curM < i.t).sort((a,b) => a.diff - b.diff);
-                if(futureItems.length > 0) itemsToAdd.push(futureItems[0]); 
-            }
-
-            itemsToAdd.forEach(item => {
-                const isPast = curM >= item.t;
-                const tpl = isPast ? copyCfg['status-tpl-past'] : copyCfg['status-tpl-future'];
-                
-                // 生成最终文案 (这就是注入的内容)
-                const text = tpl.replace(/\${min}/g, item.diff)
-                                .replace(/\${char}/g, charName)
-                                .replace(/\${act}/g, item.description)
-                                .replace(/\${time}/g, item.time);
-                
-                // 生成唯一指纹 (用于去重)
-                // 格式: 角色名|时间|描述
-                const uniqueKey = `${role.name}|${item.time}|${item.description}`;
-
-                queue.push({
-                    text: text,
-                    shortText: `${item.time} ${charName}`,
-                    copyText: text, // 注入全量文本
-                    icon: item.icon,
-                    key: uniqueKey,  // 用于注入系统去重
-                    roleName: role.name
-                });
-            });
-        });
-    });
-    return queue;
-}
+          const now = new Date(); const curM = now.getHours()*60 + now.getMinutes();
+          let queue = [];
+          
+          roles.forEach(role => {
+              role.pages.forEach(page => {
+                  if(!page.copyPreset) return;
+                  const copyCfg = getPresets('copy')[page.copyPreset];
+                  if(!copyCfg) return;
+                  
+                  let charName = role.name;
+                  if(page.charPreset) {
+                      const charCfg = getPresets('char')[page.charPreset];
+                      if(charCfg && charCfg['char-name']) charName = charCfg['char-name'];
                   }
 
                   let candidates = [];
@@ -2160,16 +2090,17 @@ function getFlowQueue(targetRoleName = null) {
           r.onload=e=>{ try{ const d=JSON.parse(e.target.result); Object.keys(d).forEach(k=>localStorage.setItem(k,d[k])); alert("导入成功！"); location.reload(); }catch(x){alert("格式错误")} }; r.readAsText(f); 
       }
 /* ===========================
-   V6.0 幕后导演系统 (逻辑统一版)
-   完全复用悬浮窗逻辑，所见即所注
+   V5.0 幕后导演系统 (智能角色识别版)
    =========================== */
 
+// 注入系统状态
 const injectState = {
-  enabled: false,
-  consumedKeys: [],
-  historyLog: []
+  enabled: false,         // 总开关
+  consumedKeys: [],       // 已注入过的内容指纹 (去重用)
+  historyLog: []          // UI显示用的日志
 };
 
+// 初始化
 function initInjectionSystem() {
   const savedConsumed = localStorage.getItem('light_inject_consumed');
   if(savedConsumed) injectState.consumedKeys = JSON.parse(savedConsumed);
@@ -2179,16 +2110,19 @@ function initInjectionSystem() {
   const toggle = document.getElementById('injection-toggle');
   if(toggle) toggle.checked = injectState.enabled;
 
+  // 启动 Iframe 钩子
   setTimeout(() => { hookIframe('app-a'); hookIframe('app-b'); }, 2000);
-  setTimeout(() => { hookIframe('app-a'); hookIframe('app-b'); }, 5000);
+  setTimeout(() => { hookIframe('app-a'); hookIframe('app-b'); }, 5000); // 双重保险
 }
 
+// 开关切换
 function toggleInjection(checked) {
   injectState.enabled = checked;
   localStorage.setItem('light_inject_enabled', checked);
   updateInjectionStatusUI();
 }
 
+// 重置历史
 function resetInjectionHistory() {
   if(confirm("清空已注入记录？\n角色可能会重新提及以前的日程。")) {
     injectState.consumedKeys = [];
@@ -2199,6 +2133,7 @@ function resetInjectionHistory() {
   }
 }
 
+/* --- 核心：Iframe 请求拦截器 --- */
 function hookIframe(appId) {
   const appDiv = document.getElementById(appId);
   if (!appDiv) return;
@@ -2206,134 +2141,182 @@ function hookIframe(appId) {
   if (!iframe || !iframe.contentWindow) return;
 
   try {
-    if (iframe.contentWindow._hasLightHook) return;
+    if (iframe.contentWindow._hasLightHook) return; // 防止重复
 
     const originalFetch = iframe.contentWindow.fetch;
+    
     iframe.contentWindow.fetch = async function(url, options) {
+      // 1. 监听聊天请求
       if (url.includes('/chat/completions') && options && options.method === 'POST') {
         
-        // 核心检查：开关开 + 悬浮窗必须可见 (因为逻辑是复用悬浮窗的)
+        // 2. 检查前置条件：开关开启 + 悬浮窗开启
         if (injectState.enabled && globalSettings.flowVisible) {
            try {
              const body = JSON.parse(options.body);
+             
+             // 3. ★★★ 智能识别角色 ★★★
+             // 从 messages 里寻找当前对话的角色是谁
              const detectedRole = detectRoleFromMessages(body.messages);
              
              if (detectedRole) {
-               console.log(`[LightInject] 识别角色: [${detectedRole.name}]`);
+               console.log(`[LightInject] 识别到正在和 [${detectedRole.name}] 聊天`);
                
-               // ★★★ 核心修改：直接调用悬浮窗的数据源 ★★★
-               const queue = getFlowQueue(detectedRole.name);
+               // 4. 获取该角色的下一条注入内容
+               const payload = await getInjectionPayloadForRole(detectedRole);
                
-               // 找到第一个没被消费过的
-               const nextItem = queue.find(item => !injectState.consumedKeys.includes(item.key));
-               
-               if (nextItem) {
+               if (payload) {
+                 // 5. 注入到最后一条用户消息
                  if (body.messages && body.messages.length > 0) {
                    let lastUserMsg = null;
+                   // 倒序找最后一个 user
                    for(let i=body.messages.length-1; i>=0; i--) {
-                     if(body.messages[i].role === 'user') { lastUserMsg = body.messages[i]; break; }
+                     if(body.messages[i].role === 'user') {
+                       lastUserMsg = body.messages[i];
+                       break;
+                     }
                    }
 
                    if(lastUserMsg) {
-                     // 注入悬浮窗生成的完整文案 (copyText)
-                     lastUserMsg.content += `\n\n[剧情触发: ${nextItem.copyText}]`;
+                     // 隐形注入
+                     lastUserMsg.content += `\n\n[剧情触发: ${payload.text}]`;
                      
+                     // 重新打包请求
                      options.body = JSON.stringify(body);
-                     markAsConsumed(nextItem); // 标记消费
+                     
+                     // 标记消费 + 记录日志
+                     markAsConsumed(payload, detectedRole.name);
                    }
                  }
                }
+             } else {
+               // console.log("[LightInject] 未匹配到已知角色，跳过注入");
              }
-           } catch(e) { console.error("Injection error", e); }
+           } catch(e) { console.error("Injection logic error", e); }
         }
       }
       return originalFetch.apply(this, arguments);
     };
+
     iframe.contentWindow._hasLightHook = true;
-    console.log(`[LightInject] Hooked ${appId}`);
-  } catch (e) { console.warn(`Hook failed ${appId}`, e); }
+    console.log(`[LightInject] Hooked ${appId} successfully.`);
+  } catch (e) {
+    console.warn(`[LightInject] Hook failed for ${appId}`, e);
+  }
 }
 
+/* --- 逻辑：从消息中识别角色 --- */
 function detectRoleFromMessages(messages) {
   if (!messages || !messages.length) return null;
+  
+  // 通常系统人设在第一条，但也可能在前面几条
+  // 我们扫描所有的 system 消息
   const systemMsgs = messages.filter(m => m.role === 'system');
   if (systemMsgs.length === 0) return null;
   
+  // 遍历我们在 TV Shell 里定义的所有 Role
+  // 看看哪个 Role 的名字出现在了 System Prompt 里
   for (const role of roles) {
+    // 比如 role.name = "方亦楷"
+    // 如果 systemMsg.content 包含 "方亦楷"，则匹配成功
     for (const msg of systemMsgs) {
-      if (msg.content.includes(role.name)) return role;
+      if (msg.content.includes(role.name)) {
+        return role;
+      }
     }
   }
   return null;
 }
 
-function markAsConsumed(item) {
-  injectState.consumedKeys.push(item.key);
-  if(injectState.consumedKeys.length > 200) injectState.consumedKeys.shift();
+/* --- 逻辑：获取特定角色的下一条注入 --- */
+async function getInjectionPayloadForRole(role) {
+  const now = new Date();
+  const curM = now.getHours() * 60 + now.getMinutes();
+  
+  let candidates = [];
+  
+  // 遍历该角色的所有 Page
+  role.pages.forEach(page => {
+    page.data.forEach(item => {
+       const [h,m] = item.time.split(':').map(Number);
+       const t = h*60+m;
+       const diff = Math.abs(t - curM);
+       
+       // 范围判断 (使用全局 flowRange)
+       if (diff <= globalSettings.flowRange) {
+         // 生成指纹：角色ID + 时间 + 内容
+         const key = `${role.id}|${item.time}|${item.description}`;
+         
+         // 检查是否已消费
+         if (!injectState.consumedKeys.includes(key)) {
+           candidates.push({
+             time: item.time,
+             text: item.description,
+             key: key,
+             fullTime: t
+           });
+         }
+       }
+    });
+  });
+
+  if (candidates.length === 0) return null;
+
+  // 按时间顺序排序，取最早的一条
+  candidates.sort((a,b) => a.fullTime - b.fullTime);
+  return candidates[0];
+}
+
+/* --- 标记为已消费 --- */
+function markAsConsumed(payload, roleName) {
+  injectState.consumedKeys.push(payload.key);
+  if(injectState.consumedKeys.length > 200) injectState.consumedKeys.shift(); // 增加记录容量
   localStorage.setItem('light_inject_consumed', JSON.stringify(injectState.consumedKeys));
   
   const log = { 
     time: new Date().toTimeString().slice(0,8), 
-    text: `[${item.roleName}] ${item.copyText}` 
+    text: `[${roleName}] ${payload.text}` 
   };
   injectState.historyLog.unshift(log);
-  if(injectState.historyLog.length > 3) injectState.historyLog.pop();
+  if(injectState.historyLog.length > 3) injectState.historyLog.pop(); // 界面只显示最近3条
   
   updateInjectionStatusUI();
 }
 
-/* --- UI：完全同步悬浮窗数据的监控面板 --- */
-function updateInjectionStatusUI() {
+/* --- UI：更新监控面板 --- */
+async function updateInjectionStatusUI() {
   const pendingEl = document.getElementById('inj-pending');
   const historyEl = document.getElementById('inj-history');
   if(!pendingEl || !historyEl) return;
 
-  // 1. 历史
+  // 1. 显示历史
   historyEl.innerHTML = injectState.historyLog.map(l => 
-    `<div style="margin-top:2px; border-bottom:1px solid rgba(255,255,255,0.05);">✔ ${l.time} ${l.text.substring(0,20)}...</div>`
+    `<div style="margin-top:2px;">✔ ${l.time} ${l.text.substring(0,18)}...</div>`
   ).join('');
 
-  // 2. 待办预览 (遍历所有角色，看他们现在悬浮窗里显示啥)
-  let pendingHtml = "";
+  // 2. 显示当前"可复制"的内容 (预览)
+  // 因为现在是动态匹配，我们不知道用户接下来会点开哪个角色。
+  // 所以我们遍历所有角色，把当前处于"可注入"状态的内容都列出来
+  let pendingText = "";
   let hasPending = false;
-
-  roles.forEach(role => {
-      // 直接调用核心函数，获取该角色当前在悬浮窗应该显示的内容
-      const queue = getFlowQueue(role.name);
-      
-      // 过滤掉已经注入过的
-      const validItems = queue.filter(item => !injectState.consumedKeys.includes(item.key));
-      
-      // 这里的逻辑是：悬浮窗显示多少条，我就列出多少条，但注入时只取第一条
-      // 为了让监控面板清晰，我们显示"即将注入"的那一条 (index 0)
-      // 以及"排队中"的其他条目
-      
-      if(validItems.length > 0) {
-          hasPending = true;
-          // 第一条是下一次必然注入的
-          const next = validItems[0];
-          pendingHtml += `<div style="color:#ffcc80; margin-bottom:4px;">
-            ⏳ [${role.name}] <span style="font-size:10px; border:1px solid #ffcc80; padding:0 2px; border-radius:3px;">NEXT</span><br>
-            ${next.copyText.substring(0, 30)}...
-          </div>`;
-          
-          // 如果还有更多
-          if(validItems.length > 1) {
-              pendingHtml += `<div style="color:#78909c; font-size:10px; margin-bottom:8px; padding-left:10px;">
-                + 还有 ${validItems.length - 1} 条排队中 (悬浮窗可见)
-              </div>`;
-          }
-      }
-  });
-
+  
+  for (const role of roles) {
+    const next = await getInjectionPayloadForRole(role);
+    if(next) {
+      pendingText += `<div style="color:#ffcc80;">⏳ [${role.name}] ${next.time} ${next.text.substring(0,10)}...</div>`;
+      hasPending = true;
+    }
+  }
+  
   if(!hasPending) {
-    pendingEl.innerHTML = '<span style="color:#546e7a">当前悬浮窗无新内容 (或已全部注入)</span>';
+    pendingEl.innerHTML = '<span style="color:#546e7a">当前时间段无待办剧情</span>';
   } else {
-    pendingEl.innerHTML = pendingHtml;
+    pendingEl.innerHTML = pendingText;
   }
 }
 
+// 注册启动
 window.addEventListener('load', initInjectionSystem);
+// 定时刷新监控
 setInterval(updateInjectionStatusUI, 3000);
     </script>
   </body>
