@@ -980,11 +980,8 @@
             <div class="input-row"><label class="input-label">配置名称</label><input type="text" id="char-preset-name" class="custom-input"></div>
             <div class="input-row"><label class="input-label">角色名字</label><input type="text" id="char-name" class="custom-input"></div>
             <div class="input-row"><label class="input-label">角色人设</label><textarea id="char-persona" class="custom-textarea"></textarea></div>
-            <div class="input-row"><label class="input-label">世界观 (World Info)</label><textarea id="world-info" class="custom-textarea"></textarea></div>
-
-<div class="input-row"><label class="input-label">角色记忆 (Memory)</label><textarea id="char-memory" class="custom-textarea" placeholder="同步后，EPhone的长期记忆会出现在这里"></textarea></div>
-
-<div class="input-row"><label class="input-label">聊天历史</label><textarea id="chat-history" class="custom-textarea"></textarea></div>
+            <div class="input-row"><label class="input-label">世界观</label><textarea id="world-info" class="custom-textarea"></textarea></div>
+            <div class="input-row"><label class="input-label">聊天历史</label><textarea id="chat-history" class="custom-textarea"></textarea></div>
           </div>
           <div class="settings-group">
             <div class="settings-title" style="color:#ce93d8;">👤 用户预设</div>
@@ -1135,163 +1132,140 @@
     </div>
 <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
     <script>
-/* ===========================
-   EPhone 数据同步核心 V2.0 (全量API + 记忆分离 + 自定义历史)
+      /* ===========================
+   EPhone 数据同步核心 (TV Shell <-> Small Phone Core)
    =========================== */
 async function syncFromEPhone() {
-  // 1. 获取用户自定义的历史记录条数
-  let historyLimit = prompt("请输入要同步的聊天历史条数 (最近N条)：", "50");
-  if (historyLimit === null) return; // 用户点击取消
-  historyLimit = parseInt(historyLimit) || 50;
+  if (!confirm("确定要从旧版 EPhone (GeminiChatDB) 同步所有角色、API和设置吗？\n\n这将把旧版数据转换为预设并自动保存。")) return;
 
-  if (!confirm(`确定要从旧版 EPhone 同步数据吗？\n\n- API: 全部同步\n- 角色: 记忆与世界观分离\n- 历史: 最近 ${historyLimit} 条`)) return;
-
-  const loadingToast = showToast("正在连接旧版数据库...", 10000);
+  const loadingToast = showToast("正在连接旧版数据库...", 10000); // 长时间提示
   
   try {
-    // 连接 EPhone 数据库
+    // 1. 连接旧数据库
     const oldDb = new Dexie("GeminiChatDB");
     oldDb.version(1).stores({
       chats: '&id, name, settings, history, longTermMemory',
       worldBooks: '&id, name, content',
-      apiConfig: '&id, proxyUrl, apiKey, model' // EPhone API表结构
+      apiConfig: '&id, proxyUrl, apiKey, model'
     });
 
-    // ----------------------------
-    // 1. 同步 API (全量)
-    // ----------------------------
-    const apiConfigs = await oldDb.table("apiConfig").toArray();
-    const apiPresets = getPresets('api');
-    let apiCount = 0;
-
-    // 如果数据库里有 API 配置
-    if (apiConfigs && apiConfigs.length > 0) {
-      apiConfigs.forEach(config => {
-        // EPhone的id通常是 'main' 或者用户自定义的 UUID
-        let pName = config.id === 'main' ? 'EPhone主线路' : `EPhone-${config.id.substring(0,6)}`;
-        // 如果 config 对象里有 name 字段最好，没有就用 ID
-        if(config.name) pName = config.name;
-
-        if (config.apiKey) {
-          apiPresets[pName] = {
-            "api-preset-name": pName,
-            "api-host": config.proxyUrl || "https://api.openai.com",
-            "api-key": config.apiKey,
-            "model-name": config.model || "gpt-3.5-turbo"
-          };
-          apiCount++;
-        }
-      });
-    } else {
-      // 容错：如果数据库没API，尝试读 LocalStorage (EPhone 备用存储)
-      const lsKey = localStorage.getItem('light_global_api_key');
-      if (lsKey) {
-        const pName = "EPhone-LocalStorage";
-        apiPresets[pName] = {
-          "api-preset-name": pName,
-          "api-host": localStorage.getItem('light_global_api_host') || "https://api.openai.com",
-          "api-key": lsKey,
-          "model-name": localStorage.getItem('light_global_api_model') || "gpt-3.5-turbo"
-        };
-        apiCount++;
-      }
-    }
-    localStorage.setItem(STORAGE_KEYS.api, JSON.stringify(apiPresets));
-
-    // ----------------------------
-    // 2. 同步 角色 & 世界书 & 记忆 & 历史
-    // ----------------------------
+    // 2. 获取数据
     const chats = await oldDb.table("chats").toArray();
     const worldBooks = await oldDb.table("worldBooks").toArray();
     
+    // 获取旧版API配置 (优先从LocalStorage读取，因为EPhone有时存LS，有时存DB)
+    const oldApiConfig = {
+      host: localStorage.getItem('light_global_api_host') || '', // 假设旧版有类似
+      key: localStorage.getItem('light_global_api_key') || '',
+      model: localStorage.getItem('light_global_api_model') || ''
+    };
+    
+    // 如果LocalStorage没有，尝试从DB读 (EPhone逻辑)
+    const dbApi = await oldDb.table("apiConfig").get("main");
+    if (dbApi) {
+        oldApiConfig.host = dbApi.proxyUrl || "https://api.openai.com";
+        oldApiConfig.key = dbApi.apiKey || "";
+        oldApiConfig.model = dbApi.model || "gpt-3.5-turbo";
+    }
+
+    // 3. 转换并保存 API 预设
+    if (oldApiConfig.key) {
+      const apiPresets = getPresets('api');
+      const presetName = "EPhone同步API";
+      apiPresets[presetName] = {
+        "api-preset-name": presetName,
+        "api-host": oldApiConfig.host,
+        "api-key": oldApiConfig.key,
+        "model-name": oldApiConfig.model
+      };
+      localStorage.setItem(STORAGE_KEYS.api, JSON.stringify(apiPresets));
+      showToast(`已同步 API: ${presetName}`);
+    }
+
+    // 4. 转换并保存 角色 & 用户 & 世界书 预设
     const charPresets = getPresets('char');
     const userPresets = getPresets('user');
-    const copyPresets = getPresets('copy');
+    const copyPresets = getPresets('copy'); // 顺便同步一些记忆作为文案
 
     for (const chat of chats) {
       const charName = chat.name || "未知角色";
       const presetName = `同步-${charName}`;
 
-      // --- A. 处理世界观 (仅世界书) ---
+      // --- 提取世界书内容 ---
       let worldInfoText = "";
       if (chat.settings && chat.settings.linkedWorldBookIds) {
+        // 查找关联的世界书内容
         const linkedBooks = worldBooks.filter(wb => chat.settings.linkedWorldBookIds.includes(wb.id));
         linkedBooks.forEach(wb => {
           worldInfoText += `【世界书：${wb.name}】\n`;
           if (Array.isArray(wb.content)) {
+             // EPhone世界书是数组，转为文本
              wb.content.forEach(entry => {
-               if(entry.enabled) worldInfoText += `keys: ${entry.keys.join(',')}\ndesc: ${entry.content}\n\n`;
+               if(entry.enabled) worldInfoText += `${entry.keys.join(',')}: ${entry.content}\n`;
              });
           }
         });
       }
 
-      // --- B. 处理记忆 (单独字段) ---
-      let memoryText = "";
+      // --- 提取记忆与历史 ---
+      let formattedMemory = "";
       if (chat.longTermMemory && Array.isArray(chat.longTermMemory)) {
-         // EPhone 的记忆通常包含 {content, importance, ...}
-         memoryText = chat.longTermMemory.map(m => `• ${m.content}`).join("\n");
+         formattedMemory = chat.longTermMemory.map(m => `[记忆] ${m.content}`).join("\n");
       }
-
-      // --- C. 处理历史记录 (自定义条数) ---
+      
+      // 简单处理历史记录 (取最近20条，避免太长)
       let historyText = "";
       if (chat.history && Array.isArray(chat.history)) {
-         // 截取最后 N 条
-         const sliceStart = Math.max(0, chat.history.length - historyLimit);
-         historyText = chat.history.slice(sliceStart).map(h => {
-             // 映射名字：user -> 用户昵称, model -> 角色名
+         historyText = chat.history.slice(-20).map(h => {
              const roleName = h.role === 'user' ? (chat.settings.myNickname || '我') : charName;
              return `${roleName}: ${h.content}`;
          }).join("\n");
       }
 
-      // --- 保存角色预设 ---
+      // --- 映射角色预设 (Char Preset) ---
       charPresets[presetName] = {
         "char-preset-name": presetName,
         "char-name": charName,
-        "char-persona": chat.settings.aiPersona || "", 
-        "world-info": worldInfoText,  // 纯世界书
-        "char-memory": memoryText,    // ★ 新增：纯记忆
-        "chat-history": historyText   // 截断后的历史
+        "char-persona": chat.settings.aiPersona || "", // 核心映射：人设
+        "world-info": worldInfoText + "\n\n" + formattedMemory, // 核心映射：世界书+记忆
+        "chat-history": historyText // 核心映射：历史
       };
 
-      // --- 保存用户预设 ---
+      // --- 映射用户预设 (User Preset) ---
+      // EPhone里每个角色可能对应不同的用户人设
       userPresets[presetName] = {
         "user-preset-name": presetName,
         "user-name": chat.settings.myNickname || "用户",
-        "user-persona": chat.settings.myPersona || ""
+        "user-persona": chat.settings.myPersona || "" // 核心映射：用户人设
       };
       
-      // --- 保存状态文案 (取最后一条历史作为参考) ---
+      // --- 映射文案预设 (Copy Preset) (可选，提取最近一条作为状态) ---
+      // 如果有最后一条AI消息，存为未来文案模板
       if(chat.history && chat.history.length > 0) {
           const lastMsg = chat.history[chat.history.length-1];
-          let statusText = lastMsg.content.substring(0, 30);
-          if(statusText.length >= 30) statusText += "...";
-          
           copyPresets[presetName] = {
               "copy-preset-name": presetName,
-              "global-copy-template": document.getElementById('global-copy-template').value || "...", // 继承当前的模板
-              "status-tpl-past": `[${charName}记录] ${statusText}`, // 仅作示例
-              "status-tpl-future": `[${charName}状态] ${statusText}`
+              "global-copy-template": DEFAULT_GLOBAL_TEMPLATE,
+              "status-tpl-future": `[${charName}状态] ${lastMsg.content.substring(0, 20)}...`
           };
       }
     }
 
-    // 写入 LocalStorage
+    // 5. 保存回 LocalStorage
     localStorage.setItem(STORAGE_KEYS.char, JSON.stringify(charPresets));
     localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(userPresets));
     localStorage.setItem(STORAGE_KEYS.copy, JSON.stringify(copyPresets));
 
-    // 刷新 UI 下拉框
+    // 刷新界面
     refreshDropdown('api');
     refreshDropdown('char');
     refreshDropdown('user');
     
-    showToast(`✅ 同步成功!\nAPI: ${apiCount}个\n角色: ${chats.length}个\n历史: 每人${historyLimit}条`);
+    showToast(`✅ 同步完成！导入了 ${chats.length} 个角色预设。`);
     
   } catch (e) {
     console.error(e);
-    alert("同步遇到错误: " + e.message + "\n请确保已经在 EPhone 页面使用过并产生了 GeminiChatDB 数据库。");
+    alert("同步失败：\n1. 请确保你在同一个浏览器/域名下打开。\n2. 请确保旧版EPhone数据存在(GeminiChatDB)。\n错误信息: " + e.message);
   }
 }
       const fabContainer = document.getElementById('fab-container');
@@ -1579,10 +1553,10 @@ async function syncFromEPhone() {
       const STORAGE_KEYS = {    api: 'light_presets_api',    char: 'light_presets_char',    user: 'light_presets_user',    prompt: 'light_presets_prompt',    copy: 'light_presets_copy',    roles: 'light_roles_v1',    global: 'light_global_settings'  };
       const FIELD_MAP = { 
         api:['api-preset-name','api-host','api-key','model-name'], 
-        char:['char-preset-name','char-name','char-persona','world-info','char-memory','chat-history'], 
+        char:['char-preset-name','char-name','char-persona','world-info','chat-history'], 
         user:['user-preset-name','user-name','user-persona'], 
         prompt:['prompt-preset-name','prompt-content'],
-        copy:['copy-preset-name','global-copy-template','status-tpl-past','status-tpl-future']
+        copy:['copy-preset-name','global-copy-template','status-tpl-past','status-tpl-future'] 
       };
       const DEFAULT_PROMPT = `# 角色扮演任务\n请根据"\${chat.name}"的人设，推演接下来24小时的行为轨迹。\n# 参数\n角色：\${chat.name}\n人设：\${chat.settings.aiPersona}\n# 输出规则\n1. 返回JSON数组。2. 时间格式 "HH:mm"。3. 包含 'html_snippet' (可选)。\n[{"time":"08:00","description":"...","icon":"⏰"}]`;
 
