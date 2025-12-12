@@ -2090,7 +2090,7 @@ async function syncFromEPhone() {
           r.onload=e=>{ try{ const d=JSON.parse(e.target.result); Object.keys(d).forEach(k=>localStorage.setItem(k,d[k])); alert("导入成功！"); location.reload(); }catch(x){alert("格式错误")} }; r.readAsText(f); 
       }
 /* ===========================
-   V5.0 幕后导演系统 (智能角色识别版)
+   V5.1 幕后导演系统 (逻辑与悬浮窗 1:1 同步版)
    =========================== */
 
 // 注入系统状态
@@ -2112,7 +2112,7 @@ function initInjectionSystem() {
 
   // 启动 Iframe 钩子
   setTimeout(() => { hookIframe('app-a'); hookIframe('app-b'); }, 2000);
-  setTimeout(() => { hookIframe('app-a'); hookIframe('app-b'); }, 5000); // 双重保险
+  setTimeout(() => { hookIframe('app-a'); hookIframe('app-b'); }, 5000);
 }
 
 // 开关切换
@@ -2141,34 +2141,30 @@ function hookIframe(appId) {
   if (!iframe || !iframe.contentWindow) return;
 
   try {
-    if (iframe.contentWindow._hasLightHook) return; // 防止重复
+    if (iframe.contentWindow._hasLightHook) return;
 
     const originalFetch = iframe.contentWindow.fetch;
     
     iframe.contentWindow.fetch = async function(url, options) {
-      // 1. 监听聊天请求
       if (url.includes('/chat/completions') && options && options.method === 'POST') {
         
-        // 2. 检查前置条件：开关开启 + 悬浮窗开启
+        // 检查开关
         if (injectState.enabled && globalSettings.flowVisible) {
            try {
              const body = JSON.parse(options.body);
              
-             // 3. ★★★ 智能识别角色 ★★★
-             // 从 messages 里寻找当前对话的角色是谁
+             // 1. 智能识别角色
              const detectedRole = detectRoleFromMessages(body.messages);
              
              if (detectedRole) {
-               console.log(`[LightInject] 识别到正在和 [${detectedRole.name}] 聊天`);
+               console.log(`[LightInject] 识别角色: [${detectedRole.name}]`);
                
-               // 4. 获取该角色的下一条注入内容
+               // 2. 获取该角色的下一条注入 (逻辑与悬浮窗完全一致)
                const payload = await getInjectionPayloadForRole(detectedRole);
                
                if (payload) {
-                 // 5. 注入到最后一条用户消息
                  if (body.messages && body.messages.length > 0) {
                    let lastUserMsg = null;
-                   // 倒序找最后一个 user
                    for(let i=body.messages.length-1; i>=0; i--) {
                      if(body.messages[i].role === 'user') {
                        lastUserMsg = body.messages[i];
@@ -2177,28 +2173,25 @@ function hookIframe(appId) {
                    }
 
                    if(lastUserMsg) {
-                     // 隐形注入
-                     lastUserMsg.content += `\n\n[剧情触发: ${payload.text}]`;
+                     // 3. 隐形注入 (使用格式化后的文本)
+                     // 注入格式: 换行 + [系统提示: 内容]
+                     lastUserMsg.content += `\n\n[系统提示: ${payload.text}]`;
                      
-                     // 重新打包请求
                      options.body = JSON.stringify(body);
                      
-                     // 标记消费 + 记录日志
                      markAsConsumed(payload, detectedRole.name);
                    }
                  }
                }
-             } else {
-               // console.log("[LightInject] 未匹配到已知角色，跳过注入");
              }
-           } catch(e) { console.error("Injection logic error", e); }
+           } catch(e) { console.error("Injection error", e); }
         }
       }
       return originalFetch.apply(this, arguments);
     };
 
     iframe.contentWindow._hasLightHook = true;
-    console.log(`[LightInject] Hooked ${appId} successfully.`);
+    console.log(`[LightInject] Hooked ${appId}`);
   } catch (e) {
     console.warn(`[LightInject] Hook failed for ${appId}`, e);
   }
@@ -2207,17 +2200,10 @@ function hookIframe(appId) {
 /* --- 逻辑：从消息中识别角色 --- */
 function detectRoleFromMessages(messages) {
   if (!messages || !messages.length) return null;
-  
-  // 通常系统人设在第一条，但也可能在前面几条
-  // 我们扫描所有的 system 消息
   const systemMsgs = messages.filter(m => m.role === 'system');
   if (systemMsgs.length === 0) return null;
   
-  // 遍历我们在 TV Shell 里定义的所有 Role
-  // 看看哪个 Role 的名字出现在了 System Prompt 里
   for (const role of roles) {
-    // 比如 role.name = "方亦楷"
-    // 如果 systemMsg.content 包含 "方亦楷"，则匹配成功
     for (const msg of systemMsgs) {
       if (msg.content.includes(role.name)) {
         return role;
@@ -2227,33 +2213,66 @@ function detectRoleFromMessages(messages) {
   return null;
 }
 
-/* --- 逻辑：获取特定角色的下一条注入 --- */
+/* --- [核心修改] 获取特定角色的下一条注入 --- */
+// 这里完全复刻 getFlowQueue 的逻辑，保证监控和悬浮窗内容一致
 async function getInjectionPayloadForRole(role) {
   const now = new Date();
   const curM = now.getHours() * 60 + now.getMinutes();
-  
+  const range = globalSettings.flowRange; // 使用全局设置的范围
+
   let candidates = [];
   
   // 遍历该角色的所有 Page
   role.pages.forEach(page => {
+    // 1. 必须绑定了文案预设 (和悬浮窗逻辑一致)
+    if(!page.copyPreset) return;
+    const copyCfg = getPresets('copy')[page.copyPreset];
+    if(!copyCfg) return;
+
+    // 确定角色名 (优先用预设里的，没有则用Role名)
+    let charName = role.name;
+    if(page.charPreset) {
+        const c = getPresets('char')[page.charPreset];
+        if(c && c['char-name']) charName = c['char-name'];
+    }
+
     page.data.forEach(item => {
        const [h,m] = item.time.split(':').map(Number);
        const t = h*60+m;
        const diff = Math.abs(t - curM);
        
-       // 范围判断 (使用全局 flowRange)
-       if (diff <= globalSettings.flowRange) {
-         // 生成指纹：角色ID + 时间 + 内容
-         const key = `${role.id}|${item.time}|${item.description}`;
+       // 2. 范围判定 (使用全局 flowRange)
+       if (diff <= range) {
          
-         // 检查是否已消费
-         if (!injectState.consumedKeys.includes(key)) {
-           candidates.push({
-             time: item.time,
-             text: item.description,
-             key: key,
-             fullTime: t
-           });
+         // 3. 模式判定 (未来/过去/双向) - 关键！
+         const mode = page.exportMode || 'both';
+         const isPast = curM >= t;
+         let isValid = false;
+         
+         if(mode === 'both') isValid = true;
+         else if(mode === 'future' && !isPast) isValid = true;
+         else if(mode === 'past' && isPast) isValid = true;
+
+         if (isValid) {
+             // 4. 生成格式化文本 (关键！和复制按钮的内容必须一模一样)
+             const tpl = isPast ? copyCfg['status-tpl-past'] : copyCfg['status-tpl-future'];
+             const formattedText = tpl.replace(/\${min}/g, diff)
+                                      .replace(/\${char}/g, charName)
+                                      .replace(/\${act}/g, item.description)
+                                      .replace(/\${time}/g, item.time);
+
+             // 5. 生成指纹 (角色+时间+原始内容)
+             const key = `${role.id}|${item.time}|${item.description}`;
+             
+             // 6. 检查是否已消费
+             if (!injectState.consumedKeys.includes(key)) {
+               candidates.push({
+                 time: item.time,
+                 text: formattedText, // 这里存的是最终美化过的文案
+                 key: key,
+                 fullTime: t
+               });
+             }
          }
        }
     });
@@ -2261,7 +2280,7 @@ async function getInjectionPayloadForRole(role) {
 
   if (candidates.length === 0) return null;
 
-  // 按时间顺序排序，取最早的一条
+  // 按时间顺序排序，取最早的一条 (保证一条一条注入)
   candidates.sort((a,b) => a.fullTime - b.fullTime);
   return candidates[0];
 }
@@ -2269,7 +2288,7 @@ async function getInjectionPayloadForRole(role) {
 /* --- 标记为已消费 --- */
 function markAsConsumed(payload, roleName) {
   injectState.consumedKeys.push(payload.key);
-  if(injectState.consumedKeys.length > 200) injectState.consumedKeys.shift(); // 增加记录容量
+  if(injectState.consumedKeys.length > 200) injectState.consumedKeys.shift(); 
   localStorage.setItem('light_inject_consumed', JSON.stringify(injectState.consumedKeys));
   
   const log = { 
@@ -2277,7 +2296,7 @@ function markAsConsumed(payload, roleName) {
     text: `[${roleName}] ${payload.text}` 
   };
   injectState.historyLog.unshift(log);
-  if(injectState.historyLog.length > 3) injectState.historyLog.pop(); // 界面只显示最近3条
+  if(injectState.historyLog.length > 2) injectState.historyLog.pop(); // 显示最近2条
   
   updateInjectionStatusUI();
 }
@@ -2288,27 +2307,26 @@ async function updateInjectionStatusUI() {
   const historyEl = document.getElementById('inj-history');
   if(!pendingEl || !historyEl) return;
 
-  // 1. 显示历史
+  // 1. 显示已注入历史
   historyEl.innerHTML = injectState.historyLog.map(l => 
-    `<div style="margin-top:2px;">✔ ${l.time} ${l.text.substring(0,18)}...</div>`
+    `<div style="margin-top:2px; color:#b0bec5;">✔ ${l.time} <span style="color:#eceff1">${l.text.substring(0,20)}...</span></div>`
   ).join('');
 
-  // 2. 显示当前"可复制"的内容 (预览)
-  // 因为现在是动态匹配，我们不知道用户接下来会点开哪个角色。
-  // 所以我们遍历所有角色，把当前处于"可注入"状态的内容都列出来
+  // 2. 显示待注入 (遍历所有角色)
   let pendingText = "";
   let hasPending = false;
   
   for (const role of roles) {
     const next = await getInjectionPayloadForRole(role);
     if(next) {
-      pendingText += `<div style="color:#ffcc80;">⏳ [${role.name}] ${next.time} ${next.text.substring(0,10)}...</div>`;
+      // 这里的 next.text 已经是被模板格式化过的了
+      pendingText += `<div style="color:#ffcc80; margin-top:3px;">⏳ [${role.name}] ${next.text}</div>`;
       hasPending = true;
     }
   }
   
   if(!hasPending) {
-    pendingEl.innerHTML = '<span style="color:#546e7a">当前时间段无待办剧情</span>';
+    pendingEl.innerHTML = '<span style="color:#546e7a">暂无待注入 (与悬浮窗内容一致)</span>';
   } else {
     pendingEl.innerHTML = pendingText;
   }
