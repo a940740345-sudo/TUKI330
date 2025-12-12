@@ -964,8 +964,17 @@
             <div class="input-row">
               <label class="input-label">Prompt 内容</label>
               <div class="prompt-toolbar">
-                <button class="var-btn" onclick="insertVarToId('prompt-content', '${chat.name}')">角色名</button>
-                <button class="var-btn" onclick="insertVarToId('prompt-content', '${chat.settings.aiPersona}')">人设</button>
+                <div class="prompt-toolbar">
+  <button class="var-btn" onclick="insertVarToId('prompt-content', '${chat.name}')" title="插入角色名字">角色名</button>
+  <button class="var-btn" onclick="insertVarToId('prompt-content', '${chat.settings.aiPersona}')" title="插入角色详细人设">角色人设</button>
+  
+  <button class="var-btn" onclick="insertVarToId('prompt-content', '${chat.memory}')" title="插入角色长期记忆" style="border-color: #ce93d8; color: #ce93d8;">角色记忆</button>
+  <button class="var-btn" onclick="insertVarToId('prompt-content', '${chat.settings.worldinfo}')" title="插入世界书内容">世界书</button>
+  <button class="var-btn" onclick="insertVarToId('prompt-content', '${chat.settings.history}')" title="插入最近的对话历史">聊天历史</button>
+  
+  <button class="var-btn" onclick="insertVarToId('prompt-content', '${user.name}')" title="插入你的名字" style="border-color: #90caf9; color: #90caf9;">用户昵称</button>
+  <button class="var-btn" onclick="insertVarToId('prompt-content', '${user.settings.aiPersona}')" title="插入你的人设">用户人设</button>
+</div>
               </div>
               <textarea id="prompt-content" class="custom-textarea" style="height:150px;"></textarea>
             </div>
@@ -1957,7 +1966,14 @@ async function syncFromEPhone() {
         const h = apiCfg['api-host'].replace(/\/$/,''); const k = apiCfg['api-key']; const m = apiCfg['model-name'];
         let pr = promptCfg['prompt-content'];
         const val = (cfg, key) => cfg ? (cfg[key] || "") : "";
-        pr = pr.replace(/\${chat.name}/g, val(charCfg, 'char-name')).replace(/\${chat.settings.aiPersona}/g, val(charCfg, 'char-persona')).replace(/\${chat.settings.worldinfo}/g, val(charCfg, 'world-info')).replace(/\${chat.settings.history}/g, val(charCfg, 'chat-history')).replace(/\${user.name}/g, val(userCfg, 'user-name')).replace(/\${user.settings.aiPersona}/g, val(userCfg, 'user-persona'));
+        pr = pr.replace(/\${chat.name}/g, val(charCfg, 'char-name'))
+       .replace(/\${chat.settings.aiPersona}/g, val(charCfg, 'char-persona'))
+       // 新增：识别角色记忆
+       .replace(/\${chat.memory}/g, val(charCfg, 'char-memory')) 
+       .replace(/\${chat.settings.worldinfo}/g, val(charCfg, 'world-info'))
+       .replace(/\${chat.settings.history}/g, val(charCfg, 'chat-history'))
+       .replace(/\${user.name}/g, val(userCfg, 'user-name'))
+       .replace(/\${user.settings.aiPersona}/g, val(userCfg, 'user-persona'));
         
         const l=document.getElementById('schedule-loading'), b1=document.getElementById('btn-gen-schedule'), b2=document.getElementById('btn-append-schedule');
         l.style.display='block'; b1.disabled=b2.disabled=true;
